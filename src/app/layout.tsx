@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Header from "@/components/header";
 
 export const metadata: Metadata = {
   title: "Bermuda Moorings",
@@ -12,9 +13,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body className="flex min-h-screen flex-col">
+        <Header />
+        <main className="flex-grow">
+          {children}
+        </main>
+        <footer className="border-t py-6 md:py-8">
+          <div className="container text-center text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Bermuda Moorings. All rights reserved.
+          </div>
+        </footer>
       </body>
     </html>
   );
