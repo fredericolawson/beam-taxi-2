@@ -32,10 +32,14 @@ const MooringSchema = z.object({
   latitude: z.coerce.number().optional().nullable(),
   longitude: z.coerce.number().optional().nullable(),
   price_per_month: z.coerce.number().positive('Price must be positive').optional().nullable(),
-  commitment_term: z.enum(['monthly', 'quarterly', 'annual']).nullable(),
+  commitment_term: z.enum(['monthly', 'quarterly', 'annual'], { errorMap: () => ({ message: 'Please select a valid commitment term.' }) }).nullable(),
   is_available: z.boolean().default(true),
   description: z.string().optional().nullable(),
 })
+
+// Define a type specifically for the create form data, omitting fields not in the form
+// Corrected syntax for z.infer with .omit()
+type CreateMooringData = z.infer<ReturnType<typeof MooringSchema.omit<{ id: true; is_available: true; latitude: true; longitude: true; }>>>;
 
 // --- Read Operations --- 
 
@@ -96,7 +100,59 @@ async function getCurrentUser(): Promise<User | null> {
 
 // --- Write Operations (Server Actions) --- 
 
-// Define the expected state shape for form actions
+// Refactored createMooring for react-hook-form
+export async function createMooring(
+  data: CreateMooringData // Accept the validated form data object directly
+): Promise<void> { // Returns void on success (redirects) or throws error
+  
+  const user = await getCurrentUser()
+  if (!user) {
+    // Throw an error for authentication failure
+    throw new Error('Authentication Error: Please log in.');
+  }
+
+  // Validation is now handled client-side by react-hook-form + zodResolver
+  // However, it's good practice to re-validate on the server.
+  const validatedFields = MooringSchema.omit({ id: true, is_available: true, latitude: true, longitude: true }).safeParse(data);
+
+  if (!validatedFields.success) {
+    console.error('Server Validation Error:', validatedFields.error.flatten().fieldErrors);
+    // Throw a generic validation error; client-side validation should catch specifics.
+    throw new Error('Validation Error: Invalid data received.');
+  }
+
+  const supabase = await createClient()
+  const { data: insertedData, error } = await supabase
+    .from('moorings')
+    .insert({
+      ...validatedFields.data,
+      owner_id: user.id,
+      is_available: true, // Explicitly set default if not in form/schema
+    })
+    .select('id')
+    .single()
+
+  if (error) {
+    console.error('Database Error creating mooring:', error);
+    // Throw an error for database failure
+    throw new Error(`Database Error: ${error.message}`);
+  }
+
+  // On success, revalidate paths and redirect
+  revalidatePath('/')
+  revalidatePath('/account/moorings')
+  if (insertedData?.id) {
+    revalidatePath(`/moorings/${insertedData.id}`)
+    // Redirect throws an error, stopping execution, so no return needed.
+    redirect(`/moorings/${insertedData.id}`);
+  } else {
+    console.error('Insert successful but no ID returned')
+    // Redirect to a fallback page if ID is missing for some reason
+    redirect('/');
+  }
+}
+
+// Keep FormState for updateMooring if it still uses useActionState
 export type FormState = {
   message?: string | null
   errors?: {
@@ -112,67 +168,7 @@ export type FormState = {
   }
 }
 
-export async function createMooring(
-  prevState: FormState, // Added prevState for useFormState
-  formData: FormData
-): Promise<FormState> { // Updated return type
-  
-  const user = await getCurrentUser()
-  if (!user) {
-    // Instead of redirecting directly, return an error state
-    return { message: 'Authentication Error: Please log in.' }
-  }
-
-  const validatedFields = MooringSchema.omit({ id: true }).safeParse({
-    name: formData.get('name'),
-    location_description: formData.get('location_description'),
-    // Ensure numeric fields are correctly parsed if included
-    price_per_month: formData.get('price_per_month'),
-    commitment_term: formData.get('commitment_term'),
-    description: formData.get('description'),
-  })
-
-  if (!validatedFields.success) {
-    console.error('Validation Error:', validatedFields.error.flatten().fieldErrors)
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Validation Error: Please check the form fields.',
-    }
-  }
-
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('moorings')
-    .insert({
-      ...validatedFields.data,
-      owner_id: user.id,
-    })
-    .select('id')
-    .single()
-
-  if (error) {
-    console.error('Database Error creating mooring:', error)
-    return { message: `Database Error: ${error.message}` }
-  }
-
-  // On success, revalidate paths and redirect
-  revalidatePath('/')
-  revalidatePath('/account/moorings')
-  if (data?.id) {
-    revalidatePath(`/moorings/${data.id}`)
-    redirect(`/moorings/${data.id}`)
-  } else {
-    // Should ideally not happen if insert succeeded and returned id
-    // but redirecting somewhere is better than nothing
-    redirect('/')
-  }
-
-  // Note: Redirects must happen outside the try/catch or return block
-  // If redirect is called, this return statement is technically unreachable,
-  // but TypeScript requires a return path.
-  // return { message: 'Success' } // This line won't be hit due to redirect
-}
-
+// Make sure updateMooring still uses FormState if it needs it
 export async function updateMooring(
   prevState: FormState, // Add prevState
   formData: FormData

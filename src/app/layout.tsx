@@ -13,13 +13,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="flex min-h-screen flex-col mx-auto max-w-screen-lg p-4">
+    <html lang="en">
+      <body className="flex min-h-screen flex-col ">
         <Header />
-        <main className="flex-grow">
+        <main className="">
           {children}
         </main>
-        <footer className="border-t py-6 md:py-8">
+        <footer className="border-t py-6 md:py-8 mt-auto">
           <div className="container text-center text-sm text-muted-foreground">
             © {new Date().getFullYear()} Bermuda Moorings. All rights reserved.
           </div>

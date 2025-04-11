@@ -13,7 +13,7 @@ export default async function CreateMooringPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col items-center p-8 sm:p-12 md:p-16">
+    <div className="flex w-full flex-col flex-grow items-center p-8 sm:p-12 md:p-16">
       <main className="w-full max-w-2xl">
         <div className="mb-6 flex items-center justify-between">
             <h1 className="text-3xl font-bold">List Your Mooring</h1>
