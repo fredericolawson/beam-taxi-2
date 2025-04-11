@@ -14,9 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex min-h-screen flex-col ">
+      <body className="flex min-h-screen flex-col">
         <Header />
-        <main className="">
+        <main className="container mx-auto flex flex-col flex-grow">
           {children}
         </main>
         <footer className="border-t py-6 md:py-8 mt-auto">

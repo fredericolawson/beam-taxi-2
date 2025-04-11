@@ -8,7 +8,6 @@ import Link from 'next/link'
 import { createMooring } from '@/lib/supabase/moorings' // Assuming createMooring will be adapted
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label" // Keep Label for structure if needed, or remove if FormLabel is sufficient
 import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
@@ -20,7 +19,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel as ShadFormLabel, // Renaming to avoid conflict if Label is kept

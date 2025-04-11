@@ -4,7 +4,7 @@ import { MooringsListSkeleton } from '@/components/moorings-list-skeleton'
 
 export default function Home() {
   return (
-    <div className="container py-8 sm:py-12 md:py-16 mx-auto">
+    <div className=" py-8 sm:py-12 md:py-16">
       <h1 className="mb-8 text-3xl font-bold tracking-tight lg:text-4xl">
         Available Moorings
       </h1>

@@ -19,8 +19,6 @@ export default async function Header() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const userInitial = user?.email?.charAt(0).toUpperCase() ?? '?'
-
   return (
     <header className="border-b flex justify-between items-center p-6">
       <div className="mr-4 flex">
