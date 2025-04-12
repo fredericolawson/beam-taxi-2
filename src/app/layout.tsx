@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/header";
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
   title: "Bermuda Moorings",
@@ -24,6 +25,7 @@ export default function RootLayout({
             © {new Date().getFullYear()} Bermuda Moorings. All rights reserved.
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   );
