@@ -35,8 +35,8 @@ export default async function MooringDetailPage({ params }: MooringDetailPagePro
   const isOwner = user?.id === mooring.owner_id
 
   return (
-    <div className="flex min-h-screen w-full flex-col items-center p-8 sm:p-12 md:p-16">
-      <main className="w-full max-w-3xl">
+    <div className="my-auto flex-grow flex flex-col items-center justify-center">
+
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -97,7 +97,7 @@ export default async function MooringDetailPage({ params }: MooringDetailPagePro
           </Button>
         </div>
 
-      </main>
+
     </div>
   )
 } 

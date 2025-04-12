@@ -38,7 +38,7 @@ export default async function EditMooringPage({ params }: EditMooringPageProps) 
 
   // If all checks pass, render the edit form
   return (
-    <div className="flex min-h-screen w-full flex-col items-center p-8 sm:p-12 md:p-16">
+    <div className="flex min-h-screen w-full flex-col items-center">
       <main className="w-full max-w-2xl">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Edit Mooring</h1>

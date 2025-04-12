@@ -5,7 +5,7 @@ import { MooringsListSkeleton } from '@/components/moorings-list-skeleton'
 export default function Home() {
   return (
     <div className=" py-8 sm:py-12 md:py-16">
-      <h1 className="mb-8 text-3xl font-bold tracking-tight lg:text-4xl">
+      <h1 className="mb-8 heading-1">
         Available Moorings
       </h1>
       <Suspense fallback={<MooringsListSkeleton />}>

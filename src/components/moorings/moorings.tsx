@@ -16,9 +16,9 @@ export default function Moorings({moorings}: {moorings: Mooring[]}) {
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center">
-      <header className="mb-8 flex w-full max-w-5xl items-center justify-between">
-        <h1 className="text-4xl font-bold">My Moorings</h1>
-        <Button asChild>
+      <header className="mb-8 flex flex-col md:flex-row w-full max-w-5xl items-center justify-between gap-4">
+        <h1 className="heading-1">My Moorings</h1>
+        <Button asChild variant="outline">
           <Link href="/moorings/new">List a New Mooring</Link>
         </Button>
       </header>
