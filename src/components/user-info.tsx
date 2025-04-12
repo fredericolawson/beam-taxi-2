@@ -1,7 +1,7 @@
 import { User } from "@supabase/supabase-js"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Car, LogOut, Mail } from "lucide-react"
+import { LogOut, Mail } from "lucide-react"
 import { UserIcon } from "lucide-react"
 import { Button } from "./ui/button"
 

@@ -1,6 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
-import { getMooringsByOwner, type Mooring } from '@/lib/supabase/moorings'
+import type { Mooring }  from '@/lib/supabase/moorings'
 import Link from 'next/link'
 import {
   Card,
