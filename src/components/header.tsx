@@ -13,6 +13,7 @@ import {
 
 import { User as SupabaseUser } from '@supabase/supabase-js'
 import { LogoutButton } from './logout-button'
+import { UserIcon } from 'lucide-react'
 
 export default async function Header() {
   const supabase = await createClient()
@@ -50,7 +51,7 @@ function UserMenu({user}: {user: SupabaseUser | null}) {
         <Link href="/moorings/new">List Your Mooring</Link>
       </Button>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger asChild className="cursor-pointer">
           <Button
             variant="outline"
             size="icon"
@@ -65,7 +66,9 @@ function UserMenu({user}: {user: SupabaseUser | null}) {
           <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href="/account">Account</Link>
+            <Link href="/account">
+            <UserIcon className="mr-2 h-4 w-4" />
+            Account</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-red-600">
