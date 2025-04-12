@@ -13,20 +13,11 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
-export default async function MyMooringsPage() {
-  // Protect the route
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect('/auth/login?message=You must be logged in to view your moorings.')
-  }
-
-  // Fetch moorings owned by the current user
-  const myMoorings: Mooring[] = await getMooringsByOwner(user.id)
+export default function Moorings({moorings}: {moorings: Mooring[]}) {
+  
 
   return (
-    <div className="flex min-h-screen w-full flex-col items-center p-8 sm:p-12 md:p-16">
+    <div className="flex min-h-screen w-full flex-col items-center">
       <header className="mb-8 flex w-full max-w-5xl items-center justify-between">
         <h1 className="text-4xl font-bold">My Moorings</h1>
         <Button asChild>
@@ -35,9 +26,9 @@ export default async function MyMooringsPage() {
       </header>
 
       <main className="w-full max-w-5xl">
-        {myMoorings.length > 0 ? (
+        {moorings.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {myMoorings.map((mooring) => (
+            {moorings.map((mooring) => (
               <Card key={mooring.id} className="flex h-full flex-col">
                 <CardHeader>
                   <div className="flex items-start justify-between gap-2">

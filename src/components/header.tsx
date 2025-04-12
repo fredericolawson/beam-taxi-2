@@ -20,7 +20,7 @@ export default async function Header() {
   } = await supabase.auth.getUser()
 
   return (
-    <header className="border-b flex justify-between items-center p-6">
+    <header className="border-b flex justify-between items-center p-6 bg-white">
       <div className="mr-4 flex">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <span className="font-bold">Bermuda Moorings</span>

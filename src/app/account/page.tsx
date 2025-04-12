@@ -2,6 +2,13 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import Moorings from '@/components/moorings/moorings'
+import { getMooringsByOwner, type Mooring } from '@/lib/supabase/moorings'
+import { User } from '@supabase/supabase-js'
+import { UserInfo } from '@/components/user-info'
+import { UpdateInfoForm } from '@/components/update-user-form'
+import { Separator } from '@/components/ui/separator'
+
 
 export default async function AccountPage() {
   const supabase = await createClient()
@@ -11,17 +18,18 @@ export default async function AccountPage() {
     redirect('/auth/login?message=You must be logged in to view your account.')
   }
 
+  const myMoorings: Mooring[] = await getMooringsByOwner(data.user.id)
+
   return (
-    <div className="container py-8 sm:py-12 md:py-16">
-      <h1 className="mb-6 text-3xl font-bold">Account</h1>
-      <div className="space-y-4">
-        <p>
-          Logged in as: <strong>{data.user.email}</strong>
-        </p>
-        <Button asChild variant="outline">
-          <Link href="/account/moorings">Manage My Moorings</Link>
-        </Button>
+    <div className="container py-8 sm:py-12 md:py-16 flex flex-col gap-8">
+      <div className="flex flex-col md:flex-row gap-8">
+        <UserInfo user={data.user} />
+        <UpdateInfoForm user={data.user} />
       </div>
+      <Separator />
+      <Moorings moorings={myMoorings} />
     </div>
   )
 }
+
+

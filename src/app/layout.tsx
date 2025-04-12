@@ -14,13 +14,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex min-h-screen flex-col">
+      <body className="flex min-h-screen flex-col bg-muted/50">
         <Header />
-        <main className="container mx-auto flex flex-col flex-grow">
+        <main className="container mx-auto flex flex-col flex-grow max-w-5xl ">
           {children}
         </main>
         <footer className="border-t py-6 md:py-8 mt-auto">
-          <div className="container text-center text-sm text-muted-foreground">
+          <div className="text-center text-sm text-muted-foreground">
             © {new Date().getFullYear()} Bermuda Moorings. All rights reserved.
           </div>
         </footer>
