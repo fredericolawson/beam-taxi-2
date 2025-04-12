@@ -10,8 +10,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { LogOut } from 'lucide-react'
+
 import { User as SupabaseUser } from '@supabase/supabase-js'
+import { LogoutButton } from './logout-button'
 
 export default async function Header() {
   const supabase = await createClient()
@@ -41,7 +42,7 @@ function UserMenu({user}: {user: SupabaseUser | null}) {
       <Link href="/auth/login">Login</Link>
     </Button>
   )
-  
+
   const userInitial = user.email?.charAt(0).toUpperCase() ?? '?'
   return (
     <>
@@ -68,8 +69,7 @@ function UserMenu({user}: {user: SupabaseUser | null}) {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-red-600">
-            <LogOut className="mr-2 h-4 w-4" />
-              Logout
+            <LogoutButton />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

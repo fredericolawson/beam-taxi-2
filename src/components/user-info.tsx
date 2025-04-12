@@ -1,9 +1,9 @@
 import { User } from "@supabase/supabase-js"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut, Mail } from "lucide-react"
+import { Mail } from "lucide-react"
 import { UserIcon } from "lucide-react"
-import { Button } from "./ui/button"
+import { LogoutButton } from "./logout-button"
 
 
 export function UserInfo({ user }: { user: User | null }) {
@@ -72,9 +72,7 @@ export function UserInfo({ user }: { user: User | null }) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" className="">
-          <LogOut className="mr-2 h-4 w-4" /> Sign Out
-        </Button>
+        <LogoutButton />
       </CardFooter>
     </Card>
   )
