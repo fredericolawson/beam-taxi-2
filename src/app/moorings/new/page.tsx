@@ -12,7 +12,7 @@ export default async function CreateMooringPage() {
   }
 
   return (
-    <Card className="max-w-3xl mx-auto my-8">
+    <Card className="">
       <CardHeader>
         <CardTitle>List A Mooring</CardTitle>
         <CardDescription>Compelete this form to add a new mooring.</CardDescription>
