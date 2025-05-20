@@ -6,6 +6,20 @@ import { Analytics } from "@vercel/analytics/react";
 export const metadata: Metadata = {
   title: "Hey Buoy",
   description: "The home of moorings in Bermuda. ",
+  openGraph: {
+    images: [
+      {
+        url: "/heybuoy.png", // Absolute or relative URL
+        width: 900,
+        height: 900,
+        alt: "Hey Buoy OG Image",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: "/heybuoy.png",
+  },
 };
 
 export default function RootLayout({
