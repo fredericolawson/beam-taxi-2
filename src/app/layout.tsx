@@ -5,7 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "Hey Buoy",
-  description: "The home of moorings in Bermuda. ",
+  description: "The home of Bermuda moorings.",
   openGraph: {
     images: [
       {
