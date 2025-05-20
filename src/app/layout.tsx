@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/header";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
-  title: "Bermuda Moorings",
+  title: "Hey Buoy",
   description: "The home of moorings in Bermuda. ",
 };
 
@@ -22,7 +22,7 @@ export default function RootLayout({
         </main>
         <footer className="border-t py-6 md:py-8 mt-auto">
           <div className="text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Bermuda Moorings. All rights reserved.
+            © {new Date().getFullYear()} Beam Bermuda Ltd. All rights reserved.
           </div>
         </footer>
         <Analytics />
