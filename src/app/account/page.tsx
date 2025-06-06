@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import Moorings from '@/components/moorings/moorings';
-import { getMooringsByOwner, type Mooring } from '@/lib/supabase/moorings';
+import { getMooringsByOwner, type Mooring } from '@/lib/tables/moorings-legacy';
 import { UserInfo } from '@/components/user-info';
 import { UpdateInfoForm } from '@/components/update-user-form';
 import { Separator } from '@/components/ui/separator';

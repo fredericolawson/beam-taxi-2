@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Link from 'next/link';
 import AutoResizeTextarea from '@/components/text-area';
-import { createMooring } from '@/lib/supabase/moorings';
+import { createMooring } from '@/lib/tables/moorings-legacy';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LocationSelector } from '@/components/location-form';

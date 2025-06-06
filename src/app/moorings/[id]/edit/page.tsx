@@ -1,4 +1,4 @@
-import { getMooringById } from '@/lib/supabase/moorings';
+import { getMooringById } from '@/lib/tables/moorings-legacy';
 import { createClient } from '@/lib/supabase/server';
 import { notFound, redirect } from 'next/navigation';
 import { EditMooringForm } from '@/components/moorings/edit-form'; // Import the edit form component

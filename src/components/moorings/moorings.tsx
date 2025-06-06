@@ -1,4 +1,4 @@
-import type { Mooring } from '@/lib/supabase/moorings';
+import type { Mooring } from '@/lib/tables/moorings-legacy';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

@@ -1,4 +1,4 @@
-import { getMooringById, deleteMooring } from '@/lib/supabase/moorings';
+import { getMooringById, deleteMooring } from '@/lib/tables/moorings-legacy';
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
