@@ -50,7 +50,7 @@ export type MooringSearchFilters = {
 };
 
 // Type guard to check if a mooring is ready for publication
-function isComplete(mooring: Mooring): mooring is CompleteMooring {
+export function isCompleteMooring(mooring: Mooring): mooring is CompleteMooring {
   return (
     mooring.latitude !== null &&
     mooring.longitude !== null &&
@@ -63,5 +63,5 @@ function isComplete(mooring: Mooring): mooring is CompleteMooring {
 }
 
 export function completeMoorings(moorings: Mooring[]): CompleteMooring[] {
-  return moorings.filter(isComplete) as CompleteMooring[];
+  return moorings.filter(isCompleteMooring) as CompleteMooring[];
 }

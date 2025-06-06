@@ -1,11 +1,14 @@
-import { getMooringById, deleteMooring } from '@/lib/tables/moorings-legacy';
-import { createClient } from '@/lib/supabase/server';
+import { getMooringById } from '@/lib/tables/moorings';
+import { deleteMooring } from '@/lib/tables/moorings-legacy';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LocationDisplay } from '@/components/location-display';
+import { getUserServer } from '@/lib/utils/get-user-server';
+import type { CompleteMooring } from '@/types/mooring';
+import { User } from '@supabase/supabase-js';
 
 type MooringDetailPageProps = {
   params: Promise<{
@@ -15,15 +18,9 @@ type MooringDetailPageProps = {
 
 export default async function MooringDetailPage({ params }: MooringDetailPageProps) {
   const { id } = await params;
-
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
   const mooring = await getMooringById(id);
-
   if (!mooring) notFound();
-  const isOwner = user?.id === mooring.owner_id;
+  const user = await getUserServer();
 
   // Check if location coordinates are available
   const hasLocation = mooring.latitude && mooring.longitude;
@@ -40,53 +37,28 @@ export default async function MooringDetailPage({ params }: MooringDetailPagePro
             <CardDescription>{mooring.location_description}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Location Map */}
-            {hasLocation && (
-              <div>
-                <h3 className="mb-3 font-semibold">Location</h3>
-              </div>
-            )}
-
-            {mooring.description && (
-              <div>
-                <h3 className="font-semibold">Description</h3>
-                <p className="text-gray-700">{mooring.description}</p>
-              </div>
-            )}
+            <div>
+              <h3 className="font-semibold">Description</h3>
+              <p className="text-gray-700">{mooring.description}</p>
+            </div>
             <div>
               <h3 className="font-semibold">Details</h3>
               <ul className="list-disc pl-5 text-gray-700">
-                {mooring.price_per_month && <li>Price: ${mooring.price_per_month}/month</li>}
-                {mooring.commitment_term && <li className="capitalize">Commitment: {mooring.commitment_term}</li>}
-                {hasLocation && (
-                  <li>
-                    Coordinates: {mooring.latitude!.toFixed(6)}, {mooring.longitude!.toFixed(6)}
-                  </li>
-                )}
+                <li>Price: ${mooring.price_per_month}/month</li>
+                <li className="capitalize">Commitment: {mooring.commitment_term}</li>
               </ul>
             </div>
-            {/* Owner Actions */}
-            {isOwner && (
-              <div className="mt-6 flex space-x-4 border-t pt-4">
-                <Button asChild variant="outline">
-                  <Link href={`/moorings/${mooring.id}/edit`}>Edit</Link>
-                </Button>
-                {/* Delete requires a form to trigger the server action */}
-                <form
-                  action={async () => {
-                    'use server';
-                    // Add confirmation dialog in real UI
-                    await deleteMooring(mooring.id);
-                    // Redirect handled within deleteMooring action
-                  }}
-                >
-                  <Button type="submit" variant="destructive">
-                    Delete
-                  </Button>
-                </form>
+            <div>
+              <h3 className="mb-2 font-semibold">Coordinates</h3>
+              <div className="flex gap-2">
+                <Badge variant="secondary">{mooring.latitude!.toFixed(6)}</Badge>
+                <Badge variant="secondary">{mooring.longitude!.toFixed(6)}</Badge>
               </div>
-            )}
+            </div>
           </CardContent>
+          <CardFooter className="mt-auto w-full">
+            <OwnerActions mooring={mooring} user={user} />
+          </CardFooter>
         </Card>
 
         <div className="w-1/2">
@@ -99,6 +71,29 @@ export default async function MooringDetailPage({ params }: MooringDetailPagePro
           <Link href="/">{'<'} Back to Listings</Link>
         </Button>
       </div>
+    </div>
+  );
+}
+
+async function OwnerActions({ mooring, user }: { mooring: CompleteMooring; user: User | null }) {
+  const isOwner = user?.id === mooring.owner_id;
+  if (!isOwner) return null;
+
+  return (
+    <div className="flex w-full space-x-4 border-t pt-4">
+      <Button asChild variant="outline">
+        <Link href={`/moorings/${mooring.id}/edit`}>Edit</Link>
+      </Button>
+      <form
+        action={async () => {
+          'use server';
+          await deleteMooring(mooring.id);
+        }}
+      >
+        <Button type="submit" variant="destructive">
+          Delete
+        </Button>
+      </form>
     </div>
   );
 }
