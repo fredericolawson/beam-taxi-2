@@ -1,22 +1,13 @@
-import type { Mooring }  from '@/lib/supabase/moorings'
-import Link from 'next/link'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import type { Mooring } from '@/lib/supabase/moorings';
+import Link from 'next/link';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
-export default function Moorings({moorings}: {moorings: Mooring[]}) {
-  
-
+export default function Moorings({ moorings }: { moorings: Mooring[] }) {
   return (
     <div className="flex min-h-screen w-full flex-col items-center">
-      <header className="mb-8 flex flex-col md:flex-row w-full max-w-5xl items-center justify-between gap-4">
+      <header className="mb-8 flex w-full max-w-5xl flex-col items-center justify-between gap-4 md:flex-row">
         <h1 className="heading-1">My Moorings</h1>
         <Button asChild variant="outline">
           <Link href="/moorings/new">List a New Mooring</Link>
@@ -39,43 +30,39 @@ export default function Moorings({moorings}: {moorings: Mooring[]}) {
                 </CardHeader>
                 <CardContent className="flex-grow">
                   {mooring.price_per_month ? (
-                    <p className="text-lg font-semibold">
-                      ${mooring.price_per_month}/month
-                    </p>
+                    <p className="text-lg font-semibold">${mooring.price_per_month}/month</p>
                   ) : (
                     <p className="text-sm text-gray-500">Price not listed</p>
                   )}
-                  <p className="text-sm capitalize text-gray-600">
-                    Term: {mooring.commitment_term || 'Not specified'}
-                  </p>
+                  <p className="text-sm text-gray-600 capitalize">Term: {mooring.commitment_term || 'Not specified'}</p>
                 </CardContent>
                 <CardFooter className="flex justify-end space-x-2">
-                   <Button variant="outline" size="sm" asChild>
-                      <Link href={`/moorings/${mooring.id}`}>View</Link>
-                    </Button>
-                    <Button variant="secondary" size="sm" asChild>
-                      <Link href={`/moorings/${mooring.id}/edit`}>Edit</Link>
-                    </Button>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href={`/moorings/${mooring.id}`}>View</Link>
+                  </Button>
+                  <Button variant="secondary" size="sm" asChild>
+                    <Link href={`/moorings/${mooring.id}/edit`}>Edit</Link>
+                  </Button>
                 </CardFooter>
               </Card>
             ))}
           </div>
         ) : (
-          <div className="text-center text-gray-500 border border-dashed rounded-lg p-8">
+          <div className="rounded-lg border border-dashed p-8 text-center text-gray-500">
             <p className="mb-4">You haven&apos;t listed any moorings yet.</p>
-             <Button asChild>
-                <Link href="/moorings/new">List Your First Mooring</Link>
+            <Button asChild>
+              <Link href="/moorings/new">List Your First Mooring</Link>
             </Button>
           </div>
         )}
       </main>
 
-       {/* Link back to main account page */} 
-       <div className="mt-8">
-         <Button variant="link" asChild>
-            <Link href="/account">{'<'} Back to Account</Link>
-          </Button>
-       </div>
+      {/* Link back to main account page */}
+      <div className="mt-8">
+        <Button variant="link" asChild>
+          <Link href="/account">{'<'} Back to Account</Link>
+        </Button>
+      </div>
     </div>
-  )
-} 
+  );
+}

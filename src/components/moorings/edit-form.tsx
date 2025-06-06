@@ -1,148 +1,209 @@
-'use client'
+'use client';
 
-import { useActionState } from 'react'
-import { useFormStatus } from 'react-dom'
-import { updateMooring, type Mooring, type FormState } from '@/lib/supabase/moorings'
-import Link from 'next/link'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import Link from 'next/link';
 
-// Define initial state for the form
-const initialState: FormState = {
-  message: null,
-  errors: {},
-}
+import { updateMooring, type Mooring } from '@/lib/supabase/moorings';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
-// Separate Submit button component to use useFormStatus
-function SubmitButton() {
-  const { pending } = useFormStatus()
+const formSchema = z.object({
+  name: z.string().min(1, { message: 'Mooring name is required.' }),
+  location_description: z.string().optional(),
+  price_per_month: z.coerce
+    .number({ invalid_type_error: 'Please enter a valid number.' })
+    .positive({ message: 'Price must be a positive number.' })
+    .optional(),
+  commitment_term: z.enum(['monthly', 'quarterly', 'annual'], {
+    required_error: 'Commitment term is required.',
+  }),
+  description: z.string().optional(),
+});
 
-  return (
-    <Button type="submit" aria-disabled={pending} disabled={pending}>
-      {pending ? 'Saving...' : 'Save Changes'}
-    </Button>
-  )
-}
+type FormData = z.infer<typeof formSchema>;
 
-// Props for the EditMooringForm component
 type EditMooringFormProps = {
-  mooring: Mooring // Pass the existing mooring data
-}
+  mooring: Mooring;
+};
 
 export function EditMooringForm({ mooring }: EditMooringFormProps) {
-  // Updated hook usage
-  const [state, formAction] = useActionState(updateMooring, initialState)
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: mooring.name,
+      location_description: mooring.location_description ?? '',
+      price_per_month: mooring.price_per_month ?? undefined,
+      commitment_term: mooring.commitment_term ?? undefined,
+      description: mooring.description ?? '',
+    },
+  });
+
+  async function onSubmit(values: FormData) {
+    try {
+      // Create FormData with the mooring ID
+      const formData = new FormData();
+      formData.append('id', mooring.id);
+      formData.append('name', values.name);
+      if (values.location_description) {
+        formData.append('location_description', values.location_description);
+      }
+      if (values.price_per_month !== undefined) {
+        formData.append('price_per_month', values.price_per_month.toString());
+      }
+      formData.append('commitment_term', values.commitment_term);
+      if (values.description) {
+        formData.append('description', values.description);
+      }
+
+      // Call updateMooring with proper parameters (prevState, formData)
+      const result = await updateMooring({ message: null, errors: {} }, formData);
+
+      // Check if there are errors returned
+      if (result.errors || result.message) {
+        // Set field-specific errors
+        if (result.errors) {
+          Object.entries(result.errors).forEach(([field, messages]) => {
+            if (messages && messages.length > 0) {
+              form.setError(field as keyof FormData, {
+                type: 'server',
+                message: messages[0],
+              });
+            }
+          });
+        }
+
+        // Set general error message
+        if (result.message) {
+          form.setError('root.serverError', {
+            type: 'server',
+            message: result.message,
+          });
+        }
+      }
+      // If no errors, the function should have redirected
+    } catch (error) {
+      console.error('Submission error:', error);
+      form.setError('root.serverError', {
+        type: 'server',
+        message: error instanceof Error ? error.message : 'An unexpected error occurred.',
+      });
+    }
+  }
 
   return (
-    // The form action now correctly points to the wrapped server action
-    <form action={formAction} className="space-y-6">
-      {/* Hidden input to pass the mooring ID */}
-      <input type="hidden" name="id" value={mooring.id} />
-
-      {/* Form Fields with defaultValues from the mooring prop */}
-      <div>
-        <Label htmlFor="name">Mooring Name</Label>
-        <Input 
-          id="name" 
-          name="name" 
-          type="text" 
-          required 
-          placeholder="e.g., Dockyard Berth 5" 
-          defaultValue={mooring.name}
-          aria-describedby="name-error"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Mooring Name</FormLabel>
+              <FormDescription>This is the name of the mooring that will be displayed to potential renters.</FormDescription>
+              <FormControl>
+                <Input placeholder="e.g. Dockyard Berth 5" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        {state?.errors?.name && (
-          <p id="name-error" className="text-sm text-red-500 mt-1">{state.errors.name[0]}</p>
-        )}
-      </div>
 
-      <div>
-        <Label htmlFor="location_description">Location Description</Label>
-        <Input 
-          id="location_description" 
-          name="location_description" 
-          type="text" 
-          placeholder="e.g., Next to the ferry terminal" 
-          defaultValue={mooring.location_description ?? ''} 
-          aria-describedby="location-error"
+        <FormField
+          control={form.control}
+          name="location_description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Location Description</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g. Next to the ferry terminal" {...field} value={field.value ?? ''} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-         {state?.errors?.location_description && (
-          <p id="location-error" className="text-sm text-red-500 mt-1">{state.errors.location_description[0]}</p>
-        )}
-      </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div>
-          <Label htmlFor="price_per_month">Price per Month ($)</Label>
-          <Input 
-            id="price_per_month" 
-            name="price_per_month" 
-            type="number" 
-            step="0.01" 
-            placeholder="e.g., 500" 
-            defaultValue={mooring.price_per_month ?? ''} 
-            aria-describedby="price-error"
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="price_per_month"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price per Month ($)</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    placeholder="e.g. 500"
+                    {...field}
+                    value={field.value ?? ''}
+                    onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-           {state?.errors?.price_per_month && (
-            <p id="price-error" className="text-sm text-red-500 mt-1">{state.errors.price_per_month[0]}</p>
-          )}
-        </div>
-        <div>
-          <Label htmlFor="commitment_term">Commitment Term</Label>
-          <Select name="commitment_term" defaultValue={mooring.commitment_term ?? ''}>
-            <SelectTrigger id="commitment_term" aria-describedby="term-error">
-              <SelectValue placeholder="Select term" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="monthly">Monthly</SelectItem>
-              <SelectItem value="quarterly">Quarterly</SelectItem>
-              <SelectItem value="annual">Annual</SelectItem>
-            </SelectContent>
-          </Select>
-          {state?.errors?.commitment_term && (
-            <p id="term-error" className="text-sm text-red-500 mt-1">{state.errors.commitment_term[0]}</p>
-          )}
-        </div>
-      </div>
 
-      <div>
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
+          <FormField
+            control={form.control}
+            name="commitment_term"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Commitment Term</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select term" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                    <SelectItem value="quarterly">Quarterly</SelectItem>
+                    <SelectItem value="annual">Annual</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
           name="description"
-          placeholder="Add any extra details..."
-          defaultValue={mooring.description ?? ''}
-          aria-describedby="description-error"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Add any extra details about the mooring (e.g. size restrictions, amenities nearby)"
+                  {...field}
+                  value={field.value ?? ''}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-         {state?.errors?.description && (
-          <p id="description-error" className="text-sm text-red-500 mt-1">{state.errors.description[0]}</p>
+
+        {form.formState.errors.root?.serverError && (
+          <p className="text-destructive text-sm">{form.formState.errors.root.serverError.message}</p>
         )}
-      </div>
-      
-      {/* TODO: Add a control for 'is_available' (e.g., Checkbox or Switch) if needed */}
 
-      {/* Display general form message/error */}
-      {state?.message && (
-        <p className="text-sm text-red-500">{state.message}</p>
-      )}
-
-      {/* Submit and Cancel Buttons */}
-      <div className="flex justify-end space-x-4">
-        <Button variant="outline" asChild>
-          {/* Link back to the mooring detail page */}
-          <Link href={`/moorings/${mooring.id}`}>Cancel</Link>
-        </Button>
-        <SubmitButton />
-      </div>
-    </form>
-  )
-} 
+        <div className="flex justify-end space-x-4">
+          <Button variant="outline" type="button" asChild>
+            <Link href={`/moorings/${mooring.id}`}>Cancel</Link>
+          </Button>
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}

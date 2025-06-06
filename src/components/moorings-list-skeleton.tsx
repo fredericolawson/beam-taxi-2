@@ -1,9 +1,9 @@
-import { Skeleton } from "@/components/ui/skeleton"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 export function MooringsListSkeleton() {
   // Show 6 skeleton cards as a placeholder
-  const skeletonCount = 6
+  const skeletonCount = 6;
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -20,5 +20,5 @@ export function MooringsListSkeleton() {
         </Card>
       ))}
     </div>
-  )
-} 
+  );
+}
