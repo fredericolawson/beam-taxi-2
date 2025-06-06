@@ -54,7 +54,7 @@ export function MiniMap({ longitude, latitude }: { longitude: number; latitude: 
 
   if (!isLoaded) return <Loader2 className="h-4 w-4 animate-spin" />;
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full overflow-hidden rounded-r-md">
       <GoogleMap
         mapContainerStyle={miniMapContainerStyle}
         center={{ lat: latitude, lng: longitude }}
