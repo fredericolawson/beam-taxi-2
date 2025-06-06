@@ -3,10 +3,15 @@
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
+import { Loader2 } from 'lucide-react';
 
 const mapContainerStyle = {
   width: '100%',
   height: '600px',
+};
+const miniMapContainerStyle = {
+  width: '100%',
+  height: '100%',
 };
 
 export function LocationDisplay({ latitude, longitude }: { latitude: number; longitude: number }) {
@@ -36,6 +41,33 @@ export function LocationDisplay({ latitude, longitude }: { latitude: number; lon
         }}
       >
         <Marker position={center} />
+      </GoogleMap>
+    </div>
+  );
+}
+
+export function MiniMap({ longitude, latitude }: { longitude: number; latitude: number }) {
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+  });
+
+  if (!isLoaded) return <Loader2 className="h-4 w-4 animate-spin" />;
+  return (
+    <div className="h-full w-full">
+      <GoogleMap
+        mapContainerStyle={miniMapContainerStyle}
+        center={{ lat: latitude, lng: longitude }}
+        zoom={12}
+        options={{
+          disableDefaultUI: true,
+          zoomControl: false,
+          streetViewControl: false,
+          fullscreenControl: false,
+          mapTypeId: 'satellite',
+        }}
+      >
+        <Marker position={{ lat: latitude, lng: longitude }} />
       </GoogleMap>
     </div>
   );

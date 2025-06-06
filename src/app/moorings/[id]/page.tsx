@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { LocationDisplay } from '@/components/location-display';
+import { LocationDisplay } from '@/components/maps';
 import { getUserServer } from '@/lib/utils/get-user-server';
 import type { CompleteMooring } from '@/types/mooring';
 import { User } from '@supabase/supabase-js';
