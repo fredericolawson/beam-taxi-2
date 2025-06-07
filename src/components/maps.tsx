@@ -1,8 +1,6 @@
 'use client';
 
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-import { useState } from 'react';
-import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
 import { Loader2 } from 'lucide-react';
 
 const mapContainerStyle = {
@@ -34,10 +32,16 @@ export function LocationDisplay({ latitude, longitude }: { latitude: number; lon
         center={center}
         zoom={15}
         options={{
+          mapTypeId: 'satellite',
           disableDefaultUI: false,
           zoomControl: false,
           streetViewControl: false,
           fullscreenControl: false,
+          mapTypeControlOptions: {
+            style: null,
+            position: null,
+            mapTypeIds: ['satellite'],
+          },
         }}
       >
         <Marker position={center} />
@@ -70,11 +74,6 @@ export function MiniMap({ longitude, latitude }: { longitude: number; latitude: 
           scrollwheel: false,
           mapTypeControl: false,
           draggable: false,
-          mapTypeControlOptions: {
-            style: null,
-            position: null,
-            mapTypeIds: ['satellite'],
-          },
         }}
       >
         <Marker position={{ lat: latitude, lng: longitude }} />
