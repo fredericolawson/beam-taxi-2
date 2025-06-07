@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { EditMooringForm } from '@/components/moorings/edit-form'; // Import the edit form component
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Master } from '@/components/moorings/google-maps-picker';
 
 // Define props, including the dynamic route parameter `id`
 type EditMooringPageProps = {
@@ -40,17 +41,19 @@ export default async function EditMooringPage({ params }: EditMooringPageProps) 
 
   // If all checks pass, render the edit form
   return (
-    <div className="flex min-h-screen w-full flex-col items-center">
-      <main className="w-full max-w-2xl">
+    <div className="flex gap-6">
+      <div className="card-container flex h-full w-1/2 flex-grow flex-col p-6">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Edit Mooring</h1>
-          {/* Optional: Add a cancel button linking back to the detail page */}
           <Button variant="outline" asChild>
             <Link href={`/moorings/${id}`}>Cancel</Link>
           </Button>
         </div>
         <EditMooringForm mooring={mooring} />
-      </main>
+      </div>
+      <div className="w-1/2">
+        <Master />
+      </div>
     </div>
   );
 }

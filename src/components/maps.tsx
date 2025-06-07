@@ -35,7 +35,7 @@ export function LocationDisplay({ latitude, longitude }: { latitude: number; lon
         zoom={15}
         options={{
           disableDefaultUI: false,
-          zoomControl: true,
+          zoomControl: false,
           streetViewControl: false,
           fullscreenControl: false,
         }}
@@ -64,7 +64,12 @@ export function MiniMap({ longitude, latitude }: { longitude: number; latitude: 
           zoomControl: false,
           streetViewControl: false,
           fullscreenControl: false,
-          mapTypeId: 'satellite',
+          clickableIcons: false,
+          gestureHandling: 'none',
+          keyboardShortcuts: false,
+          scrollwheel: false,
+          mapTypeControl: false,
+          draggable: false,
         }}
       >
         <Marker position={{ lat: latitude, lng: longitude }} />

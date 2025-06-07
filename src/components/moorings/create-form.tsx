@@ -64,30 +64,13 @@ export function CreateMooringForm() {
     latitude: number;
     longitude: number;
   }) => {
-    console.log('Location selected:', locationData);
-    console.log('Setting latitude:', locationData.latitude);
-    console.log('Setting longitude:', locationData.longitude);
-
     form.setValue('location_description', locationData.formatted_address);
     form.setValue('latitude', locationData.latitude);
     form.setValue('longitude', locationData.longitude);
-
-    // Log what was actually set
-    console.log('Form values after setting:', {
-      location_description: form.getValues('location_description'),
-      latitude: form.getValues('latitude'),
-      longitude: form.getValues('longitude'),
-    });
   };
 
   async function onSubmit(values: FormData) {
     try {
-      // Debug: Log the form data being submitted
-      console.log('Form data being submitted:', values);
-      console.log('Latitude:', values.latitude);
-      console.log('Longitude:', values.longitude);
-      console.log('Location description:', values.location_description);
-
       await createMooring(values);
     } catch (error) {
       console.error('Submission error:', error);
@@ -115,25 +98,6 @@ export function CreateMooringForm() {
             </FormItem>
           )}
         />
-
-        <FormItem>
-          <FormLabel>Location</FormLabel>
-          <FormDescription>Search and select the mooring location on the map.</FormDescription>
-          <LocationSelector onLocationSelect={handleLocationSelect} />
-          {form.watch('location_description') && (
-            <div className="mt-2 space-y-1">
-              <p className="text-muted-foreground text-sm">Selected: {form.watch('location_description')}</p>
-              {form.watch('latitude') && form.watch('longitude') && (
-                <p className="text-muted-foreground font-mono text-xs">
-                  📍 {form.watch('latitude')?.toFixed(6)}, {form.watch('longitude')?.toFixed(6)}
-                </p>
-              )}
-            </div>
-          )}
-          {form.formState.errors.location_description && (
-            <p className="text-destructive text-sm">{form.formState.errors.location_description.message}</p>
-          )}
-        </FormItem>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <FormField
@@ -214,3 +178,24 @@ export function CreateMooringForm() {
     </Form>
   );
 }
+
+/*
+<FormItem>
+          <FormLabel>Location</FormLabel>
+          <FormDescription>Search and select the mooring location on the map.</FormDescription>
+          <LocationSelector onLocationSelect={handleLocationSelect} />
+          {form.watch('location_description') && (
+            <div className="mt-2 space-y-1">
+              <p className="text-muted-foreground text-sm">Selected: {form.watch('location_description')}</p>
+              {form.watch('latitude') && form.watch('longitude') && (
+                <p className="text-muted-foreground font-mono text-xs">
+                  📍 {form.watch('latitude')?.toFixed(6)}, {form.watch('longitude')?.toFixed(6)}
+                </p>
+              )}
+            </div>
+          )}
+          {form.formState.errors.location_description && (
+            <p className="text-destructive text-sm">{form.formState.errors.location_description.message}</p>
+          )}
+        </FormItem>
+        */
