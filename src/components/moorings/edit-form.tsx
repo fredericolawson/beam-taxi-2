@@ -104,23 +104,9 @@ export function EditMooringForm({ mooring }: EditMooringFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Mooring Name</FormLabel>
-              <FormDescription>This is the name of the mooring that will be displayed to potential renters.</FormDescription>
+              <FormDescription>The name of the mooring that will be displayed to potential renters.</FormDescription>
               <FormControl>
                 <Input placeholder="e.g. Dockyard Berth 5" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="location_description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location Description</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g. Next to the ferry terminal" {...field} value={field.value ?? ''} />
               </FormControl>
               <FormMessage />
             </FormItem>

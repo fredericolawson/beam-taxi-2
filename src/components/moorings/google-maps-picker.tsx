@@ -149,15 +149,15 @@ export function Master() {
   };
 
   return (
-    <main className="container mx-auto max-w-4xl p-4">
+    <main className="card-container mx-auto max-w-4xl p-4">
       <header className="mb-6 text-center">
         <h1 className="heading-2 mb-2">Select Location</h1>
         <p className="">Click on the water to place your mooring pin</p>
       </header>
 
-      <section className="mb-6">
+      <div className="border-border rounded-lg border object-cover">
         <MooringMap onMooringSelect={setMooringLocation} />
-      </section>
+      </div>
 
       {mooringLocation && (
         <section>

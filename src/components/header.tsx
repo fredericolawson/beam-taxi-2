@@ -46,7 +46,7 @@ function UserMenu({ user }: { user: SupabaseUser | null }) {
 
   const userInitial = user.email?.charAt(0).toUpperCase() ?? '?';
   return (
-    <>
+    <div className="flex flex-col items-center items-end gap-2 md:flex-row">
       <Button asChild variant="secondary" size="sm">
         <Link href="/moorings/new">List Your Mooring</Link>
       </Button>
@@ -73,6 +73,6 @@ function UserMenu({ user }: { user: SupabaseUser | null }) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    </>
+    </div>
   );
 }

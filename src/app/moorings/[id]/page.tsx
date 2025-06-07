@@ -22,24 +22,20 @@ export default async function MooringDetailPage({ params }: MooringDetailPagePro
   if (!mooring) notFound();
   const user = await getUserServer();
 
-  // Check if location coordinates are available
-  const hasLocation = mooring.latitude && mooring.longitude;
-
   return (
-    <div className="my-auto flex flex-col items-center justify-center px-4">
-      <div className="flex min-h-[600px] w-full flex-grow flex-row gap-4">
-        <Card className="w-1/2 flex-grow">
+    <div className="my-auto flex flex-col items-center justify-center">
+      <div className="flex min-h-[600px] w-full flex-grow flex-col gap-4 md:flex-row">
+        <Card className="w-full md:w-1/2">
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col justify-between gap-2 md:flex-row">
               <CardTitle className="text-3xl">{mooring.name}</CardTitle>
               <Badge variant={mooring.is_available ? 'default' : 'destructive'}>{mooring.is_available ? 'Available' : 'Unavailable'}</Badge>
             </div>
-            <CardDescription>{mooring.location_description}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
               <h3 className="font-semibold">Description</h3>
-              <p className="text-gray-700">{mooring.description}</p>
+              <p className="">{mooring.description}</p>
             </div>
             <div>
               <h3 className="font-semibold">Details</h3>
@@ -61,7 +57,7 @@ export default async function MooringDetailPage({ params }: MooringDetailPagePro
           </CardFooter>
         </Card>
 
-        <div className="w-1/2">
+        <div className="md:w-1/2">
           <LocationDisplay latitude={mooring.latitude!} longitude={mooring.longitude!} />
         </div>
       </div>
