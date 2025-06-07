@@ -6,11 +6,13 @@ import { Loader2 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
+import { updateMooring } from '@/actions/moorings';
+import { Mooring } from '@/types/mooring';
+import { toast } from 'sonner';
 
 export interface MooringLocation {
   lat: number;
   lng: number;
-  waterBody?: string;
 }
 
 const MAP_CONFIG = {
@@ -22,8 +24,7 @@ const MAP_CONFIG = {
 const useGoogleMaps = () => {
   return useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
-    libraries: ['places'],
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
   });
 };
 
@@ -45,11 +46,6 @@ const MooringCard: React.FC<MooringCardProps> = ({ location, onSave }) => (
       <div>
         <strong>Longitude:</strong> {location.lng.toFixed(6)}°
       </div>
-      {location.waterBody && (
-        <div className="md:col-span-2">
-          <strong>Water Body:</strong> {location.waterBody}
-        </div>
-      )}
     </CardContent>
 
     {onSave && (
@@ -140,12 +136,20 @@ const MooringMap: React.FC<MooringMapProps> = ({ onMooringSelect, initialCenter 
 
 memo(MooringMap);
 
-export function Master() {
-  const [mooringLocation, setMooringLocation] = useState<MooringLocation | null>(null);
+export function Master({ mooring }: { mooring: Mooring }) {
+  const [location, setLocation] = useState<MooringLocation | null>(null);
 
-  const handleSave = () => {
-    // TODO: Implement save to database
-    alert('Mooring location saved!');
+  const handleSave = async () => {
+    if (!location) return;
+    const { updatedMooring, error } = await updateMooring({
+      mooringId: mooring.id,
+      data: { latitude: location.lat, longitude: location.lng },
+    });
+    if (error) {
+      console.error(error);
+    } else {
+      toast.success('Mooring location saved!');
+    }
   };
 
   return (
@@ -156,12 +160,12 @@ export function Master() {
       </header>
 
       <div className="border-border rounded-lg border object-cover">
-        <MooringMap onMooringSelect={setMooringLocation} />
+        <MooringMap onMooringSelect={setLocation} />
       </div>
 
-      {mooringLocation && (
+      {location && (
         <section>
-          <MooringCard location={mooringLocation} onSave={handleSave} />
+          <MooringCard location={location} onSave={handleSave} />
         </section>
       )}
     </main>

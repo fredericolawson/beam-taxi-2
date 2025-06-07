@@ -70,6 +70,11 @@ export function MiniMap({ longitude, latitude }: { longitude: number; latitude: 
           scrollwheel: false,
           mapTypeControl: false,
           draggable: false,
+          mapTypeControlOptions: {
+            style: null,
+            position: null,
+            mapTypeIds: ['satellite'],
+          },
         }}
       >
         <Marker position={{ lat: latitude, lng: longitude }} />
@@ -77,21 +82,3 @@ export function MiniMap({ longitude, latitude }: { longitude: number; latitude: 
     </div>
   );
 }
-
-/*
-
-function MapTypeToggle({ mapType, setMapType }: { mapType: "roadmap" | "satellite", setMapType: (mapType: "roadmap" | "satellite") => void }) {
-  return(
-    <Tabs value={mapType} onValueChange={(value) => setMapType(value as "roadmap" | "satellite")}>
-        <TabsList className="bg-white/90 shadow-md">
-          <TabsTrigger value="roadmap" className="text-xs">
-            🗺️ Map
-          </TabsTrigger>
-          <TabsTrigger value="satellite" className="text-xs">
-            🛰️ Satellite
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
-  )
-}
-  */

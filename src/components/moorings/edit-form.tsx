@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Badge } from '../ui/badge';
 
 const formSchema = z.object({
   name: z.string().min(1, { message: 'Mooring name is required.' }),
@@ -176,6 +177,13 @@ export function EditMooringForm({ mooring }: EditMooringFormProps) {
             </FormItem>
           )}
         />
+        <div>
+          <h3 className="mb-2 font-semibold">Coordinates</h3>
+          <div className="flex gap-2">
+            <Badge variant="secondary">{mooring.latitude!.toFixed(6)}</Badge>
+            <Badge variant="secondary">{mooring.longitude!.toFixed(6)}</Badge>
+          </div>
+        </div>
 
         {form.formState.errors.root?.serverError && (
           <p className="text-destructive text-sm">{form.formState.errors.root.serverError.message}</p>

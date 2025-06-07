@@ -19,8 +19,8 @@ export default function RootLayout({
         <Header />
         <main className="container mx-auto flex max-w-6xl flex-grow flex-col p-4">{children}</main>
         <Toaster />
-        <footer className="mt-auto border-t py-6 md:py-8">
-          <div className="text-muted-foreground text-center text-sm">
+        <footer className="mt-auto border-t py-2 md:py-4">
+          <div className="text-muted-foreground text-center text-xs">
             © {new Date().getFullYear()} Beam Bermuda Ltd. All rights reserved.
           </div>
         </footer>

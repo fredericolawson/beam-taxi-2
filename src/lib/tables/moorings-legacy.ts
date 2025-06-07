@@ -286,9 +286,7 @@ export async function deleteMooring(
     return { message: 'Database Error: Failed to Delete Mooring.' };
   }
 
-  // Revalidate paths after deletion
   revalidatePath('/');
-  revalidatePath('/account/moorings');
-  // No need to revalidate the detail/edit page as it won't exist
-  redirect('/account/moorings'); // Redirect to the user's mooring list
+  revalidatePath('/account');
+  redirect('/');
 }

@@ -52,7 +52,7 @@ export default async function EditMooringPage({ params }: EditMooringPageProps) 
         <EditMooringForm mooring={mooring} />
       </div>
       <div className="md:w-1/2">
-        <Master />
+        <Master mooring={mooring} />
       </div>
     </div>
   );
