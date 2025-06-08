@@ -30,6 +30,12 @@ export default async function Header() {
         </Link>
       </div>
       <div className="flex flex-1 items-center justify-end space-x-2">
+        <Button asChild variant="secondary" size="sm">
+          <Link href="/moorings/request">Request a Mooring</Link>
+        </Button>
+        <Button asChild variant="secondary" size="sm">
+          <Link href="/moorings/new">List a Mooring</Link>
+        </Button>
         <UserMenu user={user} />
       </div>
     </header>
@@ -47,9 +53,6 @@ function UserMenu({ user }: { user: SupabaseUser | null }) {
   const userInitial = user.email?.charAt(0).toUpperCase() ?? '?';
   return (
     <div className="flex flex-col items-center items-end gap-2 md:flex-row">
-      <Button asChild variant="secondary" size="sm">
-        <Link href="/moorings/new">List Your Mooring</Link>
-      </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="cursor-pointer">
           <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
