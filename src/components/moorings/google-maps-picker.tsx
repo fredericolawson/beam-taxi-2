@@ -50,7 +50,7 @@ const MooringCard: React.FC<MooringCardProps> = ({ location, onSave }) => (
 
     {onSave && (
       <CardFooter>
-        <Button onClick={onSave}>Save</Button>
+        <Button onClick={onSave}>Save Location</Button>
       </CardFooter>
     )}
   </Card>
