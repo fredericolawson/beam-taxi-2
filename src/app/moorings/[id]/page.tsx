@@ -47,8 +47,8 @@ export default async function MooringDetailPage({ params }: MooringDetailPagePro
             <div>
               <h3 className="mb-2 font-semibold">Coordinates</h3>
               <div className="flex gap-2">
-                <Badge variant="secondary">{mooring.latitude!.toFixed(6)}</Badge>
-                <Badge variant="secondary">{mooring.longitude!.toFixed(6)}</Badge>
+                <Badge variant="secondary">{mooring?.latitude?.toFixed(6)}</Badge>
+                <Badge variant="secondary">{mooring?.longitude?.toFixed(6)}</Badge>
               </div>
             </div>
           </CardContent>
