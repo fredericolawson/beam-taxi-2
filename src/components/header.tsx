@@ -29,14 +29,14 @@ export default async function Header() {
           <span className="text-muted-foreground text-sm">The home of Bermuda Moorings</span>
         </Link>
       </div>
-      <div className="flex flex-1 items-center justify-end space-x-2">
+      <div className="items-top flex flex-1 flex-col justify-end gap-2 md:flex-row">
+        <UserMenu user={user} />
         <Button asChild variant="secondary" size="sm">
           <Link href="/moorings/request">Request a Mooring</Link>
         </Button>
         <Button asChild variant="secondary" size="sm">
           <Link href="/moorings/new">List a Mooring</Link>
         </Button>
-        <UserMenu user={user} />
       </div>
     </header>
   );
