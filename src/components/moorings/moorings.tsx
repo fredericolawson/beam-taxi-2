@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Trash2Icon } from 'lucide-react';
 
 export default function Moorings({ moorings }: { moorings: Mooring[] }) {
   return (
@@ -18,33 +19,7 @@ export default function Moorings({ moorings }: { moorings: Mooring[] }) {
         {moorings.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {moorings.map((mooring) => (
-              <Card key={mooring.id} className="flex h-full flex-col">
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-2">
-                    <CardTitle>{mooring.name}</CardTitle>
-                    <Badge variant={mooring.is_available ? 'default' : 'secondary'} className="whitespace-nowrap">
-                      {mooring.is_available ? 'Available' : 'Unavailable'}
-                    </Badge>
-                  </div>
-                  <CardDescription>{mooring.location_description}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  {mooring.price_per_month ? (
-                    <p className="text-lg font-semibold">${mooring.price_per_month}/month</p>
-                  ) : (
-                    <p className="text-sm text-gray-500">Price not listed</p>
-                  )}
-                  <p className="text-sm text-gray-600 capitalize">Term: {mooring.commitment_term || 'Not specified'}</p>
-                </CardContent>
-                <CardFooter className="flex justify-end space-x-2">
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href={`/moorings/${mooring.id}`}>View</Link>
-                  </Button>
-                  <Button variant="secondary" size="sm" asChild>
-                    <Link href={`/moorings/${mooring.id}/edit`}>Edit</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
+              <MooringCard key={mooring.id} mooring={mooring} />
             ))}
           </div>
         ) : (
@@ -64,5 +39,37 @@ export default function Moorings({ moorings }: { moorings: Mooring[] }) {
         </Button>
       </div>
     </div>
+  );
+}
+
+function MooringCard({ mooring }: { mooring: Mooring }) {
+  return (
+    <Card key={mooring.id} className="flex h-full flex-col">
+      <CardHeader>
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle>{mooring.name}</CardTitle>
+          <Badge variant={mooring.is_available ? 'default' : 'secondary'} className="whitespace-nowrap">
+            {mooring.is_available ? 'Available' : 'Unavailable'}
+          </Badge>
+        </div>
+        <CardDescription>{mooring.location_description}</CardDescription>
+      </CardHeader>
+      <CardContent className="flex-grow">
+        {mooring.price_per_month ? (
+          <p className="text-lg font-semibold">${mooring.price_per_month}/month</p>
+        ) : (
+          <p className="text-sm text-gray-500">Price not listed</p>
+        )}
+        <p className="text-sm text-gray-600 capitalize">Term: {mooring.commitment_term || 'Not specified'}</p>
+      </CardContent>
+      <CardFooter className="flex justify-end gap-2">
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/moorings/${mooring.id}/edit`}>Edit</Link>
+        </Button>
+        <Button variant="secondary" size="sm" asChild>
+          <Link href={`/moorings/${mooring.id}`}>View</Link>
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

@@ -34,41 +34,42 @@ export function UserInfo({ user }: { user: User | null }) {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div>
-            <h3 className="mb-4 text-sm font-medium">Account Information</h3>
-            <div className="flex flex-col gap-4">
-              <div className="space-y-1">
-                <p className="text-muted-foreground text-sm">Email</p>
-                <p className="text-sm font-medium">{user.email}</p>
-              </div>
+          <div className="flex flex-col gap-4">
+            <div className="space-y-1">
+              <p className="text-muted-foreground text-sm">Email</p>
+              <p className="text-sm font-medium">{user.email}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-muted-foreground text-sm">Phone</p>
+              <p className="text-sm font-medium">{user.user_metadata.phone}</p>
+            </div>
 
-              <div className="space-y-1">
-                <p className="text-muted-foreground text-sm">Created At</p>
-                <p className="text-sm font-medium">
-                  {user.created_at
-                    ? new Date(user.created_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })
-                    : 'N/A'}
-                </p>
-              </div>
+            <div className="space-y-1">
+              <p className="text-muted-foreground text-sm">Created At</p>
+              <p className="text-sm font-medium">
+                {user.created_at
+                  ? new Date(user.created_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })
+                  : 'N/A'}
+              </p>
+            </div>
 
-              <div className="space-y-1">
-                <p className="text-muted-foreground text-sm">Last Sign In</p>
-                <p className="text-sm font-medium">
-                  {user.last_sign_in_at
-                    ? new Date(user.last_sign_in_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })
-                    : 'N/A'}
-                </p>
-              </div>
+            <div className="space-y-1">
+              <p className="text-muted-foreground text-sm">Last Sign In</p>
+              <p className="text-sm font-medium">
+                {user.last_sign_in_at
+                  ? new Date(user.last_sign_in_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })
+                  : 'N/A'}
+              </p>
             </div>
           </div>
         </div>

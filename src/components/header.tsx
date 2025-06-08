@@ -14,6 +14,7 @@ import {
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import { LogoutButton } from './logout-button';
 import { UserIcon } from 'lucide-react';
+import CreateMooring from './moorings/create-mooring';
 
 export default async function Header() {
   const supabase = await createClient();
@@ -33,9 +34,7 @@ export default async function Header() {
         <Button asChild variant="secondary" size="sm">
           <Link href="/moorings/request">Request a Mooring</Link>
         </Button>
-        <Button asChild variant="secondary" size="sm">
-          <Link href="/moorings/new">List a Mooring</Link>
-        </Button>
+        <CreateMooring />
         <UserMenu user={user} />
       </div>
     </header>
@@ -43,39 +42,16 @@ export default async function Header() {
 }
 
 function UserMenu({ user }: { user: SupabaseUser | null }) {
-  if (!user)
-    return (
-      <Button asChild size="sm">
-        <Link href="/auth/login">Login</Link>
-      </Button>
-    );
+  if (!user) return null;
 
   const userInitial = user.email?.charAt(0).toUpperCase() ?? '?';
   return (
     <div className="flex flex-col items-center items-end gap-2 md:flex-row">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild className="cursor-pointer">
-          <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
-            <Avatar className="h-8 w-8">
-              <AvatarFallback>{userInitial}</AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href="/account">
-              <UserIcon className="mr-2 h-4 w-4" />
-              Account
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-red-600">
-            <LogoutButton />
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <Link href="/account">
+        <Avatar className="h-8 w-8">
+          <AvatarFallback>{userInitial}</AvatarFallback>
+        </Avatar>
+      </Link>
     </div>
   );
 }

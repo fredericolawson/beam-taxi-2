@@ -1,6 +1,6 @@
 import { getMooringById } from '@/lib/tables/moorings-legacy';
 import { notFound, redirect } from 'next/navigation';
-import { EditMooringForm } from '@/components/moorings/edit-form';
+import { EditMooringForm } from '@/components/moorings/edit-mooring';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Master } from '@/components/moorings/google-maps-picker';
@@ -21,9 +21,6 @@ export default async function EditMooringPage({ params }: { params: Promise<{ id
       <div className="card-container flex h-full flex-grow flex-col p-6 md:w-1/2">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Edit Mooring</h1>
-          <Button variant="outline" asChild>
-            <Link href={`/moorings/${id}`}>Cancel</Link>
-          </Button>
         </div>
         <EditMooringForm mooring={mooring} />
       </div>
