@@ -30,13 +30,13 @@ export default async function Header() {
         </Link>
       </div>
       <div className="items-top flex flex-1 flex-col justify-end gap-2 md:flex-row">
-        <UserMenu user={user} />
         <Button asChild variant="secondary" size="sm">
           <Link href="/moorings/request">Request a Mooring</Link>
         </Button>
         <Button asChild variant="secondary" size="sm">
           <Link href="/moorings/new">List a Mooring</Link>
         </Button>
+        <UserMenu user={user} />
       </div>
     </header>
   );
