@@ -153,10 +153,10 @@ export function Master({ mooring }: { mooring: Mooring }) {
   };
 
   return (
-    <main className="card-container mx-auto max-w-4xl">
+    <div className="max-w-4xl">
       <header className="mb-6 text-center">
         <h1 className="heading-2 mb-2">Select Location</h1>
-        <p className="">Click on the water to place your mooring pin</p>
+        <p className="">Click on the map to place your mooring pin</p>
       </header>
 
       <div className="border-border rounded-lg border object-cover">
@@ -168,6 +168,6 @@ export function Master({ mooring }: { mooring: Mooring }) {
           <MooringCard location={location} onSave={handleSave} />
         </section>
       )}
-    </main>
+    </div>
   );
 }

@@ -1,45 +1,21 @@
 import { getMooringById } from '@/lib/tables/moorings-legacy';
-import { createClient } from '@/lib/supabase/server';
 import { notFound, redirect } from 'next/navigation';
-import { EditMooringForm } from '@/components/moorings/edit-form'; // Import the edit form component
+import { EditMooringForm } from '@/components/moorings/edit-form';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Master } from '@/components/moorings/google-maps-picker';
+import { getUserServer } from '@/lib/utils/get-user-server';
 
-// Define props, including the dynamic route parameter `id`
-type EditMooringPageProps = {
-  params: Promise<{
-    id: string;
-  }>;
-};
-
-export default async function EditMooringPage({ params }: EditMooringPageProps) {
+export default async function EditMooringPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  // Fetch user and mooring data concurrently
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUserServer();
   const mooring = await getMooringById(id);
 
-  // Check if mooring exists
-  if (!mooring) {
-    notFound();
-  }
+  if (!mooring) notFound();
+  if (!user) redirect(`/auth/login?message=You must be logged in to edit this mooring.&next=/moorings/${id}/edit`);
+  if (mooring.owner_id !== user.id) redirect(`/moorings/${id}?error=You are not authorized to edit this mooring.`);
 
-  // Check if user is logged in
-  if (!user) {
-    redirect(`/auth/login?message=You must be logged in to edit this mooring.&next=/moorings/${id}/edit`);
-  }
-
-  // Check if the logged-in user is the owner
-  if (mooring.owner_id !== user.id) {
-    // Redirect them away, perhaps back to the detail page with a message
-    redirect(`/moorings/${id}?error=You are not authorized to edit this mooring.`);
-  }
-
-  // If all checks pass, render the edit form
   return (
     <div className="my-auto flex flex-col gap-6 md:flex-row">
       <div className="card-container flex h-full flex-grow flex-col p-6 md:w-1/2">

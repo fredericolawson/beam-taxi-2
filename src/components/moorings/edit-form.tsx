@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Badge } from '../ui/badge';
+import { Separator } from '../ui/separator';
 
 const formSchema = z.object({
   name: z.string().min(1, { message: 'Mooring name is required.' }),
@@ -98,7 +99,7 @@ export function EditMooringForm({ mooring }: EditMooringFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex h-full flex-grow flex-col gap-6">
         <FormField
           control={form.control}
           name="name"
@@ -184,6 +185,7 @@ export function EditMooringForm({ mooring }: EditMooringFormProps) {
             <Badge variant="secondary">{mooring.longitude!.toFixed(6)}</Badge>
           </div>
         </div>
+        <Separator className="mt-auto" />
 
         <div className="mt-auto flex justify-end gap-4">
           <Button variant="outline" type="button" asChild>
