@@ -95,6 +95,6 @@
     @apply text-xl font-bold tracking-tight md:text-2xl;
   }
   .card-container {
-    @apply bg-card h-full min-h-[250px] rounded-lg border shadow-sm;
+    @apply bg-card rounded-lg border p-6 shadow-sm;
   }
 }

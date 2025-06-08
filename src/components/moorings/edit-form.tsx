@@ -98,7 +98,7 @@ export function EditMooringForm({ mooring }: EditMooringFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
         <FormField
           control={form.control}
           name="name"
@@ -185,11 +185,7 @@ export function EditMooringForm({ mooring }: EditMooringFormProps) {
           </div>
         </div>
 
-        {form.formState.errors.root?.serverError && (
-          <p className="text-destructive text-sm">{form.formState.errors.root.serverError.message}</p>
-        )}
-
-        <div className="flex justify-end space-x-4">
+        <div className="mt-auto flex justify-end gap-4">
           <Button variant="outline" type="button" asChild>
             <Link href={`/moorings/${mooring.id}`}>Cancel</Link>
           </Button>

@@ -153,7 +153,7 @@ export function Master({ mooring }: { mooring: Mooring }) {
   };
 
   return (
-    <main className="card-container mx-auto max-w-4xl p-4">
+    <main className="card-container mx-auto max-w-4xl">
       <header className="mb-6 text-center">
         <h1 className="heading-2 mb-2">Select Location</h1>
         <p className="">Click on the water to place your mooring pin</p>

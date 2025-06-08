@@ -41,7 +41,7 @@ export default async function EditMooringPage({ params }: EditMooringPageProps) 
 
   // If all checks pass, render the edit form
   return (
-    <div className="flex flex-col gap-6 md:flex-row">
+    <div className="my-auto flex flex-col gap-6 md:flex-row">
       <div className="card-container flex h-full flex-grow flex-col p-6 md:w-1/2">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Edit Mooring</h1>

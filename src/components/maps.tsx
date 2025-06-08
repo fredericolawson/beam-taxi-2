@@ -2,6 +2,7 @@
 
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 const mapContainerStyle = {
   width: '100%',
@@ -51,18 +52,26 @@ export function LocationDisplay({ latitude, longitude }: { latitude: number; lon
 }
 
 export function MiniMap({ longitude, latitude }: { longitude: number; latitude: number }) {
+  const [mapLoaded, setMapLoaded] = useState(false);
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
   });
 
   if (!isLoaded) return <Loader2 className="h-4 w-4 animate-spin" />;
+
   return (
-    <div className="h-full w-full overflow-hidden rounded-r-md">
+    <div className="relative h-full w-full overflow-hidden rounded-r-md">
+      {!mapLoaded && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gray-100">
+          <Loader2 className="h-4 w-4 animate-spin" />
+        </div>
+      )}
       <GoogleMap
         mapContainerStyle={miniMapContainerStyle}
         center={{ lat: latitude, lng: longitude }}
         zoom={12}
+        onLoad={() => setMapLoaded(true)}
         options={{
           disableDefaultUI: true,
           zoomControl: false,

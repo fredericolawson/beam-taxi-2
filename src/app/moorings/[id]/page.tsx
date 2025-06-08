@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ExternalLink } from 'lucide-react';
 import { LocationDisplay } from '@/components/maps';
 import { getUserServer } from '@/lib/utils/get-user-server';
 import type { CompleteMooring } from '@/types/mooring';
@@ -44,21 +45,15 @@ export default async function MooringDetailPage({ params }: MooringDetailPagePro
                 <li className="capitalize">Commitment: {mooring.commitment_term}</li>
               </ul>
             </div>
-            <div>
-              <h3 className="mb-2 font-semibold">Coordinates</h3>
-              <div className="flex gap-2">
-                <Badge variant="secondary">{mooring?.latitude?.toFixed(6)}</Badge>
-                <Badge variant="secondary">{mooring?.longitude?.toFixed(6)}</Badge>
-              </div>
-            </div>
           </CardContent>
           <CardFooter className="mt-auto w-full">
             <OwnerActions mooring={mooring} user={user} />
           </CardFooter>
         </Card>
 
-        <div className="md:w-1/2">
+        <div className="flex flex-col gap-4 md:w-1/2">
           <LocationDisplay latitude={mooring.latitude!} longitude={mooring.longitude!} />
+          <Coordinates lng={mooring.longitude} lat={mooring.latitude} />
         </div>
       </div>
 
@@ -90,6 +85,27 @@ async function OwnerActions({ mooring, user }: { mooring: CompleteMooring; user:
           Delete
         </Button>
       </form>
+    </div>
+  );
+}
+
+function Coordinates({ lng, lat }: { lng: number | null; lat: number | null }) {
+  if (!lng || !lat) return null;
+  return (
+    <div className="card-container flex justify-between">
+      <div>
+        <h3 className="mb-2 font-semibold">Coordinates</h3>
+        <div className="flex gap-2">
+          <Badge variant="secondary">{lat.toFixed(6)}</Badge>
+          <Badge variant="secondary">{lng.toFixed(6)}</Badge>
+        </div>
+      </div>
+      <Button asChild variant="outline">
+        <Link href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`} target="_blank">
+          <ExternalLink className="h-4 w-4" />
+          View on Google Maps
+        </Link>
+      </Button>
     </div>
   );
 }
