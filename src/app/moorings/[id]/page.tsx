@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { ExternalLink } from 'lucide-react';
 import { LocationDisplay } from '@/components/maps';
 import { getUserServer } from '@/lib/utils/get-user-server';
-import type { CompleteMooring } from '@/types/mooring';
+import type { CompleteMooring, Mooring } from '@/types/mooring';
 import { User } from '@supabase/supabase-js';
 
 type MooringDetailPageProps = {
@@ -66,7 +66,7 @@ export default async function MooringDetailPage({ params }: MooringDetailPagePro
   );
 }
 
-async function OwnerActions({ mooring, user }: { mooring: CompleteMooring; user: User | null }) {
+async function OwnerActions({ mooring, user }: { mooring: Mooring; user: User | null }) {
   const isOwner = user?.id === mooring.owner_id;
   if (!isOwner) return null;
 
