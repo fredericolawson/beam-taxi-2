@@ -66,7 +66,28 @@ export default async function MooringDetailPage({ params }: MooringDetailPagePro
   );
 }
 
-async function OwnerActions({ mooring, user }: { mooring: Mooring; user: User | null }) {
+function Coordinates({ lng, lat }: { lng: number | null; lat: number | null }) {
+  if (!lng || !lat) return null;
+  return (
+    <div className="card-container flex flex-col justify-between gap-4 md:flex-row">
+      <div>
+        <h3 className="mb-2 font-semibold">Coordinates</h3>
+        <div className="flex gap-2">
+          <Badge variant="secondary">{lat.toFixed(6)}</Badge>
+          <Badge variant="secondary">{lng.toFixed(6)}</Badge>
+        </div>
+      </div>
+      <Button asChild variant="outline">
+        <Link href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`} target="_blank">
+          <ExternalLink className="h-4 w-4" />
+          View on Google Maps
+        </Link>
+      </Button>
+    </div>
+  );
+}
+
+function OwnerActions({ mooring, user }: { mooring: Mooring; user: User | null }) {
   const isOwner = user?.id === mooring.owner_id;
   if (!isOwner) return null;
 
@@ -85,27 +106,6 @@ async function OwnerActions({ mooring, user }: { mooring: Mooring; user: User | 
           Delete
         </Button>
       </form>
-    </div>
-  );
-}
-
-function Coordinates({ lng, lat }: { lng: number | null; lat: number | null }) {
-  if (!lng || !lat) return null;
-  return (
-    <div className="card-container flex justify-between">
-      <div>
-        <h3 className="mb-2 font-semibold">Coordinates</h3>
-        <div className="flex gap-2">
-          <Badge variant="secondary">{lat.toFixed(6)}</Badge>
-          <Badge variant="secondary">{lng.toFixed(6)}</Badge>
-        </div>
-      </div>
-      <Button asChild variant="outline">
-        <Link href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`} target="_blank">
-          <ExternalLink className="h-4 w-4" />
-          View on Google Maps
-        </Link>
-      </Button>
     </div>
   );
 }

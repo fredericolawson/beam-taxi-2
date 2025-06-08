@@ -1,6 +1,7 @@
 'use client';
 
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { baseMapOptions } from '@/lib/constants';
 
 import { Loader2 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
@@ -67,21 +68,11 @@ const MooringMap: React.FC<MooringMapProps> = ({ onMooringSelect, initialCenter 
 
   const getMapOptions = (): google.maps.MapOptions => {
     if (!isLoaded || !window.google) {
-      return {
-        mapTypeId: 'hybrid',
-        zoomControl: true,
-        streetViewControl: false,
-        mapTypeControl: true,
-        fullscreenControl: true,
-      };
+      return baseMapOptions;
     }
 
     return {
-      mapTypeId: 'hybrid',
-      zoomControl: true,
-      streetViewControl: false,
-      mapTypeControl: true,
-      fullscreenControl: true,
+      ...baseMapOptions,
       mapTypeControlOptions: {
         style: null,
         position: null,
@@ -159,7 +150,7 @@ export function Master({ mooring }: { mooring: Mooring }) {
         <p className="">Click on the map to place your mooring pin</p>
       </header>
 
-      <div className="border-border rounded-lg border object-cover">
+      <div className="border-border overflow-hidden rounded-md border object-cover">
         <MooringMap onMooringSelect={setLocation} />
       </div>
 

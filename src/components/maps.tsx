@@ -3,6 +3,7 @@
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import { baseMapOptions } from '@/lib/constants';
 
 const mapContainerStyle = {
   width: '100%',
@@ -27,13 +28,13 @@ export function LocationDisplay({ latitude, longitude }: { latitude: number; lon
   if (!isLoaded) return <div className="h-[400px] w-full animate-pulse rounded-md bg-gray-200" />;
 
   return (
-    <div className="flex w-full flex-grow rounded-md border">
+    <div className="flex w-full flex-grow overflow-hidden rounded-md border">
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={center}
         zoom={15}
         options={{
-          mapTypeId: 'satellite',
+          ...baseMapOptions,
           disableDefaultUI: false,
           zoomControl: false,
           streetViewControl: false,
@@ -73,6 +74,7 @@ export function MiniMap({ longitude, latitude }: { longitude: number; latitude: 
         zoom={12}
         onLoad={() => setMapLoaded(true)}
         options={{
+          ...baseMapOptions,
           disableDefaultUI: true,
           zoomControl: false,
           streetViewControl: false,
