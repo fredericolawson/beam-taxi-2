@@ -42,7 +42,7 @@ export function EditRequest({ request }: { request: Request }) {
       start_to: dateRange?.to,
       id: request.id,
       request_type: request.request_type ?? 'either',
-      boat_length: request.boat_length ?? 0,
+      boat_length: request.boat_length ?? '',
     },
   });
 
