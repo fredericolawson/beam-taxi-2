@@ -56,7 +56,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
     } catch (error: unknown) {
       form.setError('root.serverError', {
         type: 'server',
-        message: error instanceof Error ? error.message : 'An error occurred',
+        message: error instanceof Error ? error.message : 'An errors occurred',
       });
     }
   }
