@@ -22,7 +22,7 @@ export async function createMooring({ mooringName }: { mooringName: string }) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect('/auth/login');
+  if (!user) redirect('/auth/sign-up');
 
   const { data, error } = await supabase.from('moorings').insert({ name: mooringName, owner_id: user.id }).select().single();
 

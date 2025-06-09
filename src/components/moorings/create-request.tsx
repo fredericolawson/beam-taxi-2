@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createMooring } from '@/actions/moorings';
+import { createRequest } from '@/actions/requests';
 import {
   Dialog,
   DialogClose,
@@ -17,14 +17,14 @@ import { Label } from '@/components/ui/label';
 import { Button } from '../ui/button';
 
 export default function CreateMooring() {
-  const [mooringName, setMooringName] = useState('');
+  const [requestName, setRequestName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
 
   const handleSubmit = async () => {
-    if (!mooringName.trim()) return;
+    if (!requestName.trim()) return;
     setIsSubmitting(true);
-    await createMooring({ mooringName: mooringName.trim() });
+    await createRequest({ requestName: requestName.trim() });
     setIsSubmitting(false);
     setOpen(false);
   };
@@ -32,24 +32,24 @@ export default function CreateMooring() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>List a Mooring</Button>
+        <Button>Request a Mooring</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>List a New Mooring</DialogTitle>
+          <DialogTitle>Request a Mooring</DialogTitle>
           <DialogDescription>Start by giving your mooring a name. You&apos;ll enter more info on the next step.</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
-          <Label htmlFor="name">Mooring Name</Label>
+          <Label htmlFor="name">Name</Label>
           <Input
             id="name"
             placeholder="e.g. Ely's Harbour Swing Mooring"
-            value={mooringName}
-            onChange={(e) => setMooringName(e.target.value)}
+            value={requestName}
+            onChange={(e) => setRequestName(e.target.value)}
           />
         </div>
         <DialogFooter className="justify-end">
-          <Button type="button" onClick={handleSubmit} disabled={!mooringName.trim() || isSubmitting}>
+          <Button type="button" onClick={handleSubmit} disabled={!requestName.trim() || isSubmitting}>
             {isSubmitting ? 'Creating...' : 'Create'}
           </Button>
           <DialogClose asChild>

@@ -1,20 +1,11 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
-import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 import { User as SupabaseUser } from '@supabase/supabase-js';
-import { LogoutButton } from './logout-button';
-import { UserIcon } from 'lucide-react';
+
 import CreateMooring from './moorings/create-mooring';
+import CreateRequest from './moorings/create-request';
 
 export default async function Header() {
   const supabase = await createClient();
@@ -31,9 +22,7 @@ export default async function Header() {
         </Link>
       </div>
       <div className="items-top flex flex-1 flex-col justify-end gap-2 md:flex-row">
-        <Button asChild variant="secondary" size="sm">
-          <Link href="/moorings/request">Request a Mooring</Link>
-        </Button>
+        <CreateRequest />
         <CreateMooring />
         <UserMenu user={user} />
       </div>
