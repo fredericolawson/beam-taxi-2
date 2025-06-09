@@ -38,13 +38,15 @@ export default function CreateRequest() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Request a Mooring</DialogTitle>
-          <DialogDescription>Start by giving your mooring a name. You&apos;ll enter more info on the next step.</DialogDescription>
+          <DialogDescription>
+            Give a brief description of what you&apos;re looking for. You&apos;ll enter more info on the next step.
+          </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
           <Label htmlFor="description">Description</Label>
           <Input
             id="description"
-            placeholder="e.g. Ely's Harbour Swing Mooring"
+            placeholder="e.g. Walk-on mooring in Hamilton Sound"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
