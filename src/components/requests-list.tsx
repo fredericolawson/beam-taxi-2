@@ -16,14 +16,6 @@ export function RequestsList({ requests }: { requests: Request[] }) {
 }
 
 function RequestCard({ request }: { request: Request }) {
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    }).format(new Date(date));
-  };
-
   return (
     <Link href={`/requests/${request.id}`} key={request.id} className="block h-full">
       <Card className="h-full min-h-[250px] transition-shadow duration-200 hover:shadow-lg">
@@ -31,8 +23,9 @@ function RequestCard({ request }: { request: Request }) {
           <RequestType requestType={request.request_type} />
         </CardHeader>
 
-        <CardContent className="space-y-3">
+        <CardContent className="flex flex-col gap-4">
           <RequestDescription description={request.description} />
+          <ExpiresOn expiresOn={request.expires_on} />
         </CardContent>
       </Card>
     </Link>
@@ -53,6 +46,15 @@ function RequestDescription({ description }: { description: string }) {
     <div className="flex flex-col gap-2">
       <span className="text-muted-foreground text-xs">Description</span>
       <span className="text-sm">{description}</span>
+    </div>
+  );
+}
+
+function ExpiresOn({ expiresOn }: { expiresOn: Date }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-muted-foreground text-xs">Expires On</span>
+      <span className="text-sm">{expiresOn.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
     </div>
   );
 }

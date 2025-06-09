@@ -3,7 +3,7 @@
 import 'server-only';
 
 import { createClient } from '@/lib/supabase/server';
-import type { Request } from '@/types/request';
+import type { RawRequest, Request } from '@/types/request';
 
 export async function getRequestById(id: string): Promise<Request | null> {
   const supabase = await createClient();
@@ -12,7 +12,7 @@ export async function getRequestById(id: string): Promise<Request | null> {
     console.error('Error fetching mooring by id:', error);
     return null;
   }
-  return data as Request;
+  return processRequest(data) as Request;
 }
 
 export async function getOpenRequests(): Promise<Request[]> {
@@ -26,7 +26,7 @@ export async function getOpenRequests(): Promise<Request[]> {
     console.error('Error fetching open requests:', error);
     return [];
   }
-  return data as Request[];
+  return processRequests(data) as Request[];
 }
 
 export async function getRequestsByOwner(userId: string): Promise<Request[]> {
@@ -38,5 +38,17 @@ export async function getRequestsByOwner(userId: string): Promise<Request[]> {
     console.error(`Error fetching moorings for owner ${userId}:`, error);
     return [];
   }
-  return data as Request[];
+  return processRequests(data) as Request[];
+}
+
+function processRequest(request: RawRequest): Request {
+  return {
+    ...request,
+    start_date: new Date(request.start_date),
+    expires_on: new Date(request.expires_on),
+  };
+}
+
+function processRequests(requests: RawRequest[]): Request[] {
+  return requests.map(processRequest);
 }

@@ -66,7 +66,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Sign up</CardTitle>
-          <CardDescription>Create a new account</CardDescription>
+          <CardDescription>Create a free account on HeyBuoy</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
