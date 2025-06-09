@@ -7,4 +7,5 @@ export type Request = {
   start_from: Date;
   start_to: Date;
   request_type: 'walk-on' | 'swing' | 'either';
+  boat_length: number;
 };

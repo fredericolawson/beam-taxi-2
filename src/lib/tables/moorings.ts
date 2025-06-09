@@ -25,3 +25,15 @@ export async function getMooringById(id: string): Promise<Mooring | null> {
   }
   return data as Mooring;
 }
+
+export async function getMooringsByOwner(userId: string): Promise<Mooring[]> {
+  if (!userId) return [];
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('moorings').select('*').eq('owner_id', userId).order('created_at', { ascending: false });
+
+  if (error) {
+    console.error(`Error fetching moorings for owner ${userId}:`, error);
+    return [];
+  }
+  return data as Mooring[];
+}

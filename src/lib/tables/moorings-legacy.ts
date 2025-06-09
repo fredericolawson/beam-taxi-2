@@ -57,30 +57,6 @@ export async function getAllAvailableMoorings(): Promise<Mooring[]> {
   return data as Mooring[];
 }
 
-export async function getMooringById(id: string): Promise<Mooring | null> {
-  if (!id) return null;
-  const supabase = await createClient();
-  const { data, error } = await supabase.from('moorings').select('*').eq('id', id).maybeSingle();
-
-  if (error) {
-    console.error(`Error fetching mooring by id ${id}:`, error);
-    return null;
-  }
-  return data as Mooring | null;
-}
-
-export async function getMooringsByOwner(userId: string): Promise<Mooring[]> {
-  if (!userId) return [];
-  const supabase = await createClient();
-  const { data, error } = await supabase.from('moorings').select('*').eq('owner_id', userId).order('created_at', { ascending: false });
-
-  if (error) {
-    console.error(`Error fetching moorings for owner ${userId}:`, error);
-    return [];
-  }
-  return data as Mooring[];
-}
-
 // --- Helper to get current user ---
 
 async function getCurrentUser(): Promise<User | null> {

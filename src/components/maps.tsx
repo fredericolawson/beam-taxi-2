@@ -59,6 +59,7 @@ export function MiniMap({ longitude, latitude }: { longitude: number; latitude: 
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
   });
 
+  if (!longitude || !latitude) return <div className="h-full w-full bg-gray-100" />;
   if (!isLoaded) return <Loader2 className="h-4 w-4 animate-spin" />;
 
   return (
