@@ -32,7 +32,7 @@ export default function CreateRequest() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Request a Mooring</Button>
+        <Button variant="secondary">Request a Mooring</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

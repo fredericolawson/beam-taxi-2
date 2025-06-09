@@ -32,7 +32,7 @@ export default function CreateMooring() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>List a Mooring</Button>
+        <Button variant="secondary">List a Mooring</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
