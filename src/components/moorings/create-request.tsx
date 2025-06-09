@@ -17,14 +17,14 @@ import { Label } from '@/components/ui/label';
 import { Button } from '../ui/button';
 
 export default function CreateRequest() {
-  const [requestName, setRequestName] = useState('');
+  const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
 
   const handleSubmit = async () => {
-    if (!requestName.trim()) return;
+    if (!description.trim()) return;
     setIsSubmitting(true);
-    await createRequest({ requestName: requestName.trim() });
+    await createRequest({ description: description.trim() });
     setIsSubmitting(false);
     setOpen(false);
   };
@@ -41,16 +41,16 @@ export default function CreateRequest() {
           <DialogDescription>Start by giving your mooring a name. You&apos;ll enter more info on the next step.</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="description">Description</Label>
           <Input
-            id="name"
+            id="description"
             placeholder="e.g. Ely's Harbour Swing Mooring"
-            value={requestName}
-            onChange={(e) => setRequestName(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
         <DialogFooter className="justify-end">
-          <Button type="button" onClick={handleSubmit} disabled={!requestName.trim() || isSubmitting}>
+          <Button type="button" onClick={handleSubmit} disabled={!description.trim() || isSubmitting}>
             {isSubmitting ? 'Creating...' : 'Create'}
           </Button>
           <DialogClose asChild>
