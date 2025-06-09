@@ -15,6 +15,20 @@ export async function getRequestById(id: string): Promise<Request | null> {
   return data as Request;
 }
 
+export async function getOpenRequests(): Promise<Request[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('requests')
+    .select('*')
+    .gt('expires_on', new Date().toISOString())
+    .order('created_at', { ascending: false });
+  if (error) {
+    console.error('Error fetching open requests:', error);
+    return [];
+  }
+  return data as Request[];
+}
+
 export async function getRequestsByOwner(userId: string): Promise<Request[]> {
   if (!userId) return [];
   const supabase = await createClient();
