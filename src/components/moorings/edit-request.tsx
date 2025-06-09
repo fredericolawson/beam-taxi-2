@@ -22,6 +22,7 @@ const formSchema = z
     start_date: z.date(),
     expires_on: z.date(),
     request_type: z.enum(['walk-on', 'swing', 'either']),
+    hurricane_insured: z.enum(['yes', 'no', 'either']),
     boat_length: z.string(),
     price_from: z.coerce.number().min(1, 'Price must be positive'),
     price_to: z.coerce.number().min(1, 'Price must be positive'),
@@ -46,6 +47,7 @@ export function EditRequest({ request }: { request: Request }) {
       expires_on: expiresOn,
       id: request.id,
       request_type: request.request_type ?? 'either',
+      hurricane_insured: request.hurricane_insured ?? 'either',
       boat_length: request.boat_length ?? '',
       price_from: request.price_from ?? 250,
       price_to: request.price_to ?? 400,
@@ -76,8 +78,8 @@ export function EditRequest({ request }: { request: Request }) {
               </Button>
             </div>
           </div>
-          <div className="flex flex-col gap-8 md:flex-row">
-            <div className="flex flex-grow flex-col gap-8 md:w-1/2">
+          <div className="flex flex-col gap-4 md:flex-row">
+            <div className="flex flex-grow flex-col gap-4 md:w-1/2">
               <Card>
                 <CardHeader>
                   <CardTitle>Description</CardTitle>
@@ -112,7 +114,7 @@ export function EditRequest({ request }: { request: Request }) {
                     name="request_type"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Preferred Type of mooring</FormLabel>
+                        <FormLabel>Preferred Mooring Type</FormLabel>
                         <FormControl>
                           <Tabs value={field.value} onValueChange={field.onChange}>
                             <TabsList>
@@ -134,6 +136,25 @@ export function EditRequest({ request }: { request: Request }) {
                         <FormLabel>Boat Length (feet)</FormLabel>
                         <FormControl>
                           <Input placeholder="e.g. 44" type="number" required {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="hurricane_insured"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Hurricane Insured</FormLabel>
+                        <FormControl>
+                          <Tabs value={field.value} onValueChange={field.onChange}>
+                            <TabsList>
+                              <TabsTrigger value="yes">Yes</TabsTrigger>
+                              <TabsTrigger value="no">No</TabsTrigger>
+                              <TabsTrigger value="either">Either</TabsTrigger>
+                            </TabsList>
+                          </Tabs>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -176,7 +197,7 @@ export function EditRequest({ request }: { request: Request }) {
                 </CardContent>
               </Card>
             </div>
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-4">
               <Card>
                 <CardHeader>
                   <CardTitle>Preferred Mooring Start Date</CardTitle>
@@ -200,7 +221,7 @@ export function EditRequest({ request }: { request: Request }) {
               <Card>
                 <CardHeader>
                   <CardTitle>Listing Expiry Date</CardTitle>
-                  <CardDescription>The date this listing will expire.</CardDescription>
+                  <CardDescription>Select the date your listing should expire.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <FormField

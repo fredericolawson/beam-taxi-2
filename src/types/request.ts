@@ -6,6 +6,7 @@ export type RawRequest = {
   start_date: string;
   expires_on: string;
   request_type: 'walk-on' | 'swing' | 'either';
+  hurricane_insured: 'yes' | 'no' | 'either';
   boat_length: string;
   price_from: number;
   price_to: number;
@@ -19,6 +20,7 @@ export type Request = {
   start_date: Date;
   expires_on: Date;
   request_type: 'walk-on' | 'swing' | 'either';
+  hurricane_insured: 'yes' | 'no' | 'either';
   boat_length: string;
   price_from: number;
   price_to: number;
