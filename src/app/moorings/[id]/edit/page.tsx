@@ -1,8 +1,6 @@
-import { getMooringById } from '@/lib/tables/moorings-legacy';
+import { getMooringById } from '@/lib/tables/moorings';
 import { notFound, redirect } from 'next/navigation';
 import { EditMooringForm } from '@/components/moorings/edit-mooring';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { Master } from '@/components/moorings/google-maps-picker';
 import { getUserServer } from '@/lib/utils/get-user-server';
 
