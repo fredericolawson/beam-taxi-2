@@ -21,7 +21,7 @@ function MooringCard({ mooring }: { mooring: Mooring }) {
     <Link
       href={`/moorings/${mooring.id}`}
       key={mooring.id}
-      className="flex h-full min-h-[250px] flex-row rounded-lg border shadow-sm transition-shadow duration-200 hover:shadow-lg"
+      className="bg-card flex h-full min-h-[250px] flex-row rounded-lg border shadow-sm transition-shadow duration-200 hover:shadow-lg"
     >
       <div className="flex w-2/3 flex-col gap-6 py-6 text-sm">
         <CardHeader>

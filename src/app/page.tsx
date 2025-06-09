@@ -9,11 +9,15 @@ export default async function Home() {
   const requests = await getOpenRequests();
   return (
     <div className="flex flex-col gap-16 py-8 sm:py-12 md:py-16">
-      <h1 className="heading-1">Available Moorings</h1>
-      <MooringsList moorings={moorings} />
+      <div className="flex flex-col gap-6">
+        <h1 className="heading-1">Available Moorings</h1>
+        <MooringsList moorings={moorings} />
+      </div>
       <Separator />
-      <h2 className="heading-2">Open Requests</h2>
-      <RequestsList requests={requests} />
+      <div className="flex flex-col gap-6">
+        <h2 className="heading-2">Open Requests</h2>
+        <RequestsList requests={requests} />
+      </div>
     </div>
   );
 }

@@ -43,7 +43,6 @@ function RequestHeader({ request }: { request: Request }) {
         <div className="flex items-start justify-between">
           <div className="space-y-2">
             <CardTitle className="text-2xl">Mooring Request</CardTitle>
-            <p className="text-muted-foreground">Looking for a {request.request_type} mooring</p>
           </div>
           <RequestTypeBadge requestType={request.request_type} />
         </div>
@@ -141,15 +140,15 @@ function TimelineCard({ request }: { request: Request }) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-muted-foreground">Preferred Start:</span>
+          <span className="text-muted-foreground text-sm">Preferred Start</span>
           <span className="font-medium">{formatDate(request.start_date)}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-muted-foreground">Request Expires:</span>
+          <span className="text-muted-foreground text-sm">Request Expires</span>
           <span className="font-medium">{formatDate(request.expires_on)}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-muted-foreground">Posted:</span>
+          <span className="text-muted-foreground text-sm">Posted</span>
           <span className="font-medium">{formatDate(request.created_at)}</span>
         </div>
       </CardContent>
