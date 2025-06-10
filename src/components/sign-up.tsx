@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { notifyTelegram } from '@/actions/telegram';
 
 const formSchema = z
   .object({
@@ -50,11 +51,16 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
         password: values.password,
         options: {
           emailRedirectTo: `${window.location.origin}/account`,
+          data: {
+            first_name: values.firstName,
+            last_name: values.lastName,
+          },
         },
       });
 
       if (error) throw error;
       router.push('/auth/sign-up-success');
+      notifyTelegram({ message: 'New HeyBuoy sign up:' + values.firstName + ' ' + values.lastName });
     } catch (error: unknown) {
       form.setError('root.serverError', {
         type: 'server',

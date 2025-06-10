@@ -32,7 +32,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
       if (error) throw error;
       router.refresh();
       router.push('/');
-      notifyTelegram({ message: 'New user signed in:' + email });
+      notifyTelegram({ message: 'New HeyBuoy sign in:' + email });
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
