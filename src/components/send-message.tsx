@@ -17,7 +17,7 @@ export function SendMessage({ object, user }: { object: Mooring | Request; user:
   const [isSent, setIsSent] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const label = object.type === 'mooring' ? 'owner' : 'requester';
+  const label = object.type === 'mooring' ? 'owner' : 'requestor';
   if (!user) return <UnauthenticatedSendMessage label={label} />;
 
   const onSubmit = async () => {
