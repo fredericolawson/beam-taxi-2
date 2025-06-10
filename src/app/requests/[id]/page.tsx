@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { getRequestById } from '@/lib/tables/requests';
 import { getUserServer } from '@/lib/utils/get-user-server';
 import { Request } from '@/types/request';
@@ -17,19 +17,20 @@ export default async function RequestPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Main Content */}
-        <div className="space-y-6 lg:col-span-2">
-          <RequestHeader request={request} />
-          <RequestDescription request={request} />
-          <RequestDetails request={request} />
-        </div>
+      <div className="flex flex-col gap-8">
+        <RequestHeader request={request} />
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          <PricingCard request={request} />
-          <TimelineCard request={request} />
-          <OwnerActions request={request} user={user} />
+        <div className="flex flex-col gap-4 md:flex-row">
+          <div className="flex flex-grow flex-col gap-4 md:w-1/2">
+            <RequestDescription request={request} />
+            <RequestDetails request={request} />
+            <PricingCard request={request} />
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <TimelineCard request={request} />
+            <OwnerActions request={request} user={user} />
+          </div>
         </div>
       </div>
     </div>
@@ -38,16 +39,12 @@ export default async function RequestPage({ params }: { params: Promise<{ id: st
 
 function RequestHeader({ request }: { request: Request }) {
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="space-y-2">
-            <CardTitle className="text-2xl">Mooring Request</CardTitle>
-          </div>
-          <RequestTypeBadge requestType={request.request_type} />
-        </div>
-      </CardHeader>
-    </Card>
+    <div className="flex items-start justify-between">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold">Mooring Request</h1>
+      </div>
+      <RequestTypeBadge requestType={request.request_type} />
+    </div>
   );
 }
 
@@ -70,7 +67,8 @@ function RequestDescription({ request }: { request: Request }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Description</CardTitle>
+        <CardTitle>Description</CardTitle>
+        <CardDescription>What the requester is looking for in a mooring</CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-muted-foreground leading-relaxed">{request.description}</p>
@@ -80,16 +78,49 @@ function RequestDescription({ request }: { request: Request }) {
 }
 
 function RequestDetails({ request }: { request: Request }) {
+  const formatRequestType = (type: string) => {
+    switch (type) {
+      case 'walk-on':
+        return 'Walk on';
+      case 'swing':
+        return 'Swing';
+      case 'either':
+        return 'Either';
+      default:
+        return type;
+    }
+  };
+
+  const formatHurricaneInsured = (insured: string) => {
+    switch (insured) {
+      case 'yes':
+        return 'Yes';
+      case 'no':
+        return 'No';
+      case 'either':
+        return 'Either';
+      default:
+        return insured;
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Mooring Details</CardTitle>
+        <CardTitle>Mooring Details</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="flex items-center gap-2">
-          <Anchor className="text-muted-foreground h-4 w-4" />
-          <span className="font-medium">Boat Length:</span>
-          <span>{request.boat_length} feet</span>
+      <CardContent className="space-y-4">
+        <div className="flex items-center justify-between">
+          <span className="text-muted-foreground">Preferred Type:</span>
+          <span className="font-medium">{formatRequestType(request.request_type)}</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-muted-foreground">Boat Length:</span>
+          <span className="font-medium">{request.boat_length} feet</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-muted-foreground">Hurricane Insured:</span>
+          <span className="font-medium">{formatHurricaneInsured(request.hurricane_insured)}</span>
         </div>
       </CardContent>
     </Card>
@@ -100,21 +131,20 @@ function PricingCard({ request }: { request: Request }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
+        <CardTitle className="flex items-center gap-2">
           <DollarSign className="h-4 w-4" />
           Price Range
         </CardTitle>
+        <CardDescription>Monthly pricing range for the mooring</CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">From:</span>
-            <span className="font-medium">${request.price_from}/month</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">To:</span>
-            <span className="font-medium">${request.price_to}/month</span>
-          </div>
+      <CardContent className="space-y-2">
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">From:</span>
+          <span className="font-medium">${request.price_from}/month</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">To:</span>
+          <span className="font-medium">${request.price_to}/month</span>
         </div>
       </CardContent>
     </Card>
@@ -133,22 +163,23 @@ function TimelineCard({ request }: { request: Request }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
+        <CardTitle className="flex items-center gap-2">
           <Calendar className="h-4 w-4" />
           Timeline
         </CardTitle>
+        <CardDescription>Important dates for this request</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-muted-foreground text-sm">Preferred Start</span>
+          <span className="text-muted-foreground text-sm">Preferred Start:</span>
           <span className="font-medium">{formatDate(request.start_date)}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-muted-foreground text-sm">Request Expires</span>
+          <span className="text-muted-foreground text-sm">Request Expires:</span>
           <span className="font-medium">{formatDate(request.expires_on)}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-muted-foreground text-sm">Posted</span>
+          <span className="text-muted-foreground text-sm">Posted:</span>
           <span className="font-medium">{formatDate(request.created_at)}</span>
         </div>
       </CardContent>
@@ -163,10 +194,11 @@ function OwnerActions({ request, user }: { request: Request; user: User | null }
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
+        <CardTitle className="flex items-center gap-2">
           <Clock className="h-4 w-4" />
           Manage Request
         </CardTitle>
+        <CardDescription>Edit or delete your mooring request</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         <Button asChild variant="outline" className="w-full">

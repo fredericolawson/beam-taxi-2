@@ -52,7 +52,7 @@ function GenericMenu({ user }: { user: SupabaseUser | null }) {
 
   return (
     <div className="flex flex-col items-center items-end gap-2 md:flex-row">
-      <Button asChild>
+      <Button asChild variant="outline">
         <Link href="/auth/login">Login</Link>
       </Button>
       <Button asChild>

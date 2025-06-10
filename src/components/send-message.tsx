@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -13,9 +14,9 @@ import { CheckCircleIcon } from 'lucide-react';
 export function SendMessage({ mooring, user }: { mooring: Mooring; user: User | null }) {
   const [message, setMessage] = useState('');
   const [isSent, setIsSent] = useState(false);
-  if (!user) return null;
-
   const [isPending, startTransition] = useTransition();
+
+  if (!user) return <UnauthenticatedSendMessage />;
 
   const onSubmit = async () => {
     startTransition(async () => {
@@ -46,6 +47,25 @@ export function SendMessage({ mooring, user }: { mooring: Mooring; user: User | 
           {isPending ? 'Sending...' : 'Send'}
         </Button>
       </CardFooter>
+    </Card>
+  );
+}
+
+function UnauthenticatedSendMessage() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Contact the owner</CardTitle>
+        <CardDescription>Please login or sign up to send a message to the owner</CardDescription>
+      </CardHeader>
+      <CardContent className="flex gap-2">
+        <Button asChild variant="outline">
+          <Link href="/auth/login">Login</Link>
+        </Button>
+        <Button asChild>
+          <Link href="/auth/sign-up">Sign up</Link>
+        </Button>
+      </CardContent>
     </Card>
   );
 }

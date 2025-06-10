@@ -33,6 +33,8 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      firstName: '',
+      lastName: '',
       email: '',
       password: '',
       repeatPassword: '',
