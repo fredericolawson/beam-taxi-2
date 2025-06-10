@@ -139,7 +139,7 @@ function PricingCard({ request }: { request: Request }) {
         </CardTitle>
         <CardDescription>Monthly pricing range for the mooring</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-2 text-sm">
         <div className="flex justify-between">
           <span className="text-muted-foreground">From:</span>
           <span className="font-medium">${request.price_from}/month</span>
@@ -171,7 +171,7 @@ function TimelineCard({ request }: { request: Request }) {
         </CardTitle>
         <CardDescription>Important dates for this request</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 text-sm">
         <div className="flex items-center justify-between">
           <span className="text-muted-foreground text-sm">Preferred Start:</span>
           <span className="font-medium">{formatDate(request.start_date)}</span>

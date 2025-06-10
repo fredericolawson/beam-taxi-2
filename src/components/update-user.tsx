@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
+import { UploadIcon } from 'lucide-react';
 
 const formSchema = z.object({
   firstName: z.string().min(1, { message: 'First name is required.' }),
@@ -127,7 +128,8 @@ export function UpdateInfoForm({ user, className, ...props }: React.ComponentPro
               {form.formState.errors.root?.serverError && (
                 <p className="text-sm text-red-500">{form.formState.errors.root.serverError.message}</p>
               )}
-              <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+              <Button type="submit" className="w-fit" disabled={form.formState.isSubmitting}>
+                <UploadIcon className="mr-2 h-4 w-4" />
                 {form.formState.isSubmitting ? 'Saving...' : 'Update Info'}
               </Button>
             </form>
