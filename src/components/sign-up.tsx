@@ -79,7 +79,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
                     <FormItem>
                       <FormLabel>First Name</FormLabel>
                       <FormControl>
-                        <Input type="text" placeholder="John" {...field} />
+                        <Input type="text" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -92,7 +92,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
                     <FormItem>
                       <FormLabel>Last Name</FormLabel>
                       <FormControl>
-                        <Input type="text" placeholder="Doe" {...field} />
+                        <Input type="text" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -105,7 +105,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="m@example.com" {...field} />
+                        <Input type="email" placeholder="email@example.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

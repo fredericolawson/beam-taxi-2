@@ -4,8 +4,9 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 import { User as SupabaseUser } from '@supabase/supabase-js';
 
-import CreateMooring from './moorings/create-mooring';
-import CreateRequest from './moorings/create-request';
+import CreateMooring from './main/create-mooring';
+import CreateRequest from './main/create-request';
+import { Button } from './ui/button';
 
 export default async function Header() {
   const supabase = await createClient();
@@ -22,9 +23,8 @@ export default async function Header() {
         </Link>
       </div>
       <div className="items-top flex flex-1 flex-col justify-end gap-2 md:flex-row">
-        <CreateRequest />
-        <CreateMooring />
         <UserMenu user={user} />
+        <GenericMenu user={user} />
       </div>
     </header>
   );
@@ -36,11 +36,28 @@ function UserMenu({ user }: { user: SupabaseUser | null }) {
   const userInitial = user.email?.charAt(0).toUpperCase() ?? '?';
   return (
     <div className="flex flex-col items-center items-end gap-2 md:flex-row">
+      <CreateRequest />
+      <CreateMooring />
       <Link href="/account">
         <Avatar className="h-8 w-8">
           <AvatarFallback>{userInitial}</AvatarFallback>
         </Avatar>
       </Link>
+    </div>
+  );
+}
+
+function GenericMenu({ user }: { user: SupabaseUser | null }) {
+  if (user) return null;
+
+  return (
+    <div className="flex flex-col items-center items-end gap-2 md:flex-row">
+      <Button asChild>
+        <Link href="/auth/login">Login</Link>
+      </Button>
+      <Button asChild>
+        <Link href="/auth/sign-up">Sign up</Link>
+      </Button>
     </div>
   );
 }

@@ -10,6 +10,7 @@ import { Button } from '../ui/button';
 import { updateMooring } from '@/actions/moorings';
 import { Mooring } from '@/types/mooring';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export interface MooringLocation {
   lat: number;

@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import { getUserServer } from '@/lib/utils/get-user-server';
-import { EditRequest } from '@/components/moorings/edit-request';
+import { EditRequest } from '@/components/main/edit-request';
 import { getRequestById } from '@/lib/tables/requests';
 
 export default async function EditRequestPage({ params }: { params: Promise<{ id: string }> }) {
