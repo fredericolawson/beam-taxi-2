@@ -12,8 +12,8 @@ export type Mooring = {
   price_per_month: number | null;
   commitment_term: CommitmentTerm | null;
   is_available: boolean;
-  owner_id: string;
   description: string | null;
+  owner_id: string;
 };
 
 export type CompleteMooring = Omit<Mooring, 'latitude' | 'longitude' | 'price_per_month' | 'commitment_term' | 'description'> & {
@@ -23,6 +23,13 @@ export type CompleteMooring = Omit<Mooring, 'latitude' | 'longitude' | 'price_pe
   commitment_term: CommitmentTerm;
   description: string;
   is_available: true; // Published moorings should be available
+};
+
+export type MooringWithOwner = Mooring & {
+  owner: {
+    id: string;
+    email: string;
+  };
 };
 
 // Utility types for working with moorings

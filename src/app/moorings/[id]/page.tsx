@@ -10,6 +10,7 @@ import { LocationDisplay } from '@/components/maps';
 import { getUserServer } from '@/lib/utils/get-user-server';
 import type { CompleteMooring, Mooring } from '@/types/mooring';
 import { User } from '@supabase/supabase-js';
+import { SendMessage } from '@/components/send-message';
 
 type MooringDetailPageProps = {
   params: Promise<{
@@ -26,30 +27,35 @@ export default async function MooringDetailPage({ params }: MooringDetailPagePro
   return (
     <div className="my-auto flex flex-col items-center justify-center">
       <div className="flex min-h-[600px] w-full flex-grow flex-col gap-4 md:flex-row">
-        <Card className="w-full md:w-1/2">
-          <CardHeader>
-            <div className="flex flex-col justify-between gap-2 md:flex-row">
-              <CardTitle className="text-3xl">{mooring.name}</CardTitle>
-              <Badge variant={mooring.is_available ? 'default' : 'destructive'}>{mooring.is_available ? 'Available' : 'Unavailable'}</Badge>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div>
-              <h3 className="font-semibold">Description</h3>
-              <p className="">{mooring.description}</p>
-            </div>
-            <div>
-              <h3 className="font-semibold">Details</h3>
-              <ul className="list-disc pl-5 text-gray-700">
-                <li>Price: ${mooring.price_per_month}/month</li>
-                <li className="capitalize">Commitment: {mooring.commitment_term}</li>
-              </ul>
-            </div>
-          </CardContent>
-          <CardFooter className="mt-auto w-full">
-            <OwnerActions mooring={mooring} user={user} />
-          </CardFooter>
-        </Card>
+        <div className="flex flex-grow flex-col gap-4 md:w-1/2">
+          <Card>
+            <CardHeader>
+              <div className="flex flex-col justify-between gap-2 md:flex-row">
+                <CardTitle className="text-3xl">{mooring.name}</CardTitle>
+                <Badge variant={mooring.is_available ? 'default' : 'destructive'}>
+                  {mooring.is_available ? 'Available' : 'Unavailable'}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <h3 className="font-semibold">Description</h3>
+                <p className="">{mooring.description}</p>
+              </div>
+              <div>
+                <h3 className="font-semibold">Details</h3>
+                <ul className="list-disc pl-5 text-gray-700">
+                  <li>Price: ${mooring.price_per_month}/month</li>
+                  <li className="capitalize">Commitment: {mooring.commitment_term}</li>
+                </ul>
+              </div>
+            </CardContent>
+            <CardFooter className="mt-auto w-full">
+              <OwnerActions mooring={mooring} user={user} />
+            </CardFooter>
+          </Card>
+          <SendMessage mooring={mooring} user={user} />
+        </div>
 
         <div className="flex flex-col gap-4 md:w-1/2">
           <LocationDisplay latitude={mooring.latitude!} longitude={mooring.longitude!} />
