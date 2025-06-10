@@ -2,12 +2,13 @@ import { User as SupabaseUser } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
-import { HeaderNav } from '@/components/header-nav';
 import CreateMooring from './main/create-mooring';
 import CreateRequest from './main/create-request';
 import { Button } from './ui/button';
+import { getUserServer } from '@/lib/utils/get-user-server';
 
-export default async function Header() {
+export async function Header() {
+  const user = await getUserServer();
   return (
     <header className="flex items-center justify-between border-b bg-white p-6">
       <div className="mr-4 flex">
@@ -16,7 +17,10 @@ export default async function Header() {
           <span className="text-muted-foreground text-sm">The home of Bermuda Moorings</span>
         </Link>
       </div>
-      <HeaderNav />
+      <div className="items-top flex flex-1 flex-col justify-end gap-2 md:flex-row">
+        <UserMenu user={user} />
+        <GenericMenu user={user} />
+      </div>
     </header>
   );
 }
@@ -26,7 +30,7 @@ function UserMenu({ user }: { user: SupabaseUser | null }) {
 
   const userInitial = user.email?.charAt(0).toUpperCase() ?? '?';
   return (
-    <div className="flex flex-col items-center items-end gap-2 md:flex-row">
+    <div className="flex flex-col items-end gap-2 md:flex-row md:items-center">
       <CreateRequest />
       <CreateMooring />
       <Link href="/account">

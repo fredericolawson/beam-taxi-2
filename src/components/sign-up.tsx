@@ -12,6 +12,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { notifyTelegram } from '@/actions/telegram';
+import { toast } from 'sonner';
+import { revalidate } from '@/actions/revalidate';
 
 const formSchema = z
   .object({
@@ -59,7 +61,10 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
       });
 
       if (error) throw error;
-      router.push('/auth/sign-up-success');
+      await revalidate('/');
+      router.push('/');
+      toast.success('Account created successfully. You are now logged in.');
+
       notifyTelegram({ message: 'New HeyBuoy sign up:' + values.firstName + ' ' + values.lastName });
     } catch (error: unknown) {
       form.setError('root.serverError', {
