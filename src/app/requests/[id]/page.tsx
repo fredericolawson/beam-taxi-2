@@ -8,6 +8,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Calendar, DollarSign, Anchor, Clock } from 'lucide-react';
+import { SendMessage } from '@/components/send-message';
 
 export default async function RequestPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -24,11 +25,12 @@ export default async function RequestPage({ params }: { params: Promise<{ id: st
           <div className="flex flex-grow flex-col gap-4 md:w-1/2">
             <RequestDescription request={request} />
             <RequestDetails request={request} />
-            <PricingCard request={request} />
+            <SendMessage object={request} user={user} />
           </div>
 
           <div className="flex flex-col gap-4">
             <TimelineCard request={request} />
+            <PricingCard request={request} />
             <OwnerActions request={request} user={user} />
           </div>
         </div>

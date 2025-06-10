@@ -13,6 +13,7 @@ export type RawRequest = {
 };
 
 export type Request = {
+  type: 'request';
   id: string;
   created_at: string;
   description: string;

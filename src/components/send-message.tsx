@@ -5,22 +5,24 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { User } from '@supabase/supabase-js';
-import { Mooring } from '@/types/mooring';
 import { useState, useTransition } from 'react';
 import { sendMessage } from '@/actions/messages';
 import { toast } from 'sonner';
 import { CheckCircleIcon } from 'lucide-react';
+import { Mooring } from '@/types/mooring';
+import { Request } from '@/types/request';
 
-export function SendMessage({ mooring, user }: { mooring: Mooring; user: User | null }) {
+export function SendMessage({ object, user }: { object: Mooring | Request; user: User | null }) {
   const [message, setMessage] = useState('');
   const [isSent, setIsSent] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  if (!user) return <UnauthenticatedSendMessage />;
+  const label = object.type === 'mooring' ? 'owner' : 'requester';
+  if (!user) return <UnauthenticatedSendMessage label={label} />;
 
   const onSubmit = async () => {
     startTransition(async () => {
-      await sendMessage({ mooring, user, message });
+      await sendMessage({ object, user, message });
       toast.success('Message sent');
       setIsSent(true);
     });
@@ -29,8 +31,10 @@ export function SendMessage({ mooring, user }: { mooring: Mooring; user: User | 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Contact the owner</CardTitle>
-        <CardDescription>The owner will reply to you at {user.email}</CardDescription>
+        <CardTitle>Contact the {label}</CardTitle>
+        <CardDescription>
+          The {label} will reply to you at {user.email}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         {isSent && (
@@ -51,12 +55,12 @@ export function SendMessage({ mooring, user }: { mooring: Mooring; user: User | 
   );
 }
 
-function UnauthenticatedSendMessage() {
+function UnauthenticatedSendMessage({ label }: { label: string }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Contact the owner</CardTitle>
-        <CardDescription>Please login or sign up to send a message to the owner</CardDescription>
+        <CardTitle>Contact the {label}</CardTitle>
+        <CardDescription>Please login or sign up to send a message to the {label}</CardDescription>
       </CardHeader>
       <CardContent className="flex gap-2">
         <Button asChild variant="outline">

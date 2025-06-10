@@ -4,10 +4,11 @@ import { EmailTemplate } from '@/components/email-template';
 import { Resend } from 'resend';
 import { User } from '@supabase/supabase-js';
 import { adminAuthClient } from '@/lib/supabase/authClient';
+import { Request } from '@/types/request';
 
-export async function sendMessage({ mooring, user, message }: { mooring: Mooring; user: User; message: string }) {
+export async function sendMessage({ object, user, message }: { object: Mooring | Request; user: User; message: string }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const { data: ownerData } = await adminAuthClient.getUserById(mooring.owner_id);
+  const { data: ownerData } = await adminAuthClient.getUserById(object.owner_id);
   if (!ownerData.user) throw new Error('Owner not found');
 
   const { data, error } = await resend.emails.send({
