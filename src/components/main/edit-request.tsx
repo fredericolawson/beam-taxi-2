@@ -24,6 +24,7 @@ const formSchema = z
     request_type: z.enum(['walk-on', 'swing', 'either']),
     hurricane_insured: z.enum(['yes', 'no', 'either']),
     boat_length: z.string(),
+    preferred_location: z.string(),
     price_from: z.coerce.number().min(1, 'Price must be positive'),
     price_to: z.coerce.number().min(1, 'Price must be positive'),
   })
@@ -49,6 +50,7 @@ export function EditRequest({ request }: { request: Request }) {
       request_type: request.request_type ?? 'either',
       hurricane_insured: request.hurricane_insured ?? 'either',
       boat_length: request.boat_length ?? '',
+      preferred_location: request.preferred_location ?? '',
       price_from: request.price_from ?? 250,
       price_to: request.price_to ?? 400,
     },
@@ -64,7 +66,7 @@ export function EditRequest({ request }: { request: Request }) {
     <div className="card-container flex h-full flex-grow flex-col bg-transparent p-4 md:w-1/2 md:p-8">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8">
-          <div className="flex justify-between">
+          <div className="flex flex-col justify-between md:flex-row">
             <h1 className="heading-2 mb-6">Edit Request</h1>
             <div className="flex gap-4">
               <Button className="w-fit" type="submit" disabled={isPending}>
@@ -82,21 +84,35 @@ export function EditRequest({ request }: { request: Request }) {
             <div className="flex flex-grow flex-col gap-4 md:w-1/2">
               <Card>
                 <CardHeader>
-                  <CardTitle>Description</CardTitle>
+                  <CardTitle>Summary</CardTitle>
                   <CardDescription>Describe what you&apos;re looking for in a mooring, the ideal location, etc.</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex w-full flex-col gap-4 md:flex-row">
                   <FormField
                     control={form.control}
                     name="description"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="w-full">
+                        <FormLabel>Description</FormLabel>
                         <FormControl>
                           <Textarea
-                            className="min-h-24"
-                            placeholder="e.g. I'm looking for a walk on mooring for my 44 foot boat, ideally located in Hamilton Sound"
+                            className="min-h-24 w-full"
+                            placeholder="e.g. I'm looking for a walk on mooring for my 44 foot boat"
                             {...field}
                           />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="preferred_location"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Preferred Location</FormLabel>
+                        <FormControl>
+                          <Textarea className="min-h-24 w-full" placeholder="e.g. Ideally somewhere in Hamilton Sound" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -108,7 +124,7 @@ export function EditRequest({ request }: { request: Request }) {
                 <CardHeader>
                   <CardTitle>Mooring Details</CardTitle>
                 </CardHeader>
-                <CardContent className="flex gap-4">
+                <CardContent className="flex flex-col gap-4 md:flex-row">
                   <FormField
                     control={form.control}
                     name="request_type"

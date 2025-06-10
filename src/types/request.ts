@@ -8,6 +8,7 @@ export type RawRequest = {
   request_type: 'walk-on' | 'swing' | 'either';
   hurricane_insured: 'yes' | 'no' | 'either';
   boat_length: string;
+  preferred_location: string;
   price_from: number;
   price_to: number;
 };
@@ -22,6 +23,7 @@ export type Request = {
   request_type: 'walk-on' | 'swing' | 'either';
   hurricane_insured: 'yes' | 'no' | 'either';
   boat_length: string;
+  preferred_location: string;
   price_from: number;
   price_to: number;
 };

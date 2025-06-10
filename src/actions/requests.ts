@@ -46,8 +46,6 @@ export async function updateRequest({ requestId, data }: { requestId: string; da
     ...(data.expires_on && { expires_on: data.expires_on.toISOString() }),
   };
 
-  console.log(transformedData);
-
   const { data: updatedRequest, error } = await supabase.from('requests').update(transformedData).eq('id', requestId).select().single();
   if (error) {
     console.error('Error creating request:', error);

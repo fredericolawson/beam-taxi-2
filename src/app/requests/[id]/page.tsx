@@ -69,11 +69,18 @@ function RequestDescription({ request }: { request: Request }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Description</CardTitle>
-        <CardDescription>What the requester is looking for in a mooring</CardDescription>
+        <CardTitle>Summary</CardTitle>
+        <CardDescription>What the requestor is looking for in a mooring</CardDescription>
       </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground leading-relaxed">{request.description}</p>
+      <CardContent className="flex flex-col gap-4">
+        <div className="flex flex-col">
+          <h3 className="text-muted-foreground text-sm">Description</h3>
+          <p className="leading-relaxed">{request.description}</p>
+        </div>
+        <div className="flex flex-col">
+          <h3 className="text-muted-foreground text-sm">Preferred Location</h3>
+          <p className="leading-relaxed">{request.preferred_location}</p>
+        </div>
       </CardContent>
     </Card>
   );
