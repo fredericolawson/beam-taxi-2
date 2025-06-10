@@ -1,9 +1,10 @@
 import './globals.css';
-import Header from '@/components/header';
+
 import { Analytics } from '@vercel/analytics/react';
 import { Toaster } from '@/components/ui/sonner';
 import { getUserServer } from '@/lib/utils/get-user-server';
 import Link from 'next/link';
+import { HeaderNav } from '@/components/header-nav';
 
 export const metadata = {
   title: 'Hey Buoy',
@@ -24,6 +25,20 @@ export default function RootLayout({
         <Analytics />
       </body>
     </html>
+  );
+}
+
+function Header() {
+  return (
+    <header className="flex items-center justify-between border-b bg-white p-6">
+      <div className="mr-4 flex">
+        <Link href="/" className="mr-6 flex flex-col">
+          <span className="text-2xl font-bold">Hey Buoy</span>
+          <span className="text-muted-foreground text-sm">The home of Bermuda Moorings</span>
+        </Link>
+      </div>
+      <HeaderNav />
+    </header>
   );
 }
 
