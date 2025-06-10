@@ -1,4 +1,5 @@
 export type RawRequest = {
+  type: 'request';
   id: string;
   created_at: string;
   description: string;
