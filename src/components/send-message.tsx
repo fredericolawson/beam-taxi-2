@@ -8,21 +8,20 @@ import { Mooring } from '@/types/mooring';
 import { useState, useTransition } from 'react';
 import { sendMessage } from '@/actions/messages';
 import { toast } from 'sonner';
+import { CheckCircleIcon } from 'lucide-react';
 
 export function SendMessage({ mooring, user }: { mooring: Mooring; user: User | null }) {
   const [message, setMessage] = useState('');
+  const [isSent, setIsSent] = useState(false);
   if (!user) return null;
 
   const [isPending, startTransition] = useTransition();
 
   const onSubmit = async () => {
-    if (!message) {
-      toast.error('Please enter a message');
-      return;
-    }
     startTransition(async () => {
       await sendMessage({ mooring, user, message });
       toast.success('Message sent');
+      setIsSent(true);
     });
   };
 
@@ -30,13 +29,20 @@ export function SendMessage({ mooring, user }: { mooring: Mooring; user: User | 
     <Card>
       <CardHeader>
         <CardTitle>Contact the owner</CardTitle>
-        <CardDescription>Your email will be sent from {user.email}</CardDescription>
+        <CardDescription>The owner will reply to you at {user.email}</CardDescription>
       </CardHeader>
       <CardContent>
-        <Textarea placeholder="Message" value={message} onChange={(e) => setMessage(e.target.value)} />
+        {isSent && (
+          <div className="text-muted-foreground bg-muted mb-4 flex w-full items-center justify-center gap-2 rounded-md p-2 text-sm">
+            <CheckCircleIcon className="text-green-500" />
+            Message sent
+          </div>
+        )}
+
+        <Textarea placeholder="Message" disabled={isPending || isSent} value={message} onChange={(e) => setMessage(e.target.value)} />
       </CardContent>
       <CardFooter>
-        <Button disabled={isPending} onClick={onSubmit}>
+        <Button disabled={isPending || !message} onClick={onSubmit}>
           {isPending ? 'Sending...' : 'Send'}
         </Button>
       </CardFooter>

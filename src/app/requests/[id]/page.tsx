@@ -83,7 +83,7 @@ function RequestDetails({ request }: { request: Request }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Boat Details</CardTitle>
+        <CardTitle className="text-lg">Mooring Details</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex items-center gap-2">
