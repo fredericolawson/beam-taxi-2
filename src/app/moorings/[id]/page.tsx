@@ -54,7 +54,7 @@ export default async function MooringDetailPage({ params }: MooringDetailPagePro
               <OwnerActions mooring={mooring} user={user} />
             </CardFooter>
           </Card>
-          <SendMessage object={mooring} user={user} />
+          <SendMessage object={mooring} user={user} label="owner" />
         </div>
 
         <div className="flex flex-col gap-4 md:w-1/2">

@@ -12,12 +12,11 @@ import { CheckCircleIcon } from 'lucide-react';
 import { Mooring } from '@/types/mooring';
 import { Request } from '@/types/request';
 
-export function SendMessage({ object, user }: { object: Mooring | Request; user: User | null }) {
+export function SendMessage({ object, user, label }: { object: Mooring | Request; user: User | null; label: string }) {
   const [message, setMessage] = useState('');
   const [isSent, setIsSent] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const label = object.type === 'mooring' ? 'owner' : 'requestor';
   if (!user) return <UnauthenticatedSendMessage label={label} />;
 
   const onSubmit = async () => {

@@ -3,7 +3,6 @@
 export type CommitmentTerm = 'monthly' | 'quarterly' | 'annual';
 
 export type Mooring = {
-  type: 'mooring';
   id: string;
   created_at: string;
   name: string;

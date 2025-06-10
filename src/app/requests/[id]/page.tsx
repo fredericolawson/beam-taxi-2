@@ -25,7 +25,7 @@ export default async function RequestPage({ params }: { params: Promise<{ id: st
           <div className="flex flex-grow flex-col gap-4 md:w-1/2">
             <RequestDescription request={request} />
             <RequestDetails request={request} />
-            <SendMessage object={request} user={user} />
+            <SendMessage object={request} user={user} label="requestor" />
           </div>
 
           <div className="flex flex-col gap-4">
