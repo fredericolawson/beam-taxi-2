@@ -18,6 +18,7 @@ export function SendMessage({ object, user, label }: { object: Mooring | Request
   const [isPending, startTransition] = useTransition();
 
   if (!user) return <UnauthenticatedSendMessage label={label} />;
+  if (user.id === object.owner_id) return null;
 
   const onSubmit = async () => {
     startTransition(async () => {

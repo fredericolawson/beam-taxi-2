@@ -107,7 +107,7 @@ function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
 function FormDescription({ className, ...props }: React.ComponentProps<'p'>) {
   const { formDescriptionId } = useFormField();
 
-  return <p data-slot="form-description" id={formDescriptionId} className={cn('text-muted-foreground text-sm', className)} {...props} />;
+  return <p data-slot="form-description" id={formDescriptionId} className={cn('label', className)} {...props} />;
 }
 
 function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {

@@ -300,17 +300,17 @@ function RequestorContact() {
       <CardContent>
         <div className="flex flex-wrap gap-8">
           <div className="space-y-1">
-            <p className="text-muted-foreground text-sm">Name</p>
+            <p className="label">Name</p>
             <p className="text-sm font-medium">
               {user.user_metadata.first_name} {user.user_metadata.last_name}
             </p>
           </div>
           <div className="space-y-1">
-            <p className="text-muted-foreground text-sm">Email</p>
+            <p className="label">Email</p>
             <p className="text-sm font-medium">{user.email}</p>
           </div>
           <div className="space-y-1">
-            <p className="text-muted-foreground text-sm">Phone</p>
+            <p className="label">Phone</p>
             <p className="text-sm font-medium">{user.user_metadata.phone}</p>
           </div>
         </div>

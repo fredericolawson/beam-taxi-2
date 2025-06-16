@@ -19,7 +19,7 @@ export default async function RequestPage({ params }: { params: Promise<{ id: st
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
       <div className="flex flex-col gap-8">
-        <RequestHeader request={request} />
+        <h1 className="text-3xl font-bold">Mooring Request</h1>
 
         <div className="flex flex-col gap-4 md:flex-row">
           <div className="flex flex-grow flex-col gap-4 md:w-1/2">
@@ -39,32 +39,6 @@ export default async function RequestPage({ params }: { params: Promise<{ id: st
   );
 }
 
-function RequestHeader({ request }: { request: Request }) {
-  return (
-    <div className="flex items-start justify-between">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold">Mooring Request</h1>
-      </div>
-      <RequestTypeBadge requestType={request.request_type} />
-    </div>
-  );
-}
-
-function RequestTypeBadge({ requestType }: { requestType: string }) {
-  const variants = {
-    'walk-on': 'default' as const,
-    swing: 'secondary' as const,
-    either: 'outline' as const,
-  };
-
-  return (
-    <Badge variant={variants[requestType as keyof typeof variants] || 'outline'}>
-      <Anchor className="mr-1 h-3 w-3" />
-      {requestType}
-    </Badge>
-  );
-}
-
 function RequestDescription({ request }: { request: Request }) {
   return (
     <Card>
@@ -74,11 +48,11 @@ function RequestDescription({ request }: { request: Request }) {
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-col">
-          <h3 className="text-muted-foreground text-sm">Description</h3>
+          <h3 className="label">Description</h3>
           <p className="leading-relaxed">{request.description}</p>
         </div>
         <div className="flex flex-col">
-          <h3 className="text-muted-foreground text-sm">Preferred Location</h3>
+          <h3 className="label">Preferred Location</h3>
           <p className="leading-relaxed">{request.preferred_location}</p>
         </div>
       </CardContent>
@@ -120,16 +94,16 @@ function RequestDetails({ request }: { request: Request }) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-muted-foreground">Preferred Type:</span>
+          <span className="label">Walk on or swing mooring</span>
           <span className="font-medium">{formatRequestType(request.request_type)}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-muted-foreground">Boat Length:</span>
-          <span className="font-medium">{request.boat_length} feet</span>
+          <span className="label">Hurricane Insured</span>
+          <span className="font-medium">{formatHurricaneInsured(request.hurricane_insured)}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-muted-foreground">Hurricane Insured:</span>
-          <span className="font-medium">{formatHurricaneInsured(request.hurricane_insured)}</span>
+          <span className="label">Boat Length</span>
+          <span className="font-medium">{request.boat_length} feet</span>
         </div>
       </CardContent>
     </Card>
@@ -170,25 +144,24 @@ function TimelineCard({ request }: { request: Request }) {
   };
 
   return (
-    <Card>
+    <Card className="min-w-[300px]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Calendar className="h-4 w-4" />
-          Timeline
+          Dates
         </CardTitle>
-        <CardDescription>Important dates for this request</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4 text-sm">
-        <div className="flex items-center justify-between">
-          <span className="text-muted-foreground text-sm">Preferred Start:</span>
+      <CardContent className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
+          <span className="label">Preferred Start</span>
           <span className="font-medium">{formatDate(request.start_date)}</span>
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-muted-foreground text-sm">Request Expires:</span>
+        <div className="flex flex-col gap-1">
+          <span className="label">Request Expires</span>
           <span className="font-medium">{formatDate(request.expires_on)}</span>
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-muted-foreground text-sm">Posted:</span>
+        <div className="flex flex-col gap-1">
+          <span className="label">Created at</span>
           <span className="font-medium">{formatDate(request.created_at)}</span>
         </div>
       </CardContent>

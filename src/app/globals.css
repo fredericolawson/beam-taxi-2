@@ -97,4 +97,8 @@
   .card-container {
     @apply bg-card rounded-lg border p-6 shadow-sm;
   }
+
+  .label {
+    @apply text-muted-foreground text-sm;
+  }
 }

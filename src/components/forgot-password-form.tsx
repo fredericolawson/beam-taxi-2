@@ -44,9 +44,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
             <CardDescription>Password reset instructions sent</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground text-sm">
-              If you registered using your email and password, you will receive a password reset email.
-            </p>
+            <p className="label">If you registered using your email and password, you will receive a password reset email.</p>
           </CardContent>
         </Card>
       ) : (
