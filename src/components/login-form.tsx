@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
+import { revalidate } from '@/actions/revalidate';
 import { useState } from 'react';
 import { notifyTelegram } from '@/actions/telegram';
 
@@ -30,7 +31,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
         password,
       });
       if (error) throw error;
-      router.refresh();
+      revalidate('/');
       router.push('/');
       notifyTelegram({ message: 'New HeyBuoy sign in:' + email });
     } catch (error: unknown) {

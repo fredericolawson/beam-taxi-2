@@ -8,12 +8,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Textarea } from '../ui/textarea';
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { updateRequest } from '@/actions/requests';
+import { deleteRequest, updateRequest } from '@/actions/requests';
 import Link from 'next/link';
 import Calendar10 from '../calendar-10';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { ConfirmationModal } from '../ui/confirmation-modal';
+import { useUser } from '@/hooks/useUser';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z
   .object({
@@ -34,7 +37,8 @@ const formSchema = z
   });
 
 export function EditRequest({ request }: { request: Request }) {
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [startDate, setStartDate] = useState<Date>(request.start_date ? new Date(request.start_date) : new Date());
   const [expiresOn, setExpiresOn] = useState<Date>(
     request.expires_on ? new Date(request.expires_on) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
@@ -57,10 +61,18 @@ export function EditRequest({ request }: { request: Request }) {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    startTransition(async () => {
-      await updateRequest({ requestId: request.id, data: values });
-    });
+    setIsSubmitting(true);
+    await updateRequest({ requestId: request.id, data: values });
+    setIsSubmitting(false);
   };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    await deleteRequest({ requestId: request.id });
+    setIsDeleting(false);
+  };
+
+  console.log(startDate, expiresOn);
 
   return (
     <div className="card-container flex h-full flex-grow flex-col bg-transparent p-4 md:w-1/2 md:p-8">
@@ -69,15 +81,23 @@ export function EditRequest({ request }: { request: Request }) {
           <div className="flex flex-col justify-between md:flex-row">
             <h1 className="heading-2 mb-6">Edit Request</h1>
             <div className="flex gap-4">
-              <Button className="w-fit" type="submit" disabled={isPending}>
-                {isPending ? 'Saving...' : 'Save'}
+              <Button className="w-fit" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Saving...' : 'Save'}
               </Button>
-              <Button className="w-fit" asChild disabled={isPending} variant="outline">
+              <Button className="w-fit" asChild variant="outline">
                 <Link href={`/requests/${request.id}`}>Cancel</Link>
               </Button>
-              <Button className="w-fit" asChild disabled={isPending} variant="destructive">
-                <Link href={`/requests/${request.id}`}>Delete</Link>
-              </Button>
+              <ConfirmationModal
+                trigger={
+                  <Button className="w-fit" disabled={isDeleting} variant="destructive">
+                    {isDeleting ? 'Deleting...' : 'Delete'}
+                  </Button>
+                }
+                title="Delete Request"
+                description="Are you sure you want to delete this request?"
+                confirmText="Delete"
+                onConfirm={handleDelete}
+              />
             </div>
           </div>
           <div className="flex flex-col gap-4 md:flex-row">
@@ -212,6 +232,7 @@ export function EditRequest({ request }: { request: Request }) {
                   />
                 </CardContent>
               </Card>
+              <RequestorContact />
             </div>
             <div className="flex flex-col gap-4">
               <Card>
@@ -259,5 +280,41 @@ export function EditRequest({ request }: { request: Request }) {
         </form>
       </Form>
     </div>
+  );
+}
+
+function RequestorContact() {
+  const { user, isLoading } = useUser();
+  if (isLoading) return <Loader2 className="animate-spin" />;
+  if (!user) return <Loader2 className="animate-spin" />;
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Your Contact Details</CardTitle>
+        <CardDescription>You&apos;ll receive offers at the email you have set below</CardDescription>
+        <Button variant="secondary" asChild className="w-fit">
+          <Link href="/account">Edit Details</Link>
+        </Button>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap gap-8">
+          <div className="space-y-1">
+            <p className="text-muted-foreground text-sm">Name</p>
+            <p className="text-sm font-medium">
+              {user.user_metadata.first_name} {user.user_metadata.last_name}
+            </p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-muted-foreground text-sm">Email</p>
+            <p className="text-sm font-medium">{user.email}</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-muted-foreground text-sm">Phone</p>
+            <p className="text-sm font-medium">{user.user_metadata.phone}</p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

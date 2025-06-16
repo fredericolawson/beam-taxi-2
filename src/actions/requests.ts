@@ -65,5 +65,11 @@ export async function updateRequest({ requestId, data }: { requestId: string; da
 export async function deleteRequest({ requestId }: { requestId: string }) {
   const supabase = await createClient();
   const { error } = await supabase.from('requests').delete().eq('id', requestId);
-  return { error };
+  if (error) {
+    console.error('Error deleting request:', error);
+    return null;
+  }
+
+  revalidatePath(`/requests/${requestId}`);
+  redirect('/');
 }

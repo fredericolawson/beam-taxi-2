@@ -23,12 +23,16 @@ export default function CreateRequest() {
 
   const handleSubmit = async () => {
     if (!description.trim()) return;
-    setIsSubmitting(true);
-    await createRequest({ description: description.trim() });
-    setIsSubmitting(false);
-    setOpen(false);
+    try {
+      setIsSubmitting(true);
+      setOpen(false);
+      await createRequest({ description: description.trim() });
+    } catch (error) {
+      console.error('Error creating request:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-  // add ---> "when do you want to leave this request open til?"
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
