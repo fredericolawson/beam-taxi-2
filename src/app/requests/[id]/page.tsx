@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Calendar, DollarSign, Anchor, Clock } from 'lucide-react';
 import { SendMessage } from '@/components/send-message';
+import { DeleteRequestAction } from '@/components/actions';
 
 export default async function RequestPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -182,20 +183,11 @@ function OwnerActions({ request, user }: { request: Request; user: User | null }
         </CardTitle>
         <CardDescription>Edit or delete your mooring request</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <Button asChild variant="outline" className="w-full">
+      <CardContent className="flex gap-4">
+        <Button asChild variant="outline">
           <Link href={`/requests/${request.id}/edit`}>Edit Request</Link>
         </Button>
-        <form
-          action={async () => {
-            'use server';
-            console.log('deleting request', request.id);
-          }}
-        >
-          <Button type="submit" variant="destructive" className="w-full">
-            Delete Request
-          </Button>
-        </form>
+        <DeleteRequestAction requestId={request.id} />
       </CardContent>
     </Card>
   );

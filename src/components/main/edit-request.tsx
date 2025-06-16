@@ -14,10 +14,10 @@ import { deleteRequest, updateRequest } from '@/actions/requests';
 import Link from 'next/link';
 import Calendar10 from '../calendar-10';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { ConfirmationModal } from '../ui/confirmation-modal';
 import { useUser } from '@/hooks/useUser';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { DeleteRequestAction } from '../actions';
 
 const formSchema = z
   .object({
@@ -39,7 +39,6 @@ const formSchema = z
 
 export function EditRequest({ request }: { request: Request }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [startDate, setStartDate] = useState<Date>(request.start_date ? new Date(request.start_date) : new Date());
   const [expiresOn, setExpiresOn] = useState<Date>(
     request.expires_on ? new Date(request.expires_on) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
@@ -81,12 +80,6 @@ export function EditRequest({ request }: { request: Request }) {
     }
   };
 
-  const handleDelete = async () => {
-    setIsDeleting(true);
-    await deleteRequest({ requestId: request.id });
-    setIsDeleting(false);
-  };
-
   return (
     <div className="card-container flex h-full flex-grow flex-col bg-transparent p-4 md:w-1/2 md:p-8">
       <Form {...form}>
@@ -100,17 +93,7 @@ export function EditRequest({ request }: { request: Request }) {
               <Button className="w-fit" asChild variant="outline">
                 <Link href={`/requests/${request.id}`}>Cancel</Link>
               </Button>
-              <ConfirmationModal
-                trigger={
-                  <Button className="w-fit" disabled={isDeleting} variant="destructive">
-                    {isDeleting ? 'Deleting...' : 'Delete'}
-                  </Button>
-                }
-                title="Delete Request"
-                description="Are you sure you want to delete this request?"
-                confirmText="Delete"
-                onConfirm={handleDelete}
-              />
+              <DeleteRequestAction requestId={request.id} />
             </div>
           </div>
           <div className="flex flex-col gap-4 md:flex-row">
