@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '../ui/button';
 
-export default function CreateMooring() {
+export function CreateMooring({ trigger }: { trigger: React.ReactNode }) {
   const [mooringName, setMooringName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
@@ -31,9 +31,7 @@ export default function CreateMooring() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="secondary">List a Mooring</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>List a New Mooring</DialogTitle>

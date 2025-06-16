@@ -10,6 +10,7 @@ import { MooringsList } from '@/components/moorings-list';
 import { RequestsList } from '@/components/requests-list';
 import { getRequestsByOwner } from '@/lib/tables/requests';
 import type { Request } from '@/types/request';
+import { CreateMooringAction, CreateRequestAction } from '@/components/actions';
 
 export default async function AccountPage() {
   const user = await getUserServer();
@@ -26,12 +27,18 @@ export default async function AccountPage() {
       </div>
       <Separator />
       <div className="flex flex-col gap-4">
-        <h2 className="heading-2">My Moorings</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="heading-2">My Moorings</h2>
+          <CreateMooringAction />
+        </div>
         <MooringsList moorings={moorings} />
       </div>
       <Separator />
       <div className="flex flex-col gap-4">
-        <h2 className="heading-2">My Requests</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="heading-2">My Requests</h2>
+          <CreateRequestAction />
+        </div>
         <RequestsList requests={requests} />
       </div>
     </div>

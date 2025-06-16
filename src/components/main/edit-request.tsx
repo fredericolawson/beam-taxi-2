@@ -17,6 +17,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui
 import { ConfirmationModal } from '../ui/confirmation-modal';
 import { useUser } from '@/hooks/useUser';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 const formSchema = z
   .object({
@@ -60,10 +61,24 @@ export function EditRequest({ request }: { request: Request }) {
     },
   });
 
+  useEffect(() => {
+    form.setValue('start_date', startDate);
+  }, [startDate, form]);
+
+  useEffect(() => {
+    form.setValue('expires_on', expiresOn);
+  }, [expiresOn, form]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
-    await updateRequest({ requestId: request.id, data: values });
-    setIsSubmitting(false);
+    try {
+      await updateRequest({ requestId: request.id, data: values });
+      setIsSubmitting(false);
+      toast.success('Request updated successfully');
+    } catch (error) {
+      console.error(error);
+      setIsSubmitting(false);
+    }
   };
 
   const handleDelete = async () => {
@@ -71,8 +86,6 @@ export function EditRequest({ request }: { request: Request }) {
     await deleteRequest({ requestId: request.id });
     setIsDeleting(false);
   };
-
-  console.log(startDate, expiresOn);
 
   return (
     <div className="card-container flex h-full flex-grow flex-col bg-transparent p-4 md:w-1/2 md:p-8">

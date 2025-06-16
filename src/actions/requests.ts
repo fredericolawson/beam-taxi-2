@@ -53,7 +53,7 @@ export async function updateRequest({ requestId, data }: { requestId: string; da
   }
 
   revalidatePath(`/requests/${requestId}`);
-  redirect(`/requests/${requestId}`);
+  revalidatePath(`/requests/${requestId}/edit`);
 }
 
 /*
