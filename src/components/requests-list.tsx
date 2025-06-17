@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Request } from '@/types/request';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from './ui/badge';
+import { Anchor, Calendar, MapPin, Shield, Ruler, DollarSign } from 'lucide-react';
 
 export function RequestsList({ requests }: { requests: Request[] }) {
   if (requests.length === 0) return <div>No requests found</div>;
@@ -20,15 +21,36 @@ function RequestCard({ request }: { request: Request }) {
     <Link href={`/requests/${request.id}`} key={request.id} className="block h-full">
       <Card className="h-full min-h-[250px] transition-shadow duration-200 hover:shadow-lg">
         <CardHeader>
-          <RequestType requestType={request.request_type} />
+          <CardTitle>{request.description}</CardTitle>
         </CardHeader>
-
         <CardContent className="flex flex-col gap-4">
-          <RequestDescription description={request.description} />
-          <ExpiresOn expiresOn={request.expires_on} />
+          <CardItem icon={<MapPin />} label="Preferred Location" value={request.preferred_location} />
+          <div className="flex gap-2">
+            <CardItem icon={<Anchor />} label="Mooring Type" value={request.request_type} />
+            <CardItem icon={<Ruler />} label="Boat LOA (ft)" value={request.boat_length} />
+          </div>
+          <CardItem icon={<Shield />} label="Hurricane Insured" value={request.hurricane_insured} />
+          <CardItem
+            icon={<Calendar />}
+            label="Preferred Start"
+            value={request.start_date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          />
+          <CardItem icon={<DollarSign />} label="Preferred Price Range" value={`$${request.price_from} - $${request.price_to}`} />
         </CardContent>
       </Card>
     </Link>
+  );
+}
+
+function CardItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="bg-muted flex w-full items-center gap-2 rounded-md p-2">
+      <div className="text-muted-foreground">{icon}</div>
+      <div className="flex w-full flex-col gap-1">
+        <span className="label text-xs">{label}</span>
+        <span className="text-sm">{value}</span>
+      </div>
+    </div>
   );
 }
 

@@ -20,7 +20,7 @@ export default async function Home() {
       </div>
       <Separator />
       <div className="flex flex-col gap-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <h2 className="heading-2">Open Requests</h2>
           <CreateRequestAction />
         </div>

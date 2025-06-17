@@ -32,9 +32,7 @@ export function SendMessage({ object, user, label }: { object: Mooring | Request
     <Card>
       <CardHeader>
         <CardTitle>Contact the {label}</CardTitle>
-        <CardDescription>
-          The {label} will reply to you at {user.email}
-        </CardDescription>
+        <CardDescription>They will reply to you at {user.email}</CardDescription>
       </CardHeader>
       <CardContent>
         {isSent && (
