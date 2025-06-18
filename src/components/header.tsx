@@ -10,8 +10,8 @@ export async function Header() {
     <header className="flex items-center justify-between border-b bg-white p-6">
       <div className="mr-4 flex">
         <Link href="/" className="mr-6 flex flex-col">
-          <span className="text-2xl font-bold">Hey Buoy</span>
-          <span className="label">The home of Bermuda Moorings</span>
+          <span className="text-2xl font-bold">CBTC Tennis Ladder</span>
+          <span className="label">The home of Coral Beach & Tennis Club</span>
         </Link>
       </div>
       <div className="items-top flex flex-1 flex-col justify-end gap-2 md:flex-row">
