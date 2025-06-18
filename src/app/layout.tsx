@@ -27,23 +27,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-async function Footer() {
-  const user = await getUserServer();
-  if (user)
-    return (
-      <footer className="mt-auto border-t py-4 md:py-4">
-        <div className="text-muted-foreground text-center text-sm">
-          <Link href="/account">Account</Link>
-        </div>
-      </footer>
-    );
-  else
-    return (
-      <footer className="mt-auto border-t py-4 md:py-4">
-        <div className="text-muted-foreground text-center text-sm">
-          <Link href="/auth/login">Sign In</Link>
-        </div>
-      </footer>
-    );
-}
