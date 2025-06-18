@@ -196,29 +196,16 @@ export function EditRequest({ request }: { request: Request }) {
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle>Price Range</CardTitle>
-                  <CardDescription>Enter the price range you&apos;re looking for.</CardDescription>
+                  <CardTitle>Max Budget</CardTitle>
+                  <CardDescription>Enter the maximum monthly budget you&apos;re looking for.</CardDescription>
                 </CardHeader>
-                <CardContent className="flex gap-4">
-                  <FormField
-                    control={form.control}
-                    name="price_from"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>From (per month)</FormLabel>
-                        <FormControl>
-                          <Input placeholder="$250" type="number" min={0} required {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <CardContent>
                   <FormField
                     control={form.control}
                     name="price_to"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>To (per month)</FormLabel>
+                      <FormItem className="w-fit">
+                        <FormLabel>Max Budget (per month)</FormLabel>
                         <FormControl>
                           <Input placeholder="$400" type="number" min={0} required {...field} />
                         </FormControl>

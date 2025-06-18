@@ -117,19 +117,12 @@ function PricingCard({ request }: { request: Request }) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <DollarSign className="h-4 w-4" />
-          Price Range
+          Max Budget
         </CardTitle>
-        <CardDescription>Monthly pricing range for the mooring</CardDescription>
+        <CardDescription>Monthly maximum budget for the mooring</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2 text-sm">
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">From:</span>
-          <span className="font-medium">${request.price_from}/month</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">To:</span>
-          <span className="font-medium">${request.price_to}/month</span>
-        </div>
+        <span className="font-medium">${request.price_to}/month</span>
       </CardContent>
     </Card>
   );

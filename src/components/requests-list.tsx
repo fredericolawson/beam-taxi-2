@@ -23,19 +23,21 @@ function RequestCard({ request }: { request: Request }) {
         <CardHeader>
           <CardTitle>{request.description}</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4">
+        <CardContent className="flex flex-col gap-2">
           <CardItem icon={<MapPin />} label="Preferred Location" value={request.preferred_location} />
           <div className="flex gap-2">
             <CardItem icon={<Anchor />} label="Mooring Type" value={request.request_type} />
             <CardItem icon={<Ruler />} label="Boat LOA (ft)" value={request.boat_length} />
           </div>
           <CardItem icon={<Shield />} label="Hurricane Insured" value={request.hurricane_insured} />
-          <CardItem
-            icon={<Calendar />}
-            label="Preferred Start"
-            value={request.start_date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-          />
-          <CardItem icon={<DollarSign />} label="Preferred Price Range" value={`$${request.price_from} - $${request.price_to}`} />
+          <div className="flex gap-2">
+            <CardItem
+              icon={<Calendar />}
+              label="Preferred Start"
+              value={request.start_date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            />
+            <CardItem icon={<DollarSign />} label="Max Budget" value={`$${request.price_to}`} />
+          </div>
         </CardContent>
       </Card>
     </Link>
