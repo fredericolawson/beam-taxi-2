@@ -11,7 +11,7 @@ export async function Header() {
       <div className="mr-4 flex">
         <Link href="/" className="mr-6 flex flex-col">
           <span className="text-2xl font-bold">CBTC Tennis Ladder</span>
-          <span className="label">The home of Coral Beach & Tennis Club</span>
+          <span className="label">Tennis Ladder for the Coral Beach & Tennis Club</span>
         </Link>
       </div>
       <div className="items-top flex flex-1 flex-col justify-end gap-2 md:flex-row">
