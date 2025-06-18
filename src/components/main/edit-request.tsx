@@ -91,7 +91,7 @@ export function EditRequest({ request }: { request: Request }) {
                 {isSubmitting ? 'Saving...' : 'Save'}
               </Button>
               <Button className="w-fit" asChild variant="outline">
-                <Link href={`/requests/${request.id}`}>Cancel</Link>
+                <Link href={`/requests/${request.id}`}>Back</Link>
               </Button>
               <DeleteRequestAction requestId={request.id} />
             </div>
@@ -288,10 +288,14 @@ function RequestorContact() {
     <Card>
       <CardHeader>
         <CardTitle>Your Contact Details</CardTitle>
-        <CardDescription>You&apos;ll receive offers at the email you have set below</CardDescription>
-        <Button variant="secondary" asChild className="w-fit">
-          <Link href="/account">Edit Details</Link>
-        </Button>
+        <CardDescription>
+          <span>
+            You&apos;ll receive alerts at the email you have set below. Your personal details won't be directly shared with others.&nbsp;
+          </span>
+          <Link href="/account" className="font-semibold hover:underline">
+            Edit Details
+          </Link>
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-8">
