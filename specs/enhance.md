@@ -9,7 +9,7 @@ Based on the current MVP, here are recommendations to improve the User Experienc
       - Site title/logo linking home (`/`).
       - Conditional buttons/links based on auth state:
         - **Logged In:** "List Your Mooring", Account dropdown (`Avatar` + `DropdownMenu`) with links to `/account` and "Logout".
-        - **Logged Out:** "Login", "Sign Up" buttons.
+        - **Logged Out:** "Sign In", "Sign Up" buttons.
     - _ShadCN Components:_ `Button`, `Avatar`, `DropdownMenu`, `Separator`.
 
 2.  **Mooring Card Loading State:**

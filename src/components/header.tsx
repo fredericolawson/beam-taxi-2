@@ -1,7 +1,5 @@
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import Link from 'next/link';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-
 import { Button } from './ui/button';
 import { getUserServer } from '@/lib/utils/get-user-server';
 import { User as UserIcon } from 'lucide-react';
@@ -46,7 +44,7 @@ function GenericMenu({ user }: { user: SupabaseUser | null }) {
   return (
     <div className="flex flex-col items-center gap-2 md:flex-row">
       <Button asChild variant="outline">
-        <Link href="/auth/login">Login</Link>
+        <Link href="/auth/login">Sign In</Link>
       </Button>
       <Button asChild>
         <Link href="/auth/sign-up">Sign up</Link>

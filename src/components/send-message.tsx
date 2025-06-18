@@ -62,7 +62,7 @@ function UnauthenticatedSendMessage({ label }: { label: string }) {
       </CardHeader>
       <CardContent className="flex gap-2">
         <Button asChild variant="outline">
-          <Link href="/auth/login">Login</Link>
+          <Link href="/auth/login">Sign In</Link>
         </Button>
         <Button asChild>
           <Link href="/auth/sign-up">Sign up</Link>
