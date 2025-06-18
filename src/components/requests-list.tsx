@@ -24,19 +24,19 @@ function RequestCard({ request }: { request: Request }) {
           <CardTitle>{request.description}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
-          <CardItem icon={<MapPin />} label="Preferred Location" value={request.preferred_location} />
+          <CardItem icon={<MapPin size={20} />} label="Preferred Location" value={request.preferred_location} />
           <div className="flex gap-2">
-            <CardItem icon={<Anchor />} label="Mooring Type" value={request.request_type} />
-            <CardItem icon={<Ruler />} label="Boat LOA (ft)" value={request.boat_length} />
+            <CardItem icon={<Anchor size={20} />} label="Mooring Type" value={request.request_type} />
+            <CardItem icon={<Ruler size={20} />} label="Boat LOA (ft)" value={request.boat_length} />
           </div>
-          <CardItem icon={<Shield />} label="Hurricane Insured" value={request.hurricane_insured} />
+          <CardItem icon={<Shield size={20} />} label="Hurricane Insured" value={request.hurricane_insured} />
           <div className="flex gap-2">
             <CardItem
-              icon={<Calendar />}
+              icon={<Calendar size={20} />}
               label="Preferred Start"
               value={request.start_date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
             />
-            <CardItem icon={<DollarSign />} label="Max Budget" value={`$${request.price_to}`} />
+            <CardItem icon={<DollarSign size={20} />} label="Max Budget (pcm)" value={`$${request.price_to}`} />
           </div>
         </CardContent>
       </Card>
@@ -52,33 +52,6 @@ function CardItem({ icon, label, value }: { icon: React.ReactNode; label: string
         <span className="label text-xs">{label}</span>
         <span className="text-sm">{value}</span>
       </div>
-    </div>
-  );
-}
-
-function RequestType({ requestType }: { requestType: string }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <span className="text-muted-foreground text-xs">Request Type</span>
-      <Badge>{requestType}</Badge>
-    </div>
-  );
-}
-
-function RequestDescription({ description }: { description: string }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <span className="text-muted-foreground text-xs">Description</span>
-      <span className="text-sm">{description}</span>
-    </div>
-  );
-}
-
-function ExpiresOn({ expiresOn }: { expiresOn: Date }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <span className="text-muted-foreground text-xs">Expires On</span>
-      <span className="text-sm">{expiresOn.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
     </div>
   );
 }
