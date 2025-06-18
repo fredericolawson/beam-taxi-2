@@ -290,7 +290,8 @@ function RequestorContact() {
         <CardTitle>Your Contact Details</CardTitle>
         <CardDescription>
           <span>
-            You&apos;ll receive alerts at the email you have set below. Your personal details won't be directly shared with others.&nbsp;
+            You&apos;ll receive alerts at the email you have set below. Your personal details won&apos;t be directly shared with
+            others.&nbsp;
           </span>
           <Link href="/account" className="font-semibold hover:underline">
             Edit Details
