@@ -7,8 +7,8 @@ import Link from 'next/link';
 import { Header } from '@/components/header';
 
 export const metadata = {
-  title: 'Hey Buoy',
-  description: 'The home of Bermuda moorings.',
+  title: 'CBTC Tennis Ladder',
+  description: 'Coral Beach & Tennis Club ladder. ',
 };
 
 export default function RootLayout({
