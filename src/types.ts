@@ -10,7 +10,7 @@ export type Player = {
   displayName: string;
 };
 
-export type Challenge = {
+export type Match = {
   id: string;
   challengerId: string;
   opponentId: string;

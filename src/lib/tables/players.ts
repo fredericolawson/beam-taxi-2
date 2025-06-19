@@ -22,3 +22,17 @@ export async function getPlayers(): Promise<Player[]> {
     displayName: `${player.firstName} ${player.lastName}`,
   }));
 }
+
+export async function getPlayerByUserId(userId: string): Promise<Player | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.schema('ladder').from('players').select('*').eq('user_id', userId);
+  if (error) {
+    console.error('Error fetching player:', error);
+    return null;
+  }
+  const player = camelcaseKeys(data[0], { deep: true }) as Player;
+  return {
+    ...player,
+    displayName: `${player.firstName} ${player.lastName}`,
+  };
+}

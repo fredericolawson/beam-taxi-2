@@ -19,7 +19,7 @@ export function LogoutButton() {
   };
 
   return (
-    <Button variant="outline" onClick={() => startTransition(logout)} disabled={isPending}>
+    <Button variant="outline" onClick={() => startTransition(logout)} disabled={isPending} className="flex-1">
       {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LogOut className="mr-2 h-4 w-4" />}
       Sign Out
     </Button>
