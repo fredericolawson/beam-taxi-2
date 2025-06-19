@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-muted/50 flex min-h-screen flex-col">
         <Header />
-        <main className="container mx-auto flex max-w-6xl flex-grow flex-col p-4">{children}</main>
+        <main className="container mx-auto flex max-w-4xl flex-grow flex-col p-4">{children}</main>
         <Toaster richColors position="bottom-center" />
         <Analytics />
       </body>
