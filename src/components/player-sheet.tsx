@@ -10,8 +10,9 @@ import {
 } from '@/components/ui/sheet';
 import { Player } from '@/types';
 import { Button } from './ui/button';
+import { ChallengePlayer } from './challenge-player';
 
-export function PlayerSheet({ children, player }: { children: React.ReactNode; player: Player }) {
+export function PlayerSheet({ children, player, currentPlayer }: { children: React.ReactNode; player: Player; currentPlayer: Player }) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -22,6 +23,9 @@ export function PlayerSheet({ children, player }: { children: React.ReactNode; p
           <SheetTitle>{player.displayName}</SheetTitle>
           <SheetDescription>Placeholder</SheetDescription>
         </SheetHeader>
+        <div className="flex flex-col gap-2 p-4">
+          <ChallengePlayer player={player} currentPlayer={currentPlayer} />
+        </div>
         <SheetFooter>
           <SheetClose asChild>
             <Button>Close</Button>

@@ -2,7 +2,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import type { Player } from '@/types';
 import { PlayerSheet } from './player-sheet';
 
-export function Ladder({ players }: { players: Player[] }) {
+export function Ladder({ players, currentPlayer }: { players: Player[]; currentPlayer: Player }) {
   return (
     <Table>
       <TableHeader>
@@ -10,7 +10,7 @@ export function Ladder({ players }: { players: Player[] }) {
       </TableHeader>
       <TableBody>
         {players.map((player) => (
-          <LadderRow key={player.id} player={player} />
+          <LadderRow key={player.id} player={player} currentPlayer={currentPlayer} />
         ))}
       </TableBody>
     </Table>
@@ -26,12 +26,12 @@ function LadderHeader() {
   );
 }
 
-function LadderRow({ player }: { player: Player }) {
+function LadderRow({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
   return (
     <TableRow>
       <TableCell>{player.ladderRank}</TableCell>
       <TableCell>
-        <PlayerSheet player={player}>
+        <PlayerSheet player={player} currentPlayer={currentPlayer}>
           <span className="cursor-pointer hover:underline">
             {player.firstName} {player.lastName}
           </span>
