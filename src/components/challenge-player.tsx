@@ -8,7 +8,16 @@ import { toast } from 'sonner';
 import { challengePlayer } from '@/actions/match';
 
 export function ChallengePlayer({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
+  return (
+    <>
+      <SendChallenge player={player} currentPlayer={currentPlayer} />
+    </>
+  );
+}
+
+export function SendChallenge({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
   const [isLoading, setIsLoading] = useState(false);
+
   const challengerId = currentPlayer.id;
 
   const sendChallenge = async () => {

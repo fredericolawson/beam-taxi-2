@@ -1,4 +1,4 @@
-import { Ladder } from '@/components/ladder-table';
+import { LadderTable } from '@/components/ladder-table';
 import { getPlayerByUserId, getPlayers } from '@/lib/tables/players';
 import { getUserServer } from '@/lib/utils/get-user-server';
 import { redirect } from 'next/navigation';
@@ -15,7 +15,7 @@ export default async function Home() {
         <div className="flex items-center justify-between">
           <h1 className="heading-1">Latest Ladder</h1>
         </div>
-        <Ladder players={players} currentPlayer={currentPlayer} />
+        <LadderTable players={players} currentPlayer={currentPlayer} />
       </div>
     </div>
   );

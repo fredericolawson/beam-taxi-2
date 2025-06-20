@@ -39,7 +39,7 @@ function MatchRow({ match }: { match: Match }) {
         {match.opponent.firstName} {match.opponent.lastName}
       </TableCell>
       <TableCell>{match.status}</TableCell>
-      <TableCell>{match.result}</TableCell>
+      <TableCell>{match.score}</TableCell>
       <TableCell>
         {match.winner?.firstName} {match.winner?.lastName}
       </TableCell>

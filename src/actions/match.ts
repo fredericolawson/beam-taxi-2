@@ -1,6 +1,8 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import type { Match } from '@/types';
+import camelcaseKeys from 'camelcase-keys';
 
 export async function challengePlayer({ challengerId, opponentId }: { challengerId: string; opponentId: string }) {
   const supabase = await createClient();
@@ -14,5 +16,63 @@ export async function challengePlayer({ challengerId, opponentId }: { challenger
     return { error: error.message };
   }
 
+  return { data, error };
+}
+
+/*
+--------------------------------
+Server Action to get bilateral matches between two players
+--------------------------------
+*/
+
+export async function getBilateralMatches({
+  challengerId,
+  opponentId,
+}: {
+  challengerId: string;
+  opponentId: string;
+}): Promise<Match[] | []> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .schema('ladder')
+    .from('matches')
+    .select(
+      '*, challenger:players!matches_challenger_id_fkey(*), opponent:players!matches_opponent_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
+    )
+    .eq('challenger_id', challengerId)
+    .eq('opponent_id', opponentId);
+  if (error) {
+    console.error('Error fetching matches:', error);
+    return [];
+  }
+  const matches = camelcaseKeys(data, { deep: true }) as Match[];
+  return matches;
+}
+
+export async function submitMatchResult({
+  matchId,
+  winnerId,
+  score,
+  completedOn,
+}: {
+  matchId: string;
+  winnerId: string;
+  score: string;
+  completedOn: Date;
+}) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .schema('ladder')
+    .from('matches')
+    .update({
+      winner_id: winnerId,
+      score: score,
+      completed_on: completedOn,
+    })
+    .eq('id', matchId);
+  if (error) {
+    console.error('Error submitting match result:', error);
+    return { error: error.message };
+  }
   return { data, error };
 }
