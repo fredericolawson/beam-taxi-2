@@ -54,7 +54,7 @@ export function PlayerSheet({ children, player, currentPlayer }: { children: Rea
       <SheetTrigger asChild>
         <div className="cursor-pointer">{children}</div>
       </SheetTrigger>
-      <SheetContent className="flex flex-col">
+      <SheetContent className="bg-muted flex flex-col">
         <SheetHeader className="border-b">
           <SheetTitle className="text-2xl font-bold">{player.displayName}</SheetTitle>
           <SheetDescription>Placeholder</SheetDescription>
