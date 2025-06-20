@@ -9,6 +9,7 @@ export type Player = {
   phone: string;
   displayName: string;
   email: string;
+  matches: Match[];
 };
 
 export type Match = {
@@ -22,7 +23,6 @@ export type Match = {
   completedOn: string | null;
   status: 'pending' | 'accepted' | 'declined' | 'completed';
   score: string | null;
-  result: 'challenger_won' | 'opponent_won' | null;
   createdAt: string;
   updatedAt: string;
 };

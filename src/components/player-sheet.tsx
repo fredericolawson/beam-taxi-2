@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react';
 import { MatchResult } from './match-result';
 import { Loader2, PhoneIcon } from 'lucide-react';
 import { SiWhatsapp } from 'react-icons/si';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Separator } from './ui/separator';
 
 export function PlayerSheet({ children, player, currentPlayer }: { children: React.ReactNode; player: Player; currentPlayer: Player }) {
@@ -49,6 +49,22 @@ export function PlayerSheet({ children, player, currentPlayer }: { children: Rea
       </div>
     );
 
+  if (player.id === currentPlayer.id) {
+    return (
+      <Sheet>
+        <SheetTrigger asChild>
+          <div className="cursor-pointer">{children}</div>
+        </SheetTrigger>
+        <SheetContent className="bg-muted flex flex-col">
+          <SheetHeader className="border-b">
+            <SheetTitle className="text-2xl font-bold">{player.displayName}</SheetTitle>
+          </SheetHeader>
+          <Profile player={player} />
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -57,10 +73,10 @@ export function PlayerSheet({ children, player, currentPlayer }: { children: Rea
       <SheetContent className="bg-muted flex flex-col">
         <SheetHeader className="border-b">
           <SheetTitle className="text-2xl font-bold">{player.displayName}</SheetTitle>
-          <SheetDescription>Placeholder</SheetDescription>
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
-          {isPendingMatch ? <PlayerContact player={player} /> : <ChallengePlayer player={player} currentPlayer={currentPlayer} />}
+          <PlayerContact player={player} isPendingMatch={isPendingMatch} />
+          <ChallengePlayer player={player} currentPlayer={currentPlayer} isPendingMatch={isPendingMatch} />
           <BilateralMatches matches={matches} fetchMatches={fetchMatches} />
         </div>
       </SheetContent>
@@ -95,7 +111,8 @@ function CompletedMatches({ matches }: { matches: CompletedMatch[] }) {
   );
 }
 
-function PlayerContact({ player }: { player: Player }) {
+function PlayerContact({ player, isPendingMatch }: { player: Player; isPendingMatch: boolean }) {
+  if (!isPendingMatch) return null;
   const phone = player.phone.replace(/ /g, '');
   return (
     <Card>
@@ -130,10 +147,10 @@ function PlayerContact({ player }: { player: Player }) {
   );
 }
 
-/*
- <SheetFooter className="border-t">
-          <SheetClose asChild>
-            <Button>Close</Button>
-          </SheetClose>
-        </SheetFooter>
-        */
+function Profile({ player }: { player: Player }) {
+  return (
+    <div>
+      <h1>{player.displayName}</h1>
+    </div>
+  );
+}

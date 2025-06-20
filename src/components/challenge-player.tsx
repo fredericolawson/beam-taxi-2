@@ -7,12 +7,17 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { challengePlayer } from '@/actions/match';
 
-export function ChallengePlayer({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
-  return (
-    <>
-      <SendChallenge player={player} currentPlayer={currentPlayer} />
-    </>
-  );
+export function ChallengePlayer({
+  player,
+  currentPlayer,
+  isPendingMatch,
+}: {
+  player: Player;
+  currentPlayer: Player;
+  isPendingMatch: boolean;
+}) {
+  if (isPendingMatch) return null;
+  return <SendChallenge player={player} currentPlayer={currentPlayer} />;
 }
 
 export function SendChallenge({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {

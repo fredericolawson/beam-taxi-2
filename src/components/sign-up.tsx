@@ -14,11 +14,13 @@ import { useRouter } from 'next/navigation';
 import { notifyTelegram } from '@/actions/telegram';
 import { toast } from 'sonner';
 import { revalidate } from '@/actions/revalidate';
+import PhoneInput from 'react-phone-number-input/input';
 
 const formSchema = z
   .object({
     firstName: z.string().min(1, { message: 'First name is required' }),
     lastName: z.string().min(1, { message: 'Last name is required' }),
+    phone: z.string().min(1, { message: 'Phone number is required' }),
     email: z.string().email({ message: 'Please enter a valid email address.' }),
     password: z.string().min(6, { message: 'Password must be at least 6 characters long.' }),
     repeatPassword: z.string().min(6, { message: 'Password must be at least 6 characters long.' }),
@@ -38,6 +40,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
     defaultValues: {
       firstName: '',
       lastName: '',
+      phone: '',
       email: '',
       password: '',
       repeatPassword: '',
@@ -48,7 +51,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
     const supabase = createClient();
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
         options: {
@@ -61,15 +64,35 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
       });
 
       if (error) throw error;
+
+      // Insert player info into players table
+      if (data.user) {
+        const { error: playerError } = await supabase.schema('ladder').from('players').insert({
+          user_id: data.user.id,
+          first_name: values.firstName,
+          last_name: values.lastName,
+          email: values.email,
+          phone: values.phone,
+        });
+
+        if (playerError) {
+          console.error('Player insert error:', playerError.message);
+          form.setError('root.serverError', {
+            type: 'server',
+            message: `Player creation failed: ${playerError.message}`,
+          });
+          return;
+        }
+      }
       await revalidate('/');
       router.push('/');
       toast.success('Account created successfully. You are now logged in.');
-
-      notifyTelegram({ message: 'New HeyBuoy sign up:' + values.firstName + ' ' + values.lastName });
+      notifyTelegram({ message: 'New Tennis Ladder sign up:' + values.firstName + ' ' + values.lastName });
     } catch (error: unknown) {
+      console.error(error);
       form.setError('root.serverError', {
         type: 'server',
-        message: error instanceof Error ? error.message : 'An errors occurred',
+        message: error instanceof Error ? error.message : 'An error occurred',
       });
     }
   }
@@ -106,6 +129,24 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
                       <FormLabel>Last Name</FormLabel>
                       <FormControl>
                         <Input type="text" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone</FormLabel>
+                      <FormControl>
+                        <PhoneInput
+                          className="border-input file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                          placeholder="Enter phone number"
+                          defaultCountry="US"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -7,7 +7,7 @@ export default async function Home() {
   const players = await getPlayers();
   const user = await getUserServer();
   const currentPlayer = await getPlayerByUserId(user?.id ?? '');
-  if (!currentPlayer) redirect('/login');
+  if (!currentPlayer) redirect('/auth/login');
 
   return (
     <div className="flex flex-col gap-16 py-8 sm:py-12 md:py-16">

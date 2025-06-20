@@ -19,3 +19,19 @@ export async function getMatches(): Promise<Match[]> {
 
   return matches;
 }
+
+export async function getMatchesByPlayerId({ playerId }: { playerId: string }): Promise<Match[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .schema('ladder')
+    .from('matches')
+    .select('*')
+    .eq('challenger_id', playerId)
+    .or(`opponent_id.eq.${playerId},winner_id.eq.${playerId}`);
+  if (error) {
+    console.error('Error fetching matches:', error);
+    return [];
+  }
+  const matches = camelcaseKeys(data, { deep: true }) as Match[];
+  return matches;
+}

@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { Player } from '@/types';
 import { PlayerSheet } from './player-sheet';
+import { getMatchHistory } from '@/lib/utils/match-history';
 
 export function LadderTable({ players, currentPlayer }: { players: Player[]; currentPlayer: Player }) {
   return (
@@ -39,16 +40,25 @@ function LadderRow({ player, currentPlayer }: { player: Player; currentPlayer: P
         </PlayerSheet>
       </TableCell>
       <TableCell>
-        <div className="flex gap-2">
-          <ResultIcon result="W" />
-          <ResultIcon result="L" />
-        </div>
+        <MatchHistory playerId={player.id} />
       </TableCell>
     </TableRow>
   );
 }
 
-function ResultIcon({ result }: { result: 'W' | 'L' }) {
+async function MatchHistory({ playerId }: { playerId: string }) {
+  const matchHistory = await getMatchHistory({ playerId });
+  if (matchHistory.length === 0) return null;
+  return (
+    <div className="flex gap-2">
+      {matchHistory.map((result, index) => (
+        <ResultIcon key={index} result={result} />
+      ))}
+    </div>
+  );
+}
+
+function ResultIcon({ result }: { result: string }) {
   if (result === 'W') {
     return <div className="flex h-4 w-4 items-center justify-center rounded-full bg-green-700 p-3 text-white">{result}</div>;
   }
