@@ -4,7 +4,7 @@ import { CalendarIcon, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
@@ -16,10 +16,10 @@ import { Input } from './ui/input';
 import type { Match } from '@/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useState } from 'react';
-import { submitMatchResult } from '@/actions/match';
+import { cancelMatchAction, submitMatchResult } from '@/actions/match';
 import { useRouter } from 'next/navigation';
 
-export function PendingMatch({ match, onSuccess }: { match: Match; onSuccess?: () => void }) {
+export function PendingMatch({ match, fetchMatches }: { match: Match; fetchMatches: () => void }) {
   if (!match) return null;
   return (
     <Card>
@@ -27,7 +27,7 @@ export function PendingMatch({ match, onSuccess }: { match: Match; onSuccess?: (
         <CardTitle>Record Your Match Result</CardTitle>
       </CardHeader>
       <CardContent>
-        <MatchResultForm match={match} onSuccess={onSuccess} />
+        <MatchResultForm match={match} fetchMatches={fetchMatches} />
       </CardContent>
     </Card>
   );
@@ -45,7 +45,7 @@ const FormSchema = z.object({
   }),
 });
 
-export function MatchResultForm({ match, onSuccess }: { match: Match; onSuccess?: () => void }) {
+export function MatchResultForm({ match, fetchMatches }: { match: Match; fetchMatches: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -71,11 +71,24 @@ export function MatchResultForm({ match, onSuccess }: { match: Match; onSuccess?
         toast.error(response.error);
       }
       setIsSubmitting(false);
-      onSuccess?.();
+      fetchMatches();
       router.refresh();
       toast.success('Match result submitted');
     };
     submitMatch();
+  }
+
+  function onCancel() {
+    const cancelMatch = async () => {
+      const response = await cancelMatchAction({ matchId: match.id });
+      if (response.error) {
+        toast.error(response.error);
+      }
+      fetchMatches();
+      router.refresh();
+      toast.success('Match cancelled');
+    };
+    cancelMatch();
   }
 
   return (
@@ -158,7 +171,7 @@ export function MatchResultForm({ match, onSuccess }: { match: Match; onSuccess?
             <PlusCircle />
             {isSubmitting ? 'Submitting...' : 'Submit Result'}
           </Button>
-          <Button variant="outline" className="flex-1" disabled={isSubmitting}>
+          <Button variant="outline" className="flex-1" disabled={isSubmitting} onClick={onCancel}>
             Cancel Match
           </Button>
         </div>

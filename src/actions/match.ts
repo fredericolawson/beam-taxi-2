@@ -76,3 +76,19 @@ export async function submitMatchResult({
   }
   return { data, error };
 }
+
+/*
+--------------------------------
+Server Action to cancel a match
+--------------------------------
+*/
+
+export async function cancelMatchAction({ matchId }: { matchId: string }) {
+  const supabase = await createClient();
+  const { data, error } = await supabase.schema('ladder').from('matches').delete().eq('id', matchId);
+  if (error) {
+    console.error('Error cancelling match:', error);
+    return { error: error.message };
+  }
+  return { data, error };
+}

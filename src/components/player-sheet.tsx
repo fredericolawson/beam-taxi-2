@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sheet';
 import type { CompletedMatch, Match, Player } from '@/types';
 import { Button } from './ui/button';
-import { ChallengePlayer } from './challenge-player';
+import { SendChallenge } from './send-challenge';
 import { PendingMatch } from './pending-match';
 import { getBilateralMatches } from '@/actions/match';
 import { useEffect, useState } from 'react';
@@ -88,7 +88,7 @@ export function PlayerSheet({
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
           <PlayerContact player={player} isPendingMatch={isPendingMatch} />
-          <ChallengePlayer player={player} currentPlayer={currentPlayer} isPendingMatch={isPendingMatch} />
+          <SendChallenge player={player} currentPlayer={currentPlayer} isPendingMatch={isPendingMatch} fetchMatches={fetchMatches} />
           <BilateralMatches matches={matches} fetchMatches={fetchMatches} />
         </div>
       </SheetContent>
@@ -103,7 +103,7 @@ function BilateralMatches({ matches, fetchMatches }: { matches: Match[]; fetchMa
   return (
     <div className="flex flex-col gap-4">
       {pendingMatches.map((match) => (
-        <PendingMatch match={match} key={match.id} onSuccess={fetchMatches} />
+        <PendingMatch match={match} key={match.id} fetchMatches={fetchMatches} />
       ))}
       <CompletedMatches matches={completedMatches} />
     </div>
@@ -142,9 +142,11 @@ function PlayerContact({ player, isPendingMatch }: { player: Player; isPendingMa
                 Send WhatsApp
               </a>
             </Button>
-            <Button variant="secondary" className="flex-1">
-              <PhoneIcon className="h-4 w-4" />
-              Call
+            <Button variant="outline" className="flex-1" asChild>
+              <a href={`tel:${phone}`} target="_blank">
+                <PhoneIcon className="h-4 w-4" />
+                Call
+              </a>
             </Button>
           </div>
         </div>

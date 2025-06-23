@@ -7,11 +7,11 @@ import { User as UserIcon } from 'lucide-react';
 export async function Header() {
   const user = await getUserServer();
   return (
-    <header className="flex items-center justify-between border-b bg-white p-6">
+    <header className="bg-secondary flex items-center justify-between border-b p-6">
       <div className="mr-4 flex">
-        <Link href="/" className="mr-6 flex flex-col">
+        <Link href="/" className="text-secondary-foreground mr-6 flex flex-col">
           <span className="text-2xl font-bold">CBTC Tennis Ladder</span>
-          <span className="label">Tennis Ladder for the Coral Beach & Tennis Club</span>
+          <span className="">Tennis Ladder for the Coral Beach & Tennis Club</span>
         </Link>
       </div>
       <div className="items-top flex flex-1 flex-col justify-end gap-2 md:flex-row">
