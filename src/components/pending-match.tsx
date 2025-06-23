@@ -170,7 +170,7 @@ export function MatchResultForm({ match }: { match: Match }) {
           )}
         />
         <div className="flex flex-col gap-2 md:flex-row">
-          <Button type="submit" className="flex-1" disabled={isSubmitting}>
+          <Button type="submit" variant="secondary" className="flex-1" disabled={isSubmitting}>
             <PlusCircle />
             {isSubmitting ? 'Submitting...' : 'Submit Result'}
           </Button>

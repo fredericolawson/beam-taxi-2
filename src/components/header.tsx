@@ -12,7 +12,7 @@ export async function Header() {
     <header className="bg-secondary flex items-center justify-between border-b p-6">
       <div className="mr-4 flex">
         <Link href="/" className="text-secondary-foreground mr-6 flex flex-col">
-          <span className="text-2xl font-bold">CBTC Tennis Ladder</span>
+          <span className="text-2xl font-bold">CBTC Ladder</span>
           <span className="">Tennis Ladder for the Coral Beach & Tennis Club</span>
         </Link>
       </div>
