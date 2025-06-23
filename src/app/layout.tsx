@@ -9,6 +9,33 @@ import { Header } from '@/components/header';
 export const metadata = {
   title: 'CBTC Tennis Ladder',
   description: 'Coral Beach & Tennis Club ladder. ',
+  openGraph: {
+    title: 'CBTC Tennis Ladder',
+    description: 'Coral Beach & Tennis Club ladder. ',
+    url: 'https://cbtctennis.com',
+    siteName: 'CBTC Tennis Ladder',
+    images: [
+      {
+        url: '/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'CBTC Tennis Ladder',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CBTC Tennis Ladder',
+    description: 'Coral Beach & Tennis Club ladder. ',
+    images: ['/logo.png'],
+  },
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({

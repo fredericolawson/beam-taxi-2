@@ -2,7 +2,9 @@ import { getMatchHistory } from '@/lib/utils/match-history';
 
 export async function MatchHistory({ playerId }: { playerId: string }) {
   const matchHistory = await getMatchHistory({ playerId });
-  if (matchHistory.length === 0) return null;
+
+  if (matchHistory.length === 0) return <NoMatchHistory />;
+
   return (
     <div className="flex gap-2">
       {matchHistory.map((result, index) => (
@@ -10,6 +12,10 @@ export async function MatchHistory({ playerId }: { playerId: string }) {
       ))}
     </div>
   );
+}
+
+function NoMatchHistory() {
+  return <div className="text-muted-foreground w-fit rounded-md bg-gray-200 px-4 py-2 text-center text-xs">No Matches Played</div>;
 }
 
 function ResultIcon({ result }: { result: string }) {

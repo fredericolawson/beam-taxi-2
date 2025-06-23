@@ -68,7 +68,7 @@ export function PlayerSheet({
         <SheetContent className="bg-muted flex flex-col">
           <SheetHeader className="border-b">
             <SheetTitle className="text-2xl font-bold">{player.displayName}</SheetTitle>
-            <SheetDescription>{matchHistory}</SheetDescription>
+            {matchHistory}
           </SheetHeader>
           <Profile player={player} />
         </SheetContent>
@@ -84,7 +84,7 @@ export function PlayerSheet({
       <SheetContent className="bg-muted flex flex-col">
         <SheetHeader className="border-b">
           <SheetTitle className="text-2xl font-bold">{player.displayName}</SheetTitle>
-          <SheetDescription>{matchHistory}</SheetDescription>
+          {matchHistory}
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
           <PlayerContact player={player} isPendingMatch={isPendingMatch} />
@@ -161,8 +161,18 @@ function PlayerContact({ player, isPendingMatch }: { player: Player; isPendingMa
 
 function Profile({ player }: { player: Player }) {
   return (
-    <div>
-      <h1>{player.displayName}</h1>
+    <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Your Profile</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-1 text-sm">
+            <span className="text-xs">Phone</span>
+            <span className="bg-muted rounded-md p-2">{player.phone}</span>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
