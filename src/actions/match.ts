@@ -25,13 +25,7 @@ Server Action to get bilateral matches between two players
 --------------------------------
 */
 
-export async function getBilateralMatches({
-  challengerId,
-  opponentId,
-}: {
-  challengerId: string;
-  opponentId: string;
-}): Promise<Match[] | []> {
+export async function getBiMatches({ challengerId, opponentId }: { challengerId: string; opponentId: string }): Promise<Match[] | []> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .schema('ladder')
@@ -48,6 +42,17 @@ export async function getBilateralMatches({
   const matches = camelcaseKeys(data, { deep: true }) as Match[];
   return matches;
 }
+
+export async function getPendingBiMatches({ challengerId, opponentId }: { challengerId: string; opponentId: string }): Promise<Match[]> {
+  const matches = await getBiMatches({ challengerId, opponentId });
+  return matches.filter((match) => match.completedOn === null);
+}
+
+/*
+--------------------------------
+Server Action to submit a match result
+--------------------------------
+*/
 
 export async function submitMatchResult({
   matchId,

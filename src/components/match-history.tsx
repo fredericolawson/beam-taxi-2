@@ -1,4 +1,4 @@
-import { getMatchHistory } from '@/lib/utils/match-history';
+import { getMatchHistory } from '@/lib/utils/match-utils';
 
 export async function MatchHistory({ playerId }: { playerId: string }) {
   const matchHistory = await getMatchHistory({ playerId });
@@ -14,13 +14,13 @@ export async function MatchHistory({ playerId }: { playerId: string }) {
   );
 }
 
-function NoMatchHistory() {
-  return <div className="text-muted-foreground w-fit rounded-md bg-gray-200 px-4 py-2 text-center text-xs">No Matches Played</div>;
-}
-
 function ResultIcon({ result }: { result: string }) {
   if (result === 'W') {
     return <div className="flex h-4 w-4 items-center justify-center rounded-full bg-green-700 p-3 text-white">{result}</div>;
   }
   return <div className="flex h-4 w-4 items-center justify-center rounded-full bg-gray-200 p-3">{result}</div>;
+}
+
+function NoMatchHistory() {
+  return <div className="text-muted-foreground w-fit rounded-md bg-gray-200 px-4 py-2 text-center text-xs">No Matches Played</div>;
 }

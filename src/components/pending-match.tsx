@@ -2,7 +2,7 @@
 
 import { CalendarIcon, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -18,16 +18,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { useState } from 'react';
 import { cancelMatchAction, submitMatchResult } from '@/actions/match';
 import { useRouter } from 'next/navigation';
+import { revalidate } from '@/actions/revalidate';
 
-export function PendingMatch({ match, fetchMatches }: { match: Match; fetchMatches: () => void }) {
+export function PendingMatch({ match }: { match: Match }) {
   if (!match) return null;
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Record Your Match Result</CardTitle>
+        <CardTitle>
+          {match.opponent.firstName} {match.opponent.lastName} vs {match.challenger.firstName} {match.challenger.lastName}
+        </CardTitle>
+        <CardDescription>Record the result of your match</CardDescription>
       </CardHeader>
       <CardContent>
-        <MatchResultForm match={match} fetchMatches={fetchMatches} />
+        <MatchResultForm match={match} />
       </CardContent>
     </Card>
   );
@@ -45,7 +49,7 @@ const FormSchema = z.object({
   }),
 });
 
-export function MatchResultForm({ match, fetchMatches }: { match: Match; fetchMatches: () => void }) {
+export function MatchResultForm({ match }: { match: Match }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -71,7 +75,6 @@ export function MatchResultForm({ match, fetchMatches }: { match: Match; fetchMa
         toast.error(response.error);
       }
       setIsSubmitting(false);
-      fetchMatches();
       router.refresh();
       toast.success('Match result submitted');
     };
@@ -84,8 +87,8 @@ export function MatchResultForm({ match, fetchMatches }: { match: Match; fetchMa
       if (response.error) {
         toast.error(response.error);
       }
-      fetchMatches();
       router.refresh();
+      revalidate('/');
       toast.success('Match cancelled');
     };
     cancelMatch();

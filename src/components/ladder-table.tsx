@@ -2,6 +2,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import type { Player } from '@/types';
 import { PlayerSheet } from './player-sheet';
 import { MatchHistory } from './match-history';
+import { LadderAction } from './ladder-action';
 
 export function LadderTable({ players, currentPlayer }: { players: Player[]; currentPlayer: Player }) {
   return (
@@ -24,6 +25,7 @@ function LadderHeader() {
       <TableHead>Rank</TableHead>
       <TableHead>Name</TableHead>
       <TableHead>Recent Results</TableHead>
+      <TableHead>Action</TableHead>
     </TableRow>
   );
 }
@@ -41,6 +43,9 @@ function LadderRow({ player, currentPlayer }: { player: Player; currentPlayer: P
       </TableCell>
       <TableCell>
         <MatchHistory playerId={player.id} />
+      </TableCell>
+      <TableCell>
+        <LadderAction player={player} currentPlayer={currentPlayer} />
       </TableCell>
     </TableRow>
   );

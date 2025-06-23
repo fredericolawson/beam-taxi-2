@@ -3,34 +3,32 @@
 import { Player } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
-import { useState } from 'react';
 import { toast } from 'sonner';
-import { challengePlayer } from '@/actions/match';
 import { Loader2 } from 'lucide-react';
+import { useSendChallenge } from '@/hooks/useSendChallenge';
 
-export function SendChallenge({
+export function ChallengePlayer({
   player,
   currentPlayer,
-  isPendingMatch,
-  fetchMatches,
+  onChallengeSuccess,
 }: {
   player: Player;
   currentPlayer: Player;
-  isPendingMatch: boolean;
-  fetchMatches: () => void;
+  onChallengeSuccess: () => void;
 }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const challengerId = currentPlayer.id;
-  if (isPendingMatch) return null;
+  const { isLoading, error, sendChallenge } = useSendChallenge({
+    challengerId: currentPlayer.id,
+    opponentId: player.id,
+  });
 
-  const sendChallenge = async () => {
-    setIsLoading(true);
-    const { error } = await challengePlayer({ challengerId, opponentId: player.id });
-    setIsLoading(false);
-    if (error) toast.error(`Failed to challenge player: ${error}`);
+  if (error) return <div className="text-red-500">{error}</div>;
+
+  const handleSendChallenge = async () => {
+    const result = await sendChallenge();
+    if (result.error) toast.error(result.error);
     else {
       toast.success('Challenge sent');
-      fetchMatches();
+      onChallengeSuccess();
     }
   };
 
@@ -43,7 +41,7 @@ export function SendChallenge({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Button onClick={() => sendChallenge()} disabled={isLoading}>
+        <Button onClick={handleSendChallenge} disabled={isLoading}>
           {isLoading ? (
             <>
               <Loader2 className="mr-2 animate-spin" />

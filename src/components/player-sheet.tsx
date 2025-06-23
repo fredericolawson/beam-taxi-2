@@ -12,15 +12,16 @@ import {
 } from '@/components/ui/sheet';
 import type { CompletedMatch, Match, Player } from '@/types';
 import { Button } from './ui/button';
-import { SendChallenge } from './send-challenge';
+import { ChallengePlayer } from './send-challenge';
 import { PendingMatch } from './pending-match';
-import { getBilateralMatches } from '@/actions/match';
+import { getBiMatches } from '@/actions/match';
 import { useEffect, useState } from 'react';
 import { MatchResult } from './match-result';
 import { Loader2, PhoneIcon } from 'lucide-react';
 import { SiWhatsapp } from 'react-icons/si';
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Separator } from './ui/separator';
+import { useFetchMatches } from '@/hooks/useFetchMatches';
 
 export function PlayerSheet({
   children,
@@ -33,48 +34,14 @@ export function PlayerSheet({
   currentPlayer: Player;
   matchHistory: React.ReactNode;
 }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [matches, setMatches] = useState<Match[]>([]);
+  const { isLoading, matches, fetchMatches } = useFetchMatches({
+    challengerId: currentPlayer.id,
+    opponentId: player.id,
+  });
 
-  const challengerId = currentPlayer.id;
-  const opponentId = player.id;
+  const matchesArePending = matches.some((m) => m.completedOn === null);
 
-  const fetchMatches = async () => {
-    setIsLoading(true);
-    const matches = await getBilateralMatches({ challengerId, opponentId });
-    setMatches(matches);
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    fetchMatches();
-  }, [challengerId, opponentId]);
-
-  const isPendingMatch = matches.some((match) => match.completedOn === null);
-
-  if (isLoading)
-    return (
-      <div className="flex h-full flex-1 flex-col items-center justify-center">
-        <Loader2 className="animate-spin" />
-      </div>
-    );
-
-  if (player.id === currentPlayer.id) {
-    return (
-      <Sheet>
-        <SheetTrigger asChild>
-          <div className="cursor-pointer">{children}</div>
-        </SheetTrigger>
-        <SheetContent className="bg-muted flex flex-col">
-          <SheetHeader className="border-b">
-            <SheetTitle className="text-2xl font-bold">{player.displayName}</SheetTitle>
-            {matchHistory}
-          </SheetHeader>
-          <Profile player={player} />
-        </SheetContent>
-      </Sheet>
-    );
-  }
+  if (isLoading) return <LoadingMatches />;
 
   return (
     <Sheet>
@@ -87,23 +54,23 @@ export function PlayerSheet({
           {matchHistory}
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
-          <PlayerContact player={player} isPendingMatch={isPendingMatch} />
-          <SendChallenge player={player} currentPlayer={currentPlayer} isPendingMatch={isPendingMatch} fetchMatches={fetchMatches} />
-          <BilateralMatches matches={matches} fetchMatches={fetchMatches} />
+          {matchesArePending && <PlayerContact player={player} />}
+          {!matchesArePending && <ChallengePlayer player={player} currentPlayer={currentPlayer} onChallengeSuccess={fetchMatches} />}
+          <BilateralMatches matches={matches} />
         </div>
       </SheetContent>
     </Sheet>
   );
 }
 
-function BilateralMatches({ matches, fetchMatches }: { matches: Match[]; fetchMatches: () => void }) {
+function BilateralMatches({ matches }: { matches: Match[] }) {
   const pendingMatches = matches.filter((match) => match.completedOn === null);
   const completedMatches = matches.filter((match) => match.completedOn !== null) as CompletedMatch[];
 
   return (
     <div className="flex flex-col gap-4">
       {pendingMatches.map((match) => (
-        <PendingMatch match={match} key={match.id} fetchMatches={fetchMatches} />
+        <PendingMatch match={match} key={match.id} />
       ))}
       <CompletedMatches matches={completedMatches} />
     </div>
@@ -123,8 +90,7 @@ function CompletedMatches({ matches }: { matches: CompletedMatch[] }) {
   );
 }
 
-function PlayerContact({ player, isPendingMatch }: { player: Player; isPendingMatch: boolean }) {
-  if (!isPendingMatch) return null;
+function PlayerContact({ player }: { player: Player }) {
   const phone = player.phone.replace(/ /g, '');
   return (
     <Card>
@@ -158,6 +124,14 @@ function PlayerContact({ player, isPendingMatch }: { player: Player; isPendingMa
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+function LoadingMatches() {
+  return (
+    <div className="flex h-full flex-1 flex-col items-center justify-center">
+      <Loader2 className="animate-spin" />
+    </div>
   );
 }
 
