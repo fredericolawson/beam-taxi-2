@@ -22,7 +22,17 @@ import { SiWhatsapp } from 'react-icons/si';
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Separator } from './ui/separator';
 
-export function PlayerSheet({ children, player, currentPlayer }: { children: React.ReactNode; player: Player; currentPlayer: Player }) {
+export function PlayerSheet({
+  children,
+  player,
+  currentPlayer,
+  matchHistory,
+}: {
+  children: React.ReactNode;
+  player: Player;
+  currentPlayer: Player;
+  matchHistory: React.ReactNode;
+}) {
   const [isLoading, setIsLoading] = useState(false);
   const [matches, setMatches] = useState<Match[]>([]);
 
@@ -58,6 +68,7 @@ export function PlayerSheet({ children, player, currentPlayer }: { children: Rea
         <SheetContent className="bg-muted flex flex-col">
           <SheetHeader className="border-b">
             <SheetTitle className="text-2xl font-bold">{player.displayName}</SheetTitle>
+            <SheetDescription>{matchHistory}</SheetDescription>
           </SheetHeader>
           <Profile player={player} />
         </SheetContent>
@@ -73,6 +84,7 @@ export function PlayerSheet({ children, player, currentPlayer }: { children: Rea
       <SheetContent className="bg-muted flex flex-col">
         <SheetHeader className="border-b">
           <SheetTitle className="text-2xl font-bold">{player.displayName}</SheetTitle>
+          <SheetDescription>{matchHistory}</SheetDescription>
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
           <PlayerContact player={player} isPendingMatch={isPendingMatch} />
@@ -124,13 +136,13 @@ function PlayerContact({ player, isPendingMatch }: { player: Player; isPendingMa
           <span className="text-xs">Phone</span>
           <span className="bg-muted mb-2 w-full rounded-md p-2">{player.phone}</span>
           <div className="flex w-full flex-col gap-2 md:flex-row">
-            <Button className="flex-1" asChild>
+            <Button variant="outline" className="flex-1" asChild>
               <a href={`https://wa.me/${phone}`} target="_blank">
-                <SiWhatsapp className="h-4 w-4" />
+                <SiWhatsapp className="h-4 w-4 text-green-500" />
                 Send WhatsApp
               </a>
             </Button>
-            <Button variant="outline" className="flex-1">
+            <Button variant="secondary" className="flex-1">
               <PhoneIcon className="h-4 w-4" />
               Call
             </Button>

@@ -24,7 +24,7 @@ export function PendingMatch({ match, onSuccess }: { match: Match; onSuccess?: (
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Match Result</CardTitle>
+        <CardTitle>Record Your Match Result</CardTitle>
       </CardHeader>
       <CardContent>
         <MatchResultForm match={match} onSuccess={onSuccess} />
