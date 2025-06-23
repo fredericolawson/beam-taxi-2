@@ -26,8 +26,8 @@ export async function getMatchesByPlayerId({ playerId }: { playerId: string }): 
     .schema('ladder')
     .from('matches')
     .select('*')
-    .eq('challenger_id', playerId)
-    .or(`opponent_id.eq.${playerId},winner_id.eq.${playerId}`);
+    .or(`opponent_id.eq.${playerId},winner_id.eq.${playerId}`)
+    .not('winner_id', 'is', null);
   if (error) {
     console.error('Error fetching matches:', error);
     return [];
