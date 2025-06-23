@@ -84,7 +84,7 @@ function PlayerContact({ player }: { player: Player }) {
           <div className="flex w-full flex-col gap-2 md:flex-row">
             <Button variant="outline" className="flex-1" asChild>
               <a href={`https://wa.me/${phone}`} target="_blank">
-                <SiWhatsapp className="h-4 w-4 text-green-500" />
+                <SiWhatsapp className="h-4 w-4" />
                 Send WhatsApp
               </a>
             </Button>
