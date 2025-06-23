@@ -1,17 +1,17 @@
 import { getBiMatches } from '@/actions/match';
-import type { Match } from '@/types';
+import type { CompletedMatch, Match } from '@/types';
 import { useState, useEffect } from 'react';
 
 export function useFetchMatches({ challengerId, opponentId }: { challengerId: string; opponentId: string }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [matches, setMatches] = useState<Match[]>([]);
-  const [pendingMatches, setPendingMatches] = useState<Match[]>([]);
+  const [completedMatches, setCompletedMatches] = useState<CompletedMatch[]>([]);
+  const [pendingMatch, setPendingMatch] = useState<Match | null>(null);
 
   const fetchMatches = async () => {
     setIsLoading(true);
     const matches = await getBiMatches({ challengerId, opponentId });
-    setMatches(matches);
-    setPendingMatches(matches.filter((m) => m.completedOn === null));
+    setCompletedMatches(matches.filter((m) => m.completedOn !== null) as CompletedMatch[]);
+    setPendingMatch(matches.find((m) => m.completedOn === null) || null);
     setIsLoading(false);
   };
 
@@ -19,5 +19,5 @@ export function useFetchMatches({ challengerId, opponentId }: { challengerId: st
     fetchMatches();
   }, [challengerId, opponentId]);
 
-  return { isLoading, matches, pendingMatches, fetchMatches };
+  return { isLoading, completedMatches, pendingMatch, fetchMatches };
 }

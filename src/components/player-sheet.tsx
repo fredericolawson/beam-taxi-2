@@ -14,8 +14,6 @@ import type { CompletedMatch, Match, Player } from '@/types';
 import { Button } from './ui/button';
 import { ChallengePlayer } from './send-challenge';
 import { PendingMatch } from './pending-match';
-import { getBiMatches } from '@/actions/match';
-import { useEffect, useState } from 'react';
 import { MatchResult } from './match-result';
 import { Loader2, PhoneIcon } from 'lucide-react';
 import { SiWhatsapp } from 'react-icons/si';
@@ -24,12 +22,10 @@ import { Separator } from './ui/separator';
 import { useFetchMatches } from '@/hooks/useFetchMatches';
 
 export function PlayerSheet({ children, player, currentPlayer }: { children: React.ReactNode; player: Player; currentPlayer: Player }) {
-  const { isLoading, matches, fetchMatches } = useFetchMatches({
+  const { isLoading, completedMatches, pendingMatch, fetchMatches } = useFetchMatches({
     challengerId: currentPlayer.id,
     opponentId: player.id,
   });
-
-  const matchesArePending = matches.some((m) => m.completedOn === null);
 
   if (isLoading) return <LoadingMatches />;
 
@@ -43,24 +39,19 @@ export function PlayerSheet({ children, player, currentPlayer }: { children: Rea
           <SheetTitle className="text-2xl font-bold">{player.displayName}</SheetTitle>
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
-          {matchesArePending && <PlayerContact player={player} />}
-          {!matchesArePending && <ChallengePlayer player={player} currentPlayer={currentPlayer} onChallengeSuccess={fetchMatches} />}
-          <BilateralMatches matches={matches} />
+          {pendingMatch && <PlayerContact player={player} />}
+          {!pendingMatch && <ChallengePlayer player={player} currentPlayer={currentPlayer} onChallengeSuccess={fetchMatches} />}
+          <BilateralMatches completedMatches={completedMatches} pendingMatch={pendingMatch} />
         </div>
       </SheetContent>
     </Sheet>
   );
 }
 
-function BilateralMatches({ matches }: { matches: Match[] }) {
-  const pendingMatches = matches.filter((match) => match.completedOn === null);
-  const completedMatches = matches.filter((match) => match.completedOn !== null) as CompletedMatch[];
-
+function BilateralMatches({ completedMatches, pendingMatch }: { completedMatches: CompletedMatch[]; pendingMatch: Match | null }) {
   return (
     <div className="flex flex-col gap-4">
-      {pendingMatches.map((match) => (
-        <PendingMatch match={match} key={match.id} />
-      ))}
+      <PendingMatch match={pendingMatch} key={pendingMatch?.id} />
       <CompletedMatches matches={completedMatches} />
     </div>
   );
