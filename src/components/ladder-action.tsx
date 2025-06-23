@@ -14,14 +14,14 @@ export function LadderAction({ player, currentPlayer }: { player: Player; curren
     opponentId: player.id,
   });
 
-  const { isLoading: isLoadingMatches, matches } = useFetchMatches({
+  const { isLoading: isLoadingMatches, pendingMatches } = useFetchMatches({
     challengerId: currentPlayer.id,
     opponentId: player.id,
   });
 
   if (isLoadingMatches) return <Loader2 className="mr-2 animate-spin" />;
 
-  if (matches.length > 0)
+  if (pendingMatches.length > 0)
     return (
       <PlayerSheet player={player} currentPlayer={currentPlayer}>
         <Button size="sm">Complete Match</Button>
@@ -29,7 +29,8 @@ export function LadderAction({ player, currentPlayer }: { player: Player; curren
     );
 
   if (player.id === currentPlayer.id) return null;
-  if (player.ladderRank < currentPlayer.ladderRank - 3) return null;
+
+  if (player.ladderRank < currentPlayer.ladderRank - 3 || player.ladderRank > currentPlayer.ladderRank) return null;
   return (
     <PlayerSheet player={player} currentPlayer={currentPlayer}>
       <Button variant="outline" size="sm">

@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import type { Match } from '@/types';
 import camelcaseKeys from 'camelcase-keys';
+import { revalidatePath } from 'next/cache';
 
 export async function challengePlayer({ challengerId, opponentId }: { challengerId: string; opponentId: string }) {
   const supabase = await createClient();
@@ -95,5 +96,6 @@ export async function cancelMatchAction({ matchId }: { matchId: string }) {
     console.error('Error cancelling match:', error);
     return { error: error.message };
   }
+  revalidatePath('/');
   return { data, error };
 }
