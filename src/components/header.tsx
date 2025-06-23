@@ -3,9 +3,11 @@ import Link from 'next/link';
 import { Button } from './ui/button';
 import { getUserServer } from '@/lib/utils/get-user-server';
 import { User as UserIcon } from 'lucide-react';
+import { getPlayerByUserId } from '@/lib/tables/players';
 
 export async function Header() {
   const user = await getUserServer();
+
   return (
     <header className="bg-secondary flex items-center justify-between border-b p-6">
       <div className="mr-4 flex">
@@ -22,14 +24,16 @@ export async function Header() {
   );
 }
 
-function ProfileMenu({ user }: { user: SupabaseUser | null }) {
+async function ProfileMenu({ user }: { user: SupabaseUser | null }) {
   if (!user) return null;
+  const player = await getPlayerByUserId(user.id);
+  if (!player) return null;
 
   return (
     <Button variant="secondary" asChild>
       <Link href={`/profile`}>
         <UserIcon />
-        {user.user_metadata.first_name} {user.user_metadata.last_name.charAt(0)}
+        {player.firstName} {player.lastName.charAt(0)}
       </Link>
     </Button>
   );

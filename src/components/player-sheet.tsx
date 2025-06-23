@@ -23,17 +23,7 @@ import { Card, CardAction, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Separator } from './ui/separator';
 import { useFetchMatches } from '@/hooks/useFetchMatches';
 
-export function PlayerSheet({
-  children,
-  player,
-  currentPlayer,
-  matchHistory,
-}: {
-  children: React.ReactNode;
-  player: Player;
-  currentPlayer: Player;
-  matchHistory: React.ReactNode;
-}) {
+export function PlayerSheet({ children, player, currentPlayer }: { children: React.ReactNode; player: Player; currentPlayer: Player }) {
   const { isLoading, matches, fetchMatches } = useFetchMatches({
     challengerId: currentPlayer.id,
     opponentId: player.id,
@@ -51,7 +41,6 @@ export function PlayerSheet({
       <SheetContent className="bg-muted flex flex-col">
         <SheetHeader className="border-b">
           <SheetTitle className="text-2xl font-bold">{player.displayName}</SheetTitle>
-          {matchHistory}
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
           {matchesArePending && <PlayerContact player={player} />}

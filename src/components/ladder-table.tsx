@@ -32,10 +32,10 @@ function LadderHeader() {
 
 function LadderRow({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
   return (
-    <TableRow>
+    <TableRow className="h-12">
       <TableCell>{player.ladderRank}</TableCell>
       <TableCell>
-        <PlayerSheet player={player} currentPlayer={currentPlayer} matchHistory={<MatchHistory playerId={player.id} />}>
+        <PlayerSheet player={player} currentPlayer={currentPlayer}>
           <span className="cursor-pointer hover:underline">
             {player.firstName} {player.lastName}
           </span>

@@ -5,6 +5,8 @@ import { Button } from './ui/button';
 import { useSendChallenge } from '@/hooks/useSendChallenge';
 import type { Player } from '@/types';
 import { Loader2 } from 'lucide-react';
+import { PlayerSheet } from './player-sheet';
+import { MatchHistory } from './match-history';
 
 export function LadderAction({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
   const { sendChallenge } = useSendChallenge({
@@ -21,16 +23,18 @@ export function LadderAction({ player, currentPlayer }: { player: Player; curren
 
   if (matches.length > 0)
     return (
-      <Button size="sm" onClick={() => null}>
-        Complete Match
-      </Button>
+      <PlayerSheet player={player} currentPlayer={currentPlayer}>
+        <Button size="sm">Complete Match</Button>
+      </PlayerSheet>
     );
 
   if (player.id === currentPlayer.id) return null;
   if (player.ladderRank < currentPlayer.ladderRank - 3) return null;
   return (
-    <Button variant="outline" size="sm" onClick={() => sendChallenge()}>
-      Challenge Player
-    </Button>
+    <PlayerSheet player={player} currentPlayer={currentPlayer}>
+      <Button variant="outline" size="sm">
+        Challenge Player
+      </Button>
+    </PlayerSheet>
   );
 }
