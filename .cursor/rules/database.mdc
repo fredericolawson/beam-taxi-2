@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+My supabase project is called Beam
+My schema is 'ladder'
+
+I am always happy for cursor agent to auto run READ queries -- but always seek my permission before modifying my DB

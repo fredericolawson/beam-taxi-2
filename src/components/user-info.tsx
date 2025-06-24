@@ -4,8 +4,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Mail } from 'lucide-react';
 import { UserIcon } from 'lucide-react';
 import { LogoutButton } from './logout-button';
+import type { Player } from '@/types';
 
-export function UserInfo({ user }: { user: User | null }) {
+export function UserInfo({ user, player }: { user: User | null; player: Player }) {
   if (!user) {
     return <div>Loading user information...</div>;
   }
@@ -22,9 +23,7 @@ export function UserInfo({ user }: { user: User | null }) {
           </Avatar>
           <div>
             <CardTitle className="text-2xl">
-              {user.user_metadata?.first_name
-                ? `${user.user_metadata.first_name} ${user.user_metadata.last_name || ''}`
-                : user.email?.split('@')[0] || 'User'}
+              {player.firstName} {player.lastName}
             </CardTitle>
             <CardDescription className="flex items-center gap-1">
               <Mail className="h-3 w-3" /> {user.email}
@@ -41,7 +40,7 @@ export function UserInfo({ user }: { user: User | null }) {
             </div>
             <div className="space-y-1">
               <p className="label">Phone</p>
-              <p className="text-sm font-medium">{user.user_metadata.phone}</p>
+              <p className="text-sm font-medium">{player.phone}</p>
             </div>
 
             <div className="space-y-1">

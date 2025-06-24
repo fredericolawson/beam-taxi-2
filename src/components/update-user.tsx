@@ -12,6 +12,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import { UploadIcon } from 'lucide-react';
+import type { Player } from '@/types';
+import { revalidate } from '@/actions/revalidate';
+import { updatePlayer } from '@/actions/player';
 
 const formSchema = z.object({
   firstName: z.string().min(1, { message: 'First name is required.' }),
@@ -22,15 +25,20 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export function UpdateInfoForm({ user, className, ...props }: React.ComponentPropsWithoutRef<'div'> & { user: User }) {
+export function UpdateInfoForm({
+  user,
+  player,
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<'div'> & { user: User; player: Player }) {
   const router = useRouter();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: user.user_metadata.first_name || '',
-      lastName: user.user_metadata.last_name || '',
-      phone: user.user_metadata.phone || '',
+      firstName: player.firstName || '',
+      lastName: player.lastName || '',
+      phone: player.phone || '',
       email: user.email || '',
     },
   });
@@ -49,12 +57,20 @@ export function UpdateInfoForm({ user, className, ...props }: React.ComponentPro
 
       if (error) throw error;
 
-      router.push('/account');
-    } catch (error: unknown) {
+      const { error: playerError } = await updatePlayer(player.id, {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        phone: values.phone,
+      });
+
+      if (playerError) throw playerError;
+
+      revalidate('/profile');
+    } catch (error: any) {
       console.error('Update error:', error);
       form.setError('root.serverError', {
         type: 'server',
-        message: error instanceof Error ? error.message : 'An unexpected error occurred.',
+        message: error?.message || 'An unexpected error occurred.',
       });
     }
   }
