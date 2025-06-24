@@ -4,18 +4,17 @@ import { Button } from './ui/button';
 import { getUserServer } from '@/lib/utils/get-user-server';
 import { User as UserIcon } from 'lucide-react';
 import { getPlayerByUserId } from '@/lib/tables/players';
+import Image from 'next/image';
 
 export async function Header() {
   const user = await getUserServer();
 
   return (
-    <header className="bg-secondary flex items-center justify-between border-b p-6">
-      <div className="mr-4 flex">
-        <Link href="/" className="text-secondary-foreground mr-6 flex flex-col">
-          <span className="text-2xl font-bold">CBTC Ladder</span>
-          <span className="">Tennis Ladder for the Coral Beach & Tennis Club</span>
-        </Link>
-      </div>
+    <header className="bg-secondary flex items-center justify-between border-b px-6">
+      <Link href="/" className="text-secondary-foreground mr-6 flex flex-col">
+        <Image src="/logo.png" alt="CBTC Ladder" width={300} height={200} />
+      </Link>
+
       <div className="items-top flex flex-1 flex-col justify-end gap-2 md:flex-row">
         <ProfileMenu user={user} />
         <GenericMenu user={user} />
