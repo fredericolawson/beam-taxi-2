@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 export function LadderTable({ players, currentPlayer }: { players: Player[]; currentPlayer: Player }) {
   return (
-    <Table>
+    <Table className="rounded-md border bg-white">
       <TableHeader>
         <LadderHeader />
       </TableHeader>
@@ -33,8 +33,8 @@ function LadderHeader() {
 
 function LadderRow({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
   return (
-    <TableRow className={cn(player.id === currentPlayer.id && 'bg-gray-100')}>
-      <TableCell className="w-16">{player.ladderRank}</TableCell>
+    <TableRow className={cn(player.id === currentPlayer.id && 'bg-secondary/20 hover:bg-secondary/20')}>
+      <TableCell className="w-16 text-center">{player.ladderRank}</TableCell>
       <TableCell className="w-48">
         <PlayerSheet player={player} currentPlayer={currentPlayer}>
           <span className="cursor-pointer hover:underline">
