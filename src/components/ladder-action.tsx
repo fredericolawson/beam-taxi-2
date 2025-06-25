@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import type { Player } from '@/types';
 import { CheckCircle, Loader2, PlusCircle } from 'lucide-react';
 import { PlayerSheet } from './player-sheet';
+import { checkPlayable } from '@/lib/utils/player-utils';
 
 export function LadderAction({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
   const { isLoading: isLoadingMatches, pendingMatch } = useFetchMatches({
@@ -14,17 +15,17 @@ export function LadderAction({ player, currentPlayer }: { player: Player; curren
 
   if (isLoadingMatches) return <Loading />;
   if (player.id === currentPlayer.id) return null;
+  const isPlayable = checkPlayable({ player, currentPlayer });
 
   return (
-    <PlayerSheet player={player} currentPlayer={currentPlayer}>
+    <>
       {pendingMatch && <CompleteMatchButton />}
-      {!pendingMatch && <ChallengePlayerButton player={player} currentPlayer={currentPlayer} />}
-    </PlayerSheet>
+      {!pendingMatch && isPlayable && <ChallengePlayerButton />}
+    </>
   );
 }
 
-function ChallengePlayerButton({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
-  if (player.ladderRank < currentPlayer.ladderRank - 3 || player.ladderRank > currentPlayer.ladderRank) return null;
+function ChallengePlayerButton() {
   return (
     <Button variant="outline" size="sm" className="w-38">
       <PlusCircle className="h-4 w-4" />

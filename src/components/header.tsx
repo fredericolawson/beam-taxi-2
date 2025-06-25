@@ -29,7 +29,7 @@ async function ProfileMenu({ user }: { user: SupabaseUser | null }) {
   if (!player) return null;
 
   return (
-    <Button variant="secondary" asChild>
+    <Button variant="secondary" asChild className="border">
       <Link href={`/profile`}>
         <UserIcon />
         {player.firstName} {player.lastName.charAt(0)}

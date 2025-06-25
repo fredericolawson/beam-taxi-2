@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Typerscript preferences
+
+- Always use named function parameters
+- Organize types by domain/feature in @/types/[feature].ts files. 
+- Never define types inline in component files - always extract them to the appropriate types file. 
+- Use barrel exports from @/types/index.ts for commonly used types.
+- Use type instead of interface for everything, except if I explicitly say otherwise

@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Standard rules that I want cursor to adhere to every time
+
+- DMC means "Don't make changes". if prompt contains that string, agent should make no changes to my codebase, only recommendations. 

@@ -20,14 +20,29 @@ import { SiWhatsapp } from 'react-icons/si';
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Separator } from './ui/separator';
 import { useFetchMatches } from '@/hooks/useFetchMatches';
+import { checkPlayable } from '@/lib/utils/player-utils';
+import { MatchesTable } from './matches-table';
 
-export function PlayerSheet({ children, player, currentPlayer }: { children: React.ReactNode; player: Player; currentPlayer: Player }) {
+export function PlayerSheet({
+  children,
+  player,
+  currentPlayer,
+  historyDetail,
+}: {
+  children: React.ReactNode;
+  player: Player;
+  currentPlayer: Player;
+  historyDetail: Match[];
+}) {
   const { isLoading, completedMatches, pendingMatch, fetchMatches } = useFetchMatches({
     challengerId: currentPlayer.id,
     opponentId: player.id,
   });
+  console.log(historyDetail);
 
   if (isLoading) return <LoadingMatches />;
+  const isPlayable = checkPlayable({ player, currentPlayer });
+  const isCurrentPlayer = player.id === currentPlayer.id;
 
   return (
     <Sheet>
@@ -40,7 +55,9 @@ export function PlayerSheet({ children, player, currentPlayer }: { children: Rea
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
           {pendingMatch && <PlayerContact player={player} />}
-          {!pendingMatch && <ChallengePlayer player={player} currentPlayer={currentPlayer} onChallengeSuccess={fetchMatches} />}
+          {!pendingMatch && isPlayable && !isCurrentPlayer && (
+            <ChallengePlayer player={player} currentPlayer={currentPlayer} onChallengeSuccess={fetchMatches} />
+          )}
           <BilateralMatches completedMatches={completedMatches} pendingMatch={pendingMatch} />
         </div>
       </SheetContent>

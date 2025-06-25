@@ -1,11 +1,7 @@
-import { getMatchHistory } from '@/lib/utils/match-utils';
-
-export async function MatchHistory({ playerId }: { playerId: string }) {
-  const matchHistory = await getMatchHistory({ playerId });
-
+export async function MatchHistorySummary({ historySummary }: { historySummary: string[] }) {
   return (
     <div className="flex gap-2">
-      {matchHistory.map((result, index) => (
+      {historySummary.map((result, index) => (
         <ResultIcon key={index} result={result} />
       ))}
     </div>
