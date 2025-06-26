@@ -47,7 +47,7 @@ export function RecordMatchResult({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      winnerId: match.challenger.id,
+      winnerId: '',
       result: '',
       completedOn: new Date(),
     },
