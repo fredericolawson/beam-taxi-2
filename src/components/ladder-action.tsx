@@ -10,7 +10,7 @@ import { checkPlayable } from '@/lib/utils/player-utils';
 export function LadderAction({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
   const { isLoading: isLoadingMatches, pendingMatch } = useFetchMatches({
     challengerId: currentPlayer.id,
-    opponentId: player.id,
+    defenderId: player.id,
   });
 
   if (isLoadingMatches) return <Loading />;

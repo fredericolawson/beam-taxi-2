@@ -9,7 +9,7 @@ export function MatchResult({ match }: { match: CompletedMatch }) {
     <Card className="gap-2">
       <CardHeader>
         <CardTitle>
-          {match.challenger.firstName} {match.challenger.lastName} vs {match.opponent.firstName} {match.opponent.lastName}
+          {match.challenger.firstName} {match.challenger.lastName} vs {match.defender.firstName} {match.defender.lastName}
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">

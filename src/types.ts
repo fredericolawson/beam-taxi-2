@@ -15,10 +15,10 @@ export type Player = {
 export type Match = {
   id: string;
   challenger: Player;
-  opponent: Player;
+  defender: Player;
   winner: Player | null;
   challengerId: string;
-  opponentId: string;
+  defenderId: string;
   winnerId: string | null;
   completedOn: string | null;
   result: string | null;
@@ -29,18 +29,18 @@ export type Match = {
 export type PendingMatch = {
   id: string;
   challenger: Player;
-  opponent: Player;
+  defender: Player;
   challengerId: string;
-  opponentId: string;
+  defenderId: string;
 };
 
 export type CompletedMatch = {
   id: string;
   challenger: Player;
-  opponent: Player;
+  defender: Player;
   winner: Player;
   challengerId: string;
-  opponentId: string;
+  defenderId: string;
   winnerId: string;
   completedOn: string;
   result: string;

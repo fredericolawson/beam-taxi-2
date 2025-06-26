@@ -35,7 +35,7 @@ function MatchRow({ match }: { match: CompletedMatch }) {
         {match.challenger.firstName} {match.challenger.lastName}
       </TableCell>
       <TableCell>
-        {match.opponent.firstName} {match.opponent.lastName}
+        {match.defender.firstName} {match.defender.lastName}
       </TableCell>
       <TableCell>{match.result}</TableCell>
       <TableCell>

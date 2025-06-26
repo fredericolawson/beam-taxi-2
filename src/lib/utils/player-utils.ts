@@ -7,3 +7,10 @@ export function checkPlayable({ player, currentPlayer }: { player: Player; curre
 
   return isPlayable as boolean;
 }
+
+export function parsePlayer(player: Player): Player {
+  return {
+    ...player,
+    displayName: `${player.firstName} ${player.lastName}`,
+  };
+}

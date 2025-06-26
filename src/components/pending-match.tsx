@@ -84,7 +84,7 @@ export function RecordMatchResult({ match, setPendingMatch }: { match: Match | n
     <Card>
       <CardHeader>
         <CardTitle>
-          {match.opponent.firstName} {match.opponent.lastName} vs {match.challenger.firstName} {match.challenger.lastName}
+          {match.defender.firstName} {match.defender.lastName} vs {match.challenger.firstName} {match.challenger.lastName}
         </CardTitle>
         <CardDescription>Record the result of your match</CardDescription>
       </CardHeader>
@@ -107,8 +107,8 @@ export function RecordMatchResult({ match, setPendingMatch }: { match: Match | n
                           <SelectItem value={match.challenger.id}>
                             {match.challenger.firstName} {match.challenger.lastName}
                           </SelectItem>
-                          <SelectItem value={match.opponent.id}>
-                            {match.opponent.firstName} {match.opponent.lastName}
+                          <SelectItem value={match.defender.id}>
+                            {match.defender.firstName} {match.defender.lastName}
                           </SelectItem>
                         </SelectContent>
                       </Select>

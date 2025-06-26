@@ -8,7 +8,7 @@ import { revalidatePath } from 'next/cache';
 export async function challengePlayer({ challengerId, defenderId }: { challengerId: string; defenderId: string }) {
   const supabase = await createClient();
   const { data, error } = await supabase.schema('ladder').from('matches').insert({
-    opponent_id: defenderId,
+    defender_id: defenderId,
     challenger_id: challengerId,
   });
 
@@ -32,10 +32,10 @@ export async function getBiMatches({ challengerId, defenderId }: { challengerId:
     .schema('ladder')
     .from('matches')
     .select(
-      '*, challenger:players!matches_challenger_id_fkey(*), opponent:players!matches_opponent_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
+      '*, challenger:players!matches_challenger_id_fkey(*), defender:players!matches_defender_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
     )
     .eq('challenger_id', challengerId)
-    .eq('opponent_id', defenderId);
+    .eq('defender_id', defenderId);
   if (error) {
     console.error('Error fetching matches:', error);
     return [];

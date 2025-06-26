@@ -43,48 +43,9 @@ export function PlayerSheet({
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
           <Challenge player={player} currentPlayer={currentPlayer} />
-          <PlayerMatchesTable matches={history.matches} />
+          <PlayerMatchesTable matches={history.matches} currentPlayer={currentPlayer} />
         </div>
       </SheetContent>
     </Sheet>
-  );
-}
-
-function BilateralMatches({ completedMatches, pendingMatch }: { completedMatches: CompletedMatch[]; pendingMatch: Match | null }) {
-  return (
-    <div className="flex flex-col gap-4">
-      <RecordMatchResult match={pendingMatch} key={pendingMatch?.id} />
-    </div>
-  );
-}
-
-function CompletedMatches({ matches }: { matches: CompletedMatch[] }) {
-  if (matches.length === 0) return null;
-  return (
-    <div className="flex flex-col gap-4">
-      <Separator className="mt-4" />
-      <h2 className="text-center text-lg font-bold">Your Completed Matches</h2>
-      {matches.map((match) => (
-        <MatchResult match={match} key={match.id} />
-      ))}
-    </div>
-  );
-}
-
-function Profile({ player }: { player: Player }) {
-  return (
-    <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Profile</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-1 text-sm">
-            <span className="text-xs">Phone</span>
-            <span className="bg-muted rounded-md p-2">{player.phone}</span>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
   );
 }

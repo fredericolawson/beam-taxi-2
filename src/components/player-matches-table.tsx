@@ -1,19 +1,24 @@
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { Match, CompletedMatch } from '@/types';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import type { CompletedMatch, Player } from '@/types';
+import { Separator } from '@/components/ui/separator';
 
-export function PlayerMatchesTable({ matches }: { matches: CompletedMatch[] | null }) {
+export function PlayerMatchesTable({ matches, currentPlayer }: { matches: CompletedMatch[] | null; currentPlayer: Player }) {
   if (!matches) return null;
   return (
-    <Table className="rounded-md border bg-white">
-      <TableHeader>
-        <MatchHeader />
-      </TableHeader>
-      <TableBody>
-        {matches.map((match) => (
-          <MatchRow key={match.id} match={match} />
-        ))}
-      </TableBody>
-    </Table>
+    <>
+      <Separator />
+      <h2 className="text-center font-semibold">Match History</h2>
+      <Table className="rounded-md border bg-white">
+        <TableHeader>
+          <MatchHeader />
+        </TableHeader>
+        <TableBody>
+          {matches.map((match) => (
+            <MatchRow key={match.id} match={match} currentPlayer={currentPlayer} />
+          ))}
+        </TableBody>
+      </Table>
+    </>
   );
 }
 
@@ -28,11 +33,13 @@ function MatchHeader() {
   );
 }
 
-function MatchRow({ match }: { match: CompletedMatch }) {
+function MatchRow({ match, currentPlayer }: { match: CompletedMatch; currentPlayer: Player }) {
+  let opponent = match.challenger;
+  if (match.challenger.id === currentPlayer.id) opponent = match.defender;
   return (
     <TableRow className="text-sm">
       <TableCell>
-        {match.opponent.firstName} {match.opponent.lastName}
+        {opponent.firstName} {opponent.lastName}
       </TableCell>
       <TableCell>
         {match.winner.firstName} {match.winner.lastName}

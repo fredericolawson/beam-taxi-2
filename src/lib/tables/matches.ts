@@ -8,7 +8,7 @@ export async function getMatches(): Promise<Match[]> {
     .schema('ladder')
     .from('matches')
     .select(
-      '*, challenger:players!matches_challenger_id_fkey(*), opponent:players!matches_opponent_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
+      '*, challenger:players!matches_challenger_id_fkey(*), defender:players!matches_defender_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
     )
     .order('completed_on', { ascending: false });
   if (error) {
@@ -32,7 +32,7 @@ export async function getCompletedMatches(): Promise<CompletedMatch[]> {
     .schema('ladder')
     .from('matches')
     .select(
-      '*, challenger:players!matches_challenger_id_fkey(*), opponent:players!matches_opponent_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
+      '*, challenger:players!matches_challenger_id_fkey(*), defender:players!matches_defender_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
     )
     .order('completed_on', { ascending: false })
     .not('winner_id', 'is', null);
@@ -51,12 +51,12 @@ export async function getMatchesByPlayerId({ playerId }: { playerId: string }): 
     .schema('ladder')
     .from('matches')
     .select(
-      '*, challenger:players!matches_challenger_id_fkey(*), opponent:players!matches_opponent_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
+      '*, challenger:players!matches_challenger_id_fkey(*), defender:players!matches_defender_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
     )
-    .or(`opponent_id.eq.${playerId},winner_id.eq.${playerId}`)
+    .or(`defender_id.eq.${playerId},winner_id.eq.${playerId}`)
     .not('winner_id', 'is', null);
   if (error) {
-    console.error('Error fetching matches:', error);
+    console.error('Error fetching matches by player id:', error);
     return [];
   }
   const matches = camelcaseKeys(data, { deep: true }) as Match[];
