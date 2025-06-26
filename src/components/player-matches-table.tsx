@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import type { CompletedMatch, Player } from '@/types';
 import { Separator } from '@/components/ui/separator';
 
-export function PlayerMatchesTable({ matches, currentPlayer }: { matches: CompletedMatch[] | null; currentPlayer: Player }) {
+export function PlayerMatchesTable({ matches, player }: { matches: CompletedMatch[] | null; player: Player }) {
   if (!matches) return null;
   return (
     <>
@@ -14,7 +14,7 @@ export function PlayerMatchesTable({ matches, currentPlayer }: { matches: Comple
         </TableHeader>
         <TableBody>
           {matches.map((match) => (
-            <MatchRow key={match.id} match={match} currentPlayer={currentPlayer} />
+            <MatchRow key={match.id} match={match} player={player} />
           ))}
         </TableBody>
       </Table>
@@ -33,9 +33,9 @@ function MatchHeader() {
   );
 }
 
-function MatchRow({ match, currentPlayer }: { match: CompletedMatch; currentPlayer: Player }) {
+function MatchRow({ match, player }: { match: CompletedMatch; player: Player }) {
   let opponent = match.challenger;
-  if (match.challenger.id === currentPlayer.id) opponent = match.defender;
+  if (match.challenger.id === player.id) opponent = match.defender;
   return (
     <TableRow className="text-sm">
       <TableCell>

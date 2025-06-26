@@ -12,10 +12,6 @@ import {
 } from '@/components/ui/sheet';
 import type { CompletedMatch, Match, Player } from '@/types';
 
-import { RecordMatchResult } from './pending-match';
-import { MatchResult } from './match-result';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Separator } from './ui/separator';
 import { PlayerMatchesTable } from './player-matches-table';
 import { MatchHistorySummary } from './match-history';
 import { Challenge } from './challenge';
@@ -43,7 +39,7 @@ export function PlayerSheet({
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
           <Challenge player={player} currentPlayer={currentPlayer} />
-          <PlayerMatchesTable matches={history.matches} currentPlayer={currentPlayer} />
+          <PlayerMatchesTable matches={history.matches} player={player} />
         </div>
       </SheetContent>
     </Sheet>
