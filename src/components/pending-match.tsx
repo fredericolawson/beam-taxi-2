@@ -22,17 +22,23 @@ import { revalidate } from '@/actions/revalidate';
 
 const FormSchema = z.object({
   winnerId: z.string({
-    required_error: 'A winner is required.',
+    required_error: 'Please select a winner',
   }),
-  score: z.string({
-    required_error: 'A score is required.',
-  }),
+  result: z.string().min(1, 'Please enter the match result'),
   completedOn: z.date({
-    required_error: 'A date is required.',
+    required_error: 'Please set the date the match was completed',
   }),
 });
 
-export function RecordMatchResult({ match, setPendingMatch }: { match: Match | null; setPendingMatch: (match: Match | null) => void }) {
+export function RecordMatchResult({
+  match,
+  setPendingMatch,
+  onMatchUpdate,
+}: {
+  match: Match | null;
+  setPendingMatch: (match: Match | null) => void;
+  onMatchUpdate: () => Promise<void>;
+}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   if (!match) return null;
@@ -42,7 +48,7 @@ export function RecordMatchResult({ match, setPendingMatch }: { match: Match | n
     resolver: zodResolver(FormSchema),
     defaultValues: {
       winnerId: match.challenger.id,
-      score: '',
+      result: '',
       completedOn: new Date(),
     },
   });
@@ -54,15 +60,17 @@ export function RecordMatchResult({ match, setPendingMatch }: { match: Match | n
       const response = await submitMatchResult({
         matchId: match!.id,
         winnerId: data.winnerId,
-        score: data.score,
+        result: data.result,
         completedOn: data.completedOn,
       });
-      if (response.error) {
-        toast.error(response.error);
+      if (response.error) toast.error(response.error);
+      else {
+        setPendingMatch(null);
+        await onMatchUpdate();
+        router.refresh();
+        toast.success('Match result submitted');
       }
       setIsSubmitting(false);
-      router.refresh();
-      toast.success('Match result submitted');
     };
     submitMatch();
   }
@@ -71,12 +79,15 @@ export function RecordMatchResult({ match, setPendingMatch }: { match: Match | n
     const cancelMatch = async () => {
       setIsCancelling(true);
       const response = await cancelMatchAction({ matchId: match!.id });
-      if (response.error) toast.error(response.error);
-      await revalidate('/');
-      setPendingMatch(null);
+      if (response.error) {
+        toast.error(response.error);
+      } else {
+        await revalidate('/');
+        setPendingMatch(null);
+        router.refresh();
+        toast.success('Match cancelled');
+      }
       setIsCancelling(false);
-      router.refresh();
-      toast.success('Match cancelled');
     };
     cancelMatch();
   }
@@ -85,7 +96,7 @@ export function RecordMatchResult({ match, setPendingMatch }: { match: Match | n
     <Card>
       <CardHeader>
         <CardTitle>
-          {match.defender.firstName} {match.defender.lastName} vs {match.challenger.firstName} {match.challenger.lastName}
+          {match.challenger.firstName} {match.challenger.lastName} vs {match.defender.firstName} {match.defender.lastName}
         </CardTitle>
         <CardDescription>Record the result of your match</CardDescription>
       </CardHeader>
@@ -100,7 +111,7 @@ export function RecordMatchResult({ match, setPendingMatch }: { match: Match | n
                   <FormItem className="flex w-full flex-col">
                     <FormLabel>Winner</FormLabel>
                     <FormControl>
-                      <Select>
+                      <Select onValueChange={field.onChange} value={field.value}>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select a winner" />
                         </SelectTrigger>
@@ -120,10 +131,10 @@ export function RecordMatchResult({ match, setPendingMatch }: { match: Match | n
               />
               <FormField
                 control={form.control}
-                name="score"
+                name="result"
                 render={({ field }) => (
                   <FormItem className="flex w-full flex-col">
-                    <FormLabel>Score</FormLabel>
+                    <FormLabel>Result</FormLabel>
                     <FormControl>
                       <Input {...field} placeholder="e.g. 8-7 (7-5)" className="w-full" disabled={isSubmitting} />
                     </FormControl>

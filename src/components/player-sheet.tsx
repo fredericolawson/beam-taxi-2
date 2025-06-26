@@ -6,20 +6,28 @@ import type { CompletedMatch, Match, Player } from '@/types';
 import { PlayerMatchesTable } from './player-matches-table';
 import { MatchHistorySummary } from './match-history';
 import { Challenge } from './challenge';
+import { useEffect, useState } from 'react';
+
+import { getMatchesByPlayerId } from '@/lib/tables/matches';
+
+type History = {
+  matches: CompletedMatch[];
+  summary: string[];
+};
 
 export function PlayerSheet({
   player,
   currentPlayer,
-  history,
   open,
   onOpenChange,
 }: {
   player: Player;
   currentPlayer: Player;
-  history: { matches: CompletedMatch[]; summary: string[] };
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { history, fetchHistory } = getMatchHistory({ playerId: player.id });
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger asChild></SheetTrigger>
@@ -29,10 +37,28 @@ export function PlayerSheet({
           <MatchHistorySummary historySummary={history.summary} />
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
-          <Challenge player={player} currentPlayer={currentPlayer} />
+          <Challenge player={player} currentPlayer={currentPlayer} onMatchUpdate={fetchHistory} />
           <PlayerMatchesTable matches={history.matches} player={player} />
         </div>
       </SheetContent>
     </Sheet>
   );
+}
+
+function getMatchHistory({ playerId }: { playerId: string }) {
+  const [history, setHistory] = useState<History>({ matches: [], summary: [] });
+
+  const fetchHistory = async () => {
+    const matches = await getMatchesByPlayerId({ playerId });
+    const completedMatches = matches.filter((match) => match.winnerId !== null);
+    const historySummary = completedMatches.map((match) => (match.winnerId === playerId ? 'W' : 'L'));
+    const history = { matches: completedMatches as CompletedMatch[], summary: historySummary };
+    setHistory(history);
+  };
+
+  useEffect(() => {
+    fetchHistory();
+  }, [playerId]);
+
+  return { history, fetchHistory };
 }

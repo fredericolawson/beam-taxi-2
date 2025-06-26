@@ -59,12 +59,12 @@ Server Action to submit a match result
 export async function submitMatchResult({
   matchId,
   winnerId,
-  score,
+  result,
   completedOn,
 }: {
   matchId: string;
   winnerId: string;
-  score: string;
+  result: string;
   completedOn: Date;
 }) {
   const supabase = await createClient();
@@ -73,7 +73,7 @@ export async function submitMatchResult({
     .from('matches')
     .update({
       winner_id: winnerId,
-      score: score,
+      result: result,
       completed_on: completedOn,
     })
     .eq('id', matchId);

@@ -12,7 +12,15 @@ import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { challengePlayer, getPendingBiMatch } from '@/actions/match';
 
-export function Challenge({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
+export function Challenge({
+  player,
+  currentPlayer,
+  onMatchUpdate,
+}: {
+  player: Player;
+  currentPlayer: Player;
+  onMatchUpdate: () => Promise<void>;
+}) {
   const [isLoading, setIsLoading] = useState(false);
   const [pendingMatch, setPendingMatch] = useState<Match | null>(null);
 
@@ -31,9 +39,15 @@ export function Challenge({ player, currentPlayer }: { player: Player; currentPl
 
   return (
     <>
-      <ChallengePlayer player={player} currentPlayer={currentPlayer} pendingMatch={pendingMatch} fetchMatch={fetchMatch} />
+      <ChallengePlayer
+        player={player}
+        currentPlayer={currentPlayer}
+        pendingMatch={pendingMatch}
+        fetchMatch={fetchMatch}
+        onMatchUpdate={onMatchUpdate}
+      />
       <PlayerContact player={player} pendingMatch={pendingMatch} />
-      <RecordMatchResult match={pendingMatch} key={pendingMatch?.id} setPendingMatch={setPendingMatch} />
+      <RecordMatchResult match={pendingMatch} key={pendingMatch?.id} setPendingMatch={setPendingMatch} onMatchUpdate={onMatchUpdate} />
     </>
   );
 }
@@ -43,11 +57,13 @@ function ChallengePlayer({
   currentPlayer,
   pendingMatch,
   fetchMatch,
+  onMatchUpdate,
 }: {
   player: Player;
   currentPlayer: Player;
   pendingMatch: Match | null;
   fetchMatch: () => Promise<void>;
+  onMatchUpdate: () => Promise<void>;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -62,7 +78,8 @@ function ChallengePlayer({
     try {
       const { error } = await challengePlayer({ challengerId: currentPlayer.id, defenderId: player.id });
       if (error) setError(error);
-      fetchMatch();
+      await fetchMatch();
+      await onMatchUpdate(); // Refresh history after creating challenge
     } finally {
       setIsLoading(false);
     }

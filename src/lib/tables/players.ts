@@ -1,3 +1,5 @@
+'use server';
+
 import { createClient } from '@/lib/supabase/server';
 import type { Player } from '@/types';
 import camelcaseKeys from 'camelcase-keys';
