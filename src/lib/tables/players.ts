@@ -18,9 +18,7 @@ export async function getPlayers(): Promise<Player[]> {
     return [];
   }
 
-  const players = camelcaseKeys(data, { deep: true }) as Player[];
-
-  return players.map(parsePlayer);
+  return data.map(parsePlayer);
 }
 
 export async function getPlayerByUserId(userId: string): Promise<Player | null> {
@@ -31,7 +29,5 @@ export async function getPlayerByUserId(userId: string): Promise<Player | null> 
     return null;
   }
   if (data.length === 0) return null;
-  const player = camelcaseKeys(data[0], { deep: true }) as Player;
-  if (!player) return null;
-  return parsePlayer(player);
+  return parsePlayer(data[0]);
 }

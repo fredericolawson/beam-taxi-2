@@ -1,3 +1,16 @@
+export type RawPlayer = {
+  id: string;
+  user_id: string;
+  ladder_rank: number;
+  is_approved: boolean;
+  created_at: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  matches: Match[];
+};
+
 export type Player = {
   id: string;
   userId: string;
