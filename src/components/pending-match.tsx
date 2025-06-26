@@ -75,6 +75,7 @@ export function RecordMatchResult({ match, setPendingMatch }: { match: Match | n
       await revalidate('/');
       setPendingMatch(null);
       setIsCancelling(false);
+      router.refresh();
       toast.success('Match cancelled');
     };
     cancelMatch();

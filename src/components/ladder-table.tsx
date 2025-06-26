@@ -6,6 +6,8 @@ import { LadderAction } from './ladder-action';
 import { cn } from '@/lib/utils';
 import { getMatchHistory } from '@/lib/utils/match-utils';
 
+import { LadderRow } from './ladder-row';
+
 export function LadderTable({ players, currentPlayer }: { players: Player[]; currentPlayer: Player }) {
   return (
     <Table className="rounded-md border bg-white">
@@ -13,9 +15,10 @@ export function LadderTable({ players, currentPlayer }: { players: Player[]; cur
         <LadderHeader />
       </TableHeader>
       <TableBody>
-        {players.map((player) => (
-          <LadderRow key={player.id} player={player} currentPlayer={currentPlayer} />
-        ))}
+        {players.map(async (player) => {
+          const history = await getMatchHistory({ playerId: player.id });
+          return <LadderRow key={player.id} player={player} currentPlayer={currentPlayer} history={history} />;
+        })}
       </TableBody>
     </Table>
   );
@@ -31,25 +34,36 @@ function LadderHeader() {
     </TableRow>
   );
 }
+/*
 
 async function LadderRow({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const history = await getMatchHistory({ playerId: player.id });
+
   return (
-    <TableRow className={cn(player.id === currentPlayer.id && 'bg-secondary/20 hover:bg-secondary/20')}>
-      <TableCell className="w-16 text-center">{player.ladderRank}</TableCell>
-      <TableCell className="w-48">
-        <PlayerSheet player={player} currentPlayer={currentPlayer} history={history}>
-          <span className="cursor-pointer hover:underline">
+    <>
+      <TableRow
+        className={cn('hover:bg-muted/50 cursor-pointer', player.id === currentPlayer.id && 'bg-secondary/20 hover:bg-secondary/30')}
+        onClick={() => setIsSheetOpen(true)}
+      >
+        <TableCell className="w-16 text-center">{player.ladderRank}</TableCell>
+        <TableCell className="w-48">
+          <span className="hover:underline">
             {player.firstName} {player.lastName}
           </span>
-        </PlayerSheet>
-      </TableCell>
-      <TableCell className="flex-1">
-        <MatchHistorySummary historySummary={history.summary} />
-      </TableCell>
-      <TableCell className="w-32">
-        <LadderAction player={player} currentPlayer={currentPlayer} />
-      </TableCell>
-    </TableRow>
+        </TableCell>
+        <TableCell className="flex-1">
+          <MatchHistorySummary historySummary={history.summary} />
+        </TableCell>
+        <TableCell className="w-32">
+          <LadderAction player={player} currentPlayer={currentPlayer} />
+        </TableCell>
+      </TableRow>
+
+      <PlayerSheet player={player} currentPlayer={currentPlayer} history={history} open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+        <div style={{ display: 'none' }} />
+      </PlayerSheet>
+    </>
   );
 }
+*/
