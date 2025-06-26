@@ -6,9 +6,10 @@ import { redirect } from 'next/navigation';
 export default async function Home() {
   const players = await getPlayers();
   const user = await getUserServer();
-  if (!user) redirect('/auth/login');
+  if (!user) redirect('/auth/sign-up');
+
   const currentPlayer = await getPlayerByUserId(user?.id ?? '');
-  if (!currentPlayer) redirect('/auth/login');
+  if (!currentPlayer) redirect('/auth/sign-up');
 
   return (
     <div className="flex flex-col gap-6">

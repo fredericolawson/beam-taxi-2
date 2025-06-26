@@ -30,7 +30,9 @@ export async function getPlayerByUserId(userId: string): Promise<Player | null> 
     console.error('Error fetching player:', error);
     return null;
   }
+  if (data.length === 0) return null;
   const player = camelcaseKeys(data[0], { deep: true }) as Player;
+  if (!player) return null;
   return {
     ...player,
     displayName: `${player.firstName} ${player.lastName}`,
