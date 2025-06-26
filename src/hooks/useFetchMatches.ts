@@ -9,7 +9,7 @@ export function useFetchMatches({ challengerId, opponentId }: { challengerId: st
 
   const fetchMatches = async () => {
     setIsLoading(true);
-    const matches = await getBiMatches({ challengerId, opponentId });
+    const matches = await getBiMatches({ challengerId, defenderId: opponentId });
     setCompletedMatches(matches.filter((m) => m.completedOn !== null) as CompletedMatch[]);
     setPendingMatch(matches.find((m) => m.completedOn === null) || null);
     setIsLoading(false);

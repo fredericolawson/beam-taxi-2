@@ -5,11 +5,11 @@ import type { Match } from '@/types';
 import camelcaseKeys from 'camelcase-keys';
 import { revalidatePath } from 'next/cache';
 
-export async function challengePlayer({ challengerId, opponentId }: { challengerId: string; opponentId: string }) {
+export async function challengePlayer({ challengerId, defenderId }: { challengerId: string; defenderId: string }) {
   const supabase = await createClient();
   const { data, error } = await supabase.schema('ladder').from('matches').insert({
+    opponent_id: defenderId,
     challenger_id: challengerId,
-    opponent_id: opponentId,
   });
 
   if (error) {
@@ -26,7 +26,7 @@ Server Action to get bilateral matches between two players
 --------------------------------
 */
 
-export async function getBiMatches({ challengerId, opponentId }: { challengerId: string; opponentId: string }): Promise<Match[] | []> {
+export async function getBiMatches({ challengerId, defenderId }: { challengerId: string; defenderId: string }): Promise<Match[] | []> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .schema('ladder')
@@ -35,7 +35,7 @@ export async function getBiMatches({ challengerId, opponentId }: { challengerId:
       '*, challenger:players!matches_challenger_id_fkey(*), opponent:players!matches_opponent_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
     )
     .eq('challenger_id', challengerId)
-    .eq('opponent_id', opponentId);
+    .eq('opponent_id', defenderId);
   if (error) {
     console.error('Error fetching matches:', error);
     return [];
@@ -44,9 +44,10 @@ export async function getBiMatches({ challengerId, opponentId }: { challengerId:
   return matches;
 }
 
-export async function getPendingBiMatches({ challengerId, opponentId }: { challengerId: string; opponentId: string }): Promise<Match[]> {
-  const matches = await getBiMatches({ challengerId, opponentId });
-  return matches.filter((match) => match.completedOn === null);
+export async function getPendingBiMatch({ challengerId, defenderId }: { challengerId: string; defenderId: string }) {
+  const matches = await getBiMatches({ challengerId, defenderId });
+  const pendingMatches = matches.filter((match) => match.winnerId === null);
+  return pendingMatches[0] as Match | null;
 }
 
 /*

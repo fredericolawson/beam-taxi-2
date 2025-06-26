@@ -7,15 +7,7 @@ import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import { useSendChallenge } from '@/hooks/useSendChallenge';
 
-export function ChallengePlayer({
-  player,
-  currentPlayer,
-  onChallengeSuccess,
-}: {
-  player: Player;
-  currentPlayer: Player;
-  onChallengeSuccess: () => void;
-}) {
+export function ChallengePlayer({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
   const { isLoading, error, sendChallenge } = useSendChallenge({
     challengerId: currentPlayer.id,
     opponentId: player.id,
@@ -26,10 +18,8 @@ export function ChallengePlayer({
   const handleSendChallenge = async () => {
     const result = await sendChallenge();
     if (result.error) toast.error(result.error);
-    else {
-      toast.success('Challenge sent');
-      onChallengeSuccess();
-    }
+
+    toast.success('Challenge sent');
   };
 
   return (
@@ -48,7 +38,7 @@ export function ChallengePlayer({
               Sending...
             </>
           ) : (
-            'Challenge'
+            'Schedule Match'
           )}
         </Button>
       </CardContent>

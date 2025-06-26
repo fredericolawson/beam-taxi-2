@@ -84,11 +84,8 @@ export function MatchResultForm({ match }: { match: Match }) {
   function onCancel() {
     const cancelMatch = async () => {
       const response = await cancelMatchAction({ matchId: match.id });
-      if (response.error) {
-        toast.error(response.error);
-      }
-      router.refresh();
-      revalidate('/');
+      if (response.error) toast.error(response.error);
+      await revalidate('/');
       toast.success('Match cancelled');
     };
     cancelMatch();
