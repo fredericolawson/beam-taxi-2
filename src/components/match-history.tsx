@@ -1,4 +1,5 @@
 export function MatchHistorySummary({ historySummary }: { historySummary: string[] }) {
+  if (historySummary.length === 0) return <div>—</div>;
   return (
     <div className="flex gap-2">
       {historySummary.map((result, index) => (

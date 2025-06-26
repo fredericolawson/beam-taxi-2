@@ -33,7 +33,7 @@ export function Challenge({ player, currentPlayer }: { player: Player; currentPl
     <>
       <ChallengePlayer player={player} currentPlayer={currentPlayer} pendingMatch={pendingMatch} fetchMatch={fetchMatch} />
       <PlayerContact player={player} pendingMatch={pendingMatch} />
-      <RecordMatchResult match={pendingMatch} key={pendingMatch?.id} />
+      <RecordMatchResult match={pendingMatch} key={pendingMatch?.id} setPendingMatch={setPendingMatch} />
     </>
   );
 }
