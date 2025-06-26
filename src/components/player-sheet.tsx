@@ -11,17 +11,11 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import type { CompletedMatch, Match, Player } from '@/types';
-import { Button } from './ui/button';
-import { ChallengePlayer } from './send-challenge';
+
 import { RecordMatchResult } from './pending-match';
 import { MatchResult } from './match-result';
-import { Loader2, MailIcon, PhoneIcon } from 'lucide-react';
-import { SiWhatsapp } from 'react-icons/si';
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Separator } from './ui/separator';
-import { useFetchMatches } from '@/hooks/useFetchMatches';
-import { checkPlayable } from '@/lib/utils/player-utils';
-import { MatchesTable } from './matches-table';
 import { PlayerMatchesTable } from './player-matches-table';
 import { MatchHistorySummary } from './match-history';
 import { Challenge } from './challenge';
