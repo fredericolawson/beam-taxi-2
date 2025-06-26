@@ -10,7 +10,7 @@ export async function Header() {
   const user = await getUserServer();
 
   return (
-    <header className="bg-secondary flex items-center justify-between border-b px-6">
+    <header className="bg-secondary mb-12 flex items-center justify-between border-b px-6">
       <Link href="/" className="text-secondary-foreground mr-6 flex flex-col">
         <Image src="/logo.png" alt="CBTC Ladder" width={300} height={200} />
       </Link>

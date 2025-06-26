@@ -21,10 +21,17 @@ export type Match = {
   opponentId: string;
   winnerId: string | null;
   completedOn: string | null;
-  status: 'pending' | 'accepted' | 'declined' | 'completed';
-  score: string | null;
+  result: string | null;
   createdAt: string;
   updatedAt: string;
+};
+
+export type PendingMatch = {
+  id: string;
+  challenger: Player;
+  opponent: Player;
+  challengerId: string;
+  opponentId: string;
 };
 
 export type CompletedMatch = {
@@ -36,6 +43,6 @@ export type CompletedMatch = {
   opponentId: string;
   winnerId: string;
   completedOn: string;
-  score: string;
+  result: string;
   createdAt: string;
 };

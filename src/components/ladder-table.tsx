@@ -33,12 +33,12 @@ function LadderHeader() {
 }
 
 async function LadderRow({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
-  const { historySummary, historyDetail } = await getMatchHistory({ playerId: player.id });
+  const { historySummary, completedMatches } = await getMatchHistory({ playerId: player.id });
   return (
     <TableRow className={cn(player.id === currentPlayer.id && 'bg-secondary/20 hover:bg-secondary/20')}>
       <TableCell className="w-16 text-center">{player.ladderRank}</TableCell>
       <TableCell className="w-48">
-        <PlayerSheet player={player} currentPlayer={currentPlayer} historyDetail={historyDetail}>
+        <PlayerSheet player={player} currentPlayer={currentPlayer} completedMatches={completedMatches}>
           <span className="cursor-pointer hover:underline">
             {player.firstName} {player.lastName}
           </span>

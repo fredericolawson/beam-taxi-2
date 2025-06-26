@@ -1,12 +1,12 @@
-import { getMatches } from '@/lib/tables/matches';
+import { getCompletedMatches, getMatches } from '@/lib/tables/matches';
 import { MatchesTable } from '@/components/matches-table';
+import { CompletedMatch } from '@/types';
 
 export default async function Matches() {
-  const matches = await getMatches();
-  const completedMatches = matches.filter((match) => match.status === 'completed');
+  const completedMatches = await getCompletedMatches();
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">Completed Matches</h1>
+      <h1 className="heading-1">Completed Matches</h1>
       <MatchesTable matches={completedMatches} />
     </div>
   );

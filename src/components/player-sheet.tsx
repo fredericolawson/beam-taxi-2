@@ -27,18 +27,18 @@ export function PlayerSheet({
   children,
   player,
   currentPlayer,
-  historyDetail,
+  completedMatches,
 }: {
   children: React.ReactNode;
   player: Player;
   currentPlayer: Player;
-  historyDetail: Match[];
+  completedMatches: CompletedMatch[];
 }) {
-  const { isLoading, completedMatches, pendingMatch, fetchMatches } = useFetchMatches({
+  const { isLoading, pendingMatch, fetchMatches } = useFetchMatches({
     challengerId: currentPlayer.id,
     opponentId: player.id,
   });
-  console.log(historyDetail);
+  console.log(completedMatches);
 
   if (isLoading) return <LoadingMatches />;
   const isPlayable = checkPlayable({ player, currentPlayer });
@@ -59,6 +59,7 @@ export function PlayerSheet({
             <ChallengePlayer player={player} currentPlayer={currentPlayer} onChallengeSuccess={fetchMatches} />
           )}
           <BilateralMatches completedMatches={completedMatches} pendingMatch={pendingMatch} />
+          {completedMatches.length > 0 && <MatchesTable matches={completedMatches} />}
         </div>
       </SheetContent>
     </Sheet>
@@ -69,7 +70,6 @@ function BilateralMatches({ completedMatches, pendingMatch }: { completedMatches
   return (
     <div className="flex flex-col gap-4">
       <PendingMatch match={pendingMatch} key={pendingMatch?.id} />
-      <CompletedMatches matches={completedMatches} />
     </div>
   );
 }

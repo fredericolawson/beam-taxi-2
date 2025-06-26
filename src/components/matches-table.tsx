@@ -1,9 +1,9 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { Match } from '@/types';
+import type { Match, CompletedMatch } from '@/types';
 
-export function MatchesTable({ matches }: { matches: Match[] }) {
+export function MatchesTable({ matches }: { matches: CompletedMatch[] }) {
   return (
-    <Table>
+    <Table className="rounded-md border bg-white">
       <TableHeader>
         <MatchHeader />
       </TableHeader>
@@ -20,16 +20,15 @@ function MatchHeader() {
   return (
     <TableRow>
       <TableHead>Challenger</TableHead>
-      <TableHead>Opponent</TableHead>
-      <TableHead>Status</TableHead>
+      <TableHead>Defender</TableHead>
       <TableHead>Result</TableHead>
       <TableHead>Winner</TableHead>
-      <TableHead>Completed On</TableHead>
+      <TableHead>Date</TableHead>
     </TableRow>
   );
 }
 
-function MatchRow({ match }: { match: Match }) {
+function MatchRow({ match }: { match: CompletedMatch }) {
   return (
     <TableRow>
       <TableCell>
@@ -38,12 +37,11 @@ function MatchRow({ match }: { match: Match }) {
       <TableCell>
         {match.opponent.firstName} {match.opponent.lastName}
       </TableCell>
-      <TableCell>{match.status}</TableCell>
-      <TableCell>{match.score}</TableCell>
+      <TableCell>{match.result}</TableCell>
       <TableCell>
-        {match.winner?.firstName} {match.winner?.lastName}
+        {match.winner.firstName} {match.winner.lastName}
       </TableCell>
-      <TableCell>{match.completedOn ? new Date(match.completedOn).toLocaleDateString() : ''}</TableCell>
+      <TableCell>{new Date(match.completedOn).toLocaleDateString()}</TableCell>
     </TableRow>
   );
 }

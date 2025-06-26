@@ -10,13 +10,9 @@ export default async function Home() {
   if (!currentPlayer) redirect('/auth/login');
 
   return (
-    <div className="flex flex-col gap-16 py-8 sm:py-12 md:py-16">
-      <div className="flex flex-col gap-6">
-        <div className="flex items-center justify-between">
-          <h1 className="heading-1">Club Ladder</h1>
-        </div>
-        <LadderTable players={players} currentPlayer={currentPlayer} />
-      </div>
+    <div className="flex flex-col gap-6">
+      <h1 className="heading-1">Club Ladder</h1>
+      <LadderTable players={players} currentPlayer={currentPlayer} />
     </div>
   );
 }

@@ -86,7 +86,7 @@
     @apply bg-background text-foreground;
   }
   .heading-1 {
-    @apply text-3xl font-semibold tracking-tight md:text-4xl;
+    @apply mb-4 text-3xl font-semibold tracking-tight md:text-4xl;
   }
   .heading-2 {
     @apply text-2xl font-semibold tracking-tight md:text-3xl;
