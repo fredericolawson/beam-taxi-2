@@ -20,7 +20,7 @@ import { cancelMatchAction, submitMatchResult } from '@/actions/match';
 import { useRouter } from 'next/navigation';
 import { revalidate } from '@/actions/revalidate';
 
-export function PendingMatch({ match }: { match: Match | null }) {
+export function RecordMatchResult({ match }: { match: Match | null }) {
   if (!match) return null;
   return (
     <Card>

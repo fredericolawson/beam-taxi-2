@@ -18,7 +18,7 @@ export function MatchResult({ match }: { match: CompletedMatch }) {
           value={`${match.winner.firstName} ${match.winner.lastName}`}
           icon={<Trophy className="text-green-700" />}
         />
-        <ResultItem label="Score" value={match.score} icon={<FlagIcon />} />
+        <ResultItem label="Result" value={match.result} icon={<FlagIcon />} />
         <ResultItem label="Completed On" value={format(new Date(match.completedOn), 'PPP')} icon={<CalendarIcon />} />
       </CardContent>
     </Card>

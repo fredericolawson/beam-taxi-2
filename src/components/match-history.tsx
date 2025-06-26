@@ -1,4 +1,4 @@
-export async function MatchHistorySummary({ historySummary }: { historySummary: string[] }) {
+export function MatchHistorySummary({ historySummary }: { historySummary: string[] }) {
   return (
     <div className="flex gap-2">
       {historySummary.map((result, index) => (

@@ -13,32 +13,33 @@ import {
 import type { CompletedMatch, Match, Player } from '@/types';
 import { Button } from './ui/button';
 import { ChallengePlayer } from './send-challenge';
-import { PendingMatch } from './pending-match';
+import { RecordMatchResult } from './pending-match';
 import { MatchResult } from './match-result';
-import { Loader2, PhoneIcon } from 'lucide-react';
+import { Loader2, MailIcon, PhoneIcon } from 'lucide-react';
 import { SiWhatsapp } from 'react-icons/si';
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Separator } from './ui/separator';
 import { useFetchMatches } from '@/hooks/useFetchMatches';
 import { checkPlayable } from '@/lib/utils/player-utils';
 import { MatchesTable } from './matches-table';
+import { PlayerMatchesTable } from './player-matches-table';
+import { MatchHistorySummary } from './match-history';
 
 export function PlayerSheet({
   children,
   player,
   currentPlayer,
-  completedMatches,
+  history,
 }: {
   children: React.ReactNode;
   player: Player;
   currentPlayer: Player;
-  completedMatches: CompletedMatch[];
+  history: { matches: CompletedMatch[]; summary: string[] };
 }) {
   const { isLoading, pendingMatch, fetchMatches } = useFetchMatches({
     challengerId: currentPlayer.id,
     opponentId: player.id,
   });
-  console.log(completedMatches);
 
   if (isLoading) return <LoadingMatches />;
   const isPlayable = checkPlayable({ player, currentPlayer });
@@ -49,17 +50,18 @@ export function PlayerSheet({
       <SheetTrigger asChild>
         <div className="cursor-pointer">{children}</div>
       </SheetTrigger>
-      <SheetContent className="bg-muted flex flex-col">
+      <SheetContent className="bg-muted flex !max-w-xl flex-col md:p-4">
         <SheetHeader className="border-b">
           <SheetTitle className="text-2xl font-bold">{player.displayName}</SheetTitle>
+          <MatchHistorySummary historySummary={history.summary} />
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
           {pendingMatch && <PlayerContact player={player} />}
           {!pendingMatch && isPlayable && !isCurrentPlayer && (
             <ChallengePlayer player={player} currentPlayer={currentPlayer} onChallengeSuccess={fetchMatches} />
           )}
-          <BilateralMatches completedMatches={completedMatches} pendingMatch={pendingMatch} />
-          {completedMatches.length > 0 && <MatchesTable matches={completedMatches} />}
+          <RecordMatchResult match={pendingMatch} key={pendingMatch?.id} />
+          <PlayerMatchesTable matches={history.matches} />
         </div>
       </SheetContent>
     </Sheet>
@@ -69,7 +71,7 @@ export function PlayerSheet({
 function BilateralMatches({ completedMatches, pendingMatch }: { completedMatches: CompletedMatch[]; pendingMatch: Match | null }) {
   return (
     <div className="flex flex-col gap-4">
-      <PendingMatch match={pendingMatch} key={pendingMatch?.id} />
+      <RecordMatchResult match={pendingMatch} key={pendingMatch?.id} />
     </div>
   );
 }
@@ -95,9 +97,11 @@ function PlayerContact({ player }: { player: Player }) {
         <CardTitle>Schedule Your Match</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2 md:flex-row">
+          <PlayerPhone player={player} />
+          <PlayerEmail player={player} />
+        </div>
         <div className="flex flex-col gap-1 text-sm">
-          <span className="text-xs">Phone</span>
-          <span className="bg-muted mb-2 w-full rounded-md p-2">{player.phone}</span>
           <div className="flex w-full flex-col gap-2 md:flex-row">
             <Button variant="outline" className="flex-1" asChild>
               <a href={`https://wa.me/${phone}`} target="_blank">
@@ -111,16 +115,36 @@ function PlayerContact({ player }: { player: Player }) {
                 Call
               </a>
             </Button>
+            <Button variant="outline" className="flex-1" asChild>
+              <a href={`mailto:${player.email}`} target="_blank">
+                <MailIcon className="h-4 w-4" />
+                Email
+              </a>
+            </Button>
           </div>
-        </div>
-        <div className="flex flex-col gap-1 text-sm">
-          <span className="text-xs">Email</span>
-          <span className="bg-muted rounded-md p-2">
-            <a href={`mailto:${player.email}`}>{player.email}</a>
-          </span>
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+function PlayerPhone({ player }: { player: Player }) {
+  return (
+    <div className="flex w-full flex-col gap-1 text-sm">
+      <span className="text-xs">Phone</span>
+      <span className="bg-muted rounded-md p-2">{player.phone}</span>
+    </div>
+  );
+}
+
+function PlayerEmail({ player }: { player: Player }) {
+  return (
+    <div className="flex w-full flex-col gap-1 text-sm">
+      <span className="text-xs">Email</span>
+      <span className="bg-muted rounded-md p-2">
+        <a href={`mailto:${player.email}`}>{player.email}</a>
+      </span>
+    </div>
   );
 }
 
