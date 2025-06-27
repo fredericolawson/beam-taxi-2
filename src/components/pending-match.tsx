@@ -4,7 +4,7 @@ import { CalendarIcon, Loader2, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
@@ -133,8 +133,9 @@ export function RecordMatchResult({
                 render={({ field }) => (
                   <FormItem className="flex w-full flex-col">
                     <FormLabel>Result</FormLabel>
+                    <FormDescription>Record the result of your superset (first to 8 games)</FormDescription>
                     <FormControl>
-                      <Input {...field} placeholder="e.g. 8-7 (7-5)" className="w-full" disabled={isSubmitting} />
+                      <Input {...field} placeholder="e.g. 8-6" className="w-full" disabled={isSubmitting} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
