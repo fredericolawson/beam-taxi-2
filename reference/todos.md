@@ -1,0 +1,1 @@
+- Add confirmation pop-up.
