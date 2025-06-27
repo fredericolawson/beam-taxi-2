@@ -29,36 +29,3 @@ function LadderHeader() {
     </TableRow>
   );
 }
-/*
-
-async function LadderRow({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const history = await getMatchHistory({ playerId: player.id });
-
-  return (
-    <>
-      <TableRow
-        className={cn('hover:bg-muted/50 cursor-pointer', player.id === currentPlayer.id && 'bg-secondary/20 hover:bg-secondary/30')}
-        onClick={() => setIsSheetOpen(true)}
-      >
-        <TableCell className="w-16 text-center">{player.ladderRank}</TableCell>
-        <TableCell className="w-48">
-          <span className="hover:underline">
-            {player.firstName} {player.lastName}
-          </span>
-        </TableCell>
-        <TableCell className="flex-1">
-          <MatchHistorySummary historySummary={history.summary} />
-        </TableCell>
-        <TableCell className="w-32">
-          <LadderAction player={player} currentPlayer={currentPlayer} />
-        </TableCell>
-      </TableRow>
-
-      <PlayerSheet player={player} currentPlayer={currentPlayer} history={history} open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <div style={{ display: 'none' }} />
-      </PlayerSheet>
-    </>
-  );
-}
-*/

@@ -1,27 +1,35 @@
 'use client';
 
-import { useFetchMatches } from '@/hooks/useFetchMatches';
 import { Button } from './ui/button';
-import type { Player } from '@/types';
+import type { CompletedMatch, Match, Player } from '@/types';
 import { CheckCircle, Loader2, PlusCircle } from 'lucide-react';
 import { checkPlayable } from '@/lib/utils/player-utils';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { getBiMatches } from '@/actions/match';
 
 export function LadderAction({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
-  const { isLoading: isLoadingMatches, pendingMatch } = useFetchMatches({
-    challengerId: currentPlayer.id,
-    defenderId: player.id,
-  });
+  const [pendingMatch, setPendingMatch] = useState<Match | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  if (isLoadingMatches) return <Loading />;
   if (player.id === currentPlayer.id) return null;
   const isPlayable = checkPlayable({ player, currentPlayer });
 
-  return (
-    <>
-      {pendingMatch && <CompleteMatchButton />}
-      {!pendingMatch && isPlayable && <ChallengePlayerButton />}
-    </>
-  );
+  useEffect(() => {
+    const fetchMatches = async () => {
+      setIsLoading(true);
+      const matches = await getBiMatches({ challengerId: currentPlayer.id, defenderId: player.id });
+      setPendingMatch(matches.find((m) => m.completedOn === null) || null);
+      setIsLoading(false);
+    };
+    fetchMatches();
+  }, [currentPlayer.id, player.id]);
+
+  if (isLoading) return <Loading />;
+  if (pendingMatch) return <CompleteMatchButton />;
+  if (isPlayable && !pendingMatch) return <ChallengePlayerButton />;
+
+  return null;
 }
 
 function ChallengePlayerButton() {
@@ -48,4 +56,24 @@ function Loading() {
       <Loader2 className="animate-spin" />
     </div>
   );
+}
+
+function useFetchMatches({ challengerId, defenderId }: { challengerId: string; defenderId: string }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [completedMatches, setCompletedMatches] = useState<CompletedMatch[]>([]);
+  const [pendingMatch, setPendingMatch] = useState<Match | null>(null);
+
+  const fetchMatches = async () => {
+    setIsLoading(true);
+    const matches = await getBiMatches({ challengerId, defenderId: defenderId });
+    setCompletedMatches(matches.filter((m) => m.completedOn !== null) as CompletedMatch[]);
+    setPendingMatch(matches.find((m) => m.completedOn === null) || null);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchMatches();
+  }, [challengerId, defenderId, fetchMatches]);
+
+  return { isLoading, completedMatches, pendingMatch, fetchMatches };
 }

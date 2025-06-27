@@ -6,7 +6,7 @@ import type { CompletedMatch, Match, Player } from '@/types';
 import { PlayerMatchesTable } from './player-matches-table';
 import { MatchHistorySummary } from './match-history';
 import { Challenge } from './challenge';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import { getMatchesByPlayerId } from '@/lib/tables/matches';
 
@@ -48,17 +48,17 @@ export function PlayerSheet({
 function useMatchHistory({ playerId }: { playerId: string }) {
   const [history, setHistory] = useState<History>({ matches: [], summary: [] });
 
-  const fetchHistory = async () => {
+  const fetchHistory = useCallback(async () => {
     const matches = await getMatchesByPlayerId({ playerId });
     const completedMatches = matches.filter((match) => match.winnerId !== null);
     const historySummary = completedMatches.map((match) => (match.winnerId === playerId ? 'W' : 'L'));
     const history = { matches: completedMatches as CompletedMatch[], summary: historySummary };
     setHistory(history);
-  };
+  }, [playerId]);
 
   useEffect(() => {
     fetchHistory();
-  }, [playerId, fetchHistory]);
+  }, [fetchHistory]);
 
   return { history, fetchHistory };
 }

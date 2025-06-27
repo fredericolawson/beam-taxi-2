@@ -35,7 +35,6 @@ export function LadderRow({ player, currentPlayer, history }: { player: Player; 
           <LadderAction player={player} currentPlayer={currentPlayer} />
         </TableCell>
       </TableRow>
-
       <PlayerSheet player={player} currentPlayer={currentPlayer} open={isSheetOpen} onOpenChange={setIsSheetOpen}></PlayerSheet>
     </>
   );
