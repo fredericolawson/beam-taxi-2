@@ -1,4 +1,3 @@
-
 import { UserInfo } from '@/components/user-info';
 import { UpdateInfoForm } from '@/components/update-user';
 import { getUserServer } from '@/lib/utils/get-user-server';
@@ -31,7 +30,6 @@ function PendingApproval({ player }: { player: Player }) {
       <Card>
         <CardHeader>
           <CardTitle>Account Pending Approval</CardTitle>
-          <CardDescription>Your registration is being reviewed</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground text-sm">

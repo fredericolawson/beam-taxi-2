@@ -21,9 +21,7 @@ import { useRouter } from 'next/navigation';
 import { revalidate } from '@/actions/revalidate';
 
 const FormSchema = z.object({
-  winnerId: z.string({
-    required_error: 'Please select a winner',
-  }),
+  winnerId: z.string().min(1, 'Please select a winner'),
   result: z.string().min(1, 'Please enter the match result'),
   completedOn: z.date({
     required_error: 'Please set the date the match was completed',
