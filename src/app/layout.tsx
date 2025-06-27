@@ -6,15 +6,33 @@ import { Header } from '@/components/header';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'CBTC Tennis Ladder',
-  description: 'Coral Beach & Tennis Club ladder. ',
+  title: 'CBTC Ladder | Coral Beach & Tennis Club',
+  description: 'Tennis ladder for the Coral Beach & Tennis Club',
+  keywords: ['tennis', 'ladder', 'coral beach', 'tennis club', 'bermuda', 'rankings', 'matches', 'competition'],
+  authors: [{ name: 'Coral Beach & Tennis Club' }],
+  viewport: 'width=device-width, initial-scale=1',
+  robots: 'index, follow',
   openGraph: {
-    title: 'CBTC Tennis Ladder',
-    description: 'Coral Beach & Tennis Club ladder. ',
+    title: 'CBTC Ladder | Coral Beach & Tennis Club',
+    description: 'Tennis ladder for the Coral Beach & Tennis Club',
     url: 'https://tennis.beam.com',
     siteName: 'CBTC Tennis Ladder',
-    locale: 'en_US',
+    locale: 'en_BM',
     type: 'website',
+    images: [
+      {
+        url: '/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'CBTC Tennis Ladder - Coral Beach & Tennis Club',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CBTC Ladder | Coral Beach & Tennis Club',
+    description: 'Tennis ladder for the Coral Beach & Tennis Club',
+    images: ['/logo.png'],
   },
 };
 
