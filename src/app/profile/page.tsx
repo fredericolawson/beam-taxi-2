@@ -7,16 +7,14 @@ import { getPlayerByUserId } from '@/lib/tables/players';
 
 export default async function AccountPage() {
   const user = await getUserServer();
-  if (!user) redirect('/auth/login?message=You must be logged in to view your account.');
+  if (!user) return null;
   const player = await getPlayerByUserId(user.id);
-  if (!player) redirect('/auth/login?message=You must be logged in to view your account.');
+  if (!player) return null;
 
   return (
-    <div className="container flex flex-col gap-8 py-8 sm:py-12 md:py-16">
-      <div className="flex flex-col gap-8 md:flex-row">
-        <UserInfo user={user} player={player} />
-        <UpdateInfoForm user={user} player={player} />
-      </div>
+    <div className="flex w-full flex-col gap-4 md:flex-row">
+      <UserInfo user={user} player={player} />
+      <UpdateInfoForm user={user} player={player} />
     </div>
   );
 }

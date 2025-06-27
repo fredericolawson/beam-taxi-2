@@ -1,8 +1,9 @@
 export function MatchHistorySummary({ historySummary }: { historySummary: string[] }) {
   if (historySummary.length === 0) return <div>—</div>;
+  const slicedSummary = historySummary.slice(0, 12);
   return (
     <div className="flex gap-2">
-      {historySummary.map((result, index) => (
+      {slicedSummary.map((result, index) => (
         <ResultIcon key={index} result={result} />
       ))}
     </div>

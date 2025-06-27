@@ -1,8 +1,40 @@
 import { updateSession } from '@/lib/supabase/middleware';
-import { type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request);
+  // First, update the session
+  const response = await updateSession(request);
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  console.log('user', user);
+
+  if (!user && !request.nextUrl.pathname.startsWith('/auth/')) return NextResponse.redirect(new URL('/auth/login', request.url));
+
+  if (user && request.nextUrl.pathname.startsWith('/auth/')) return NextResponse.redirect(new URL('/', request.url));
+
+  if (user && request.nextUrl.pathname.startsWith('/admin')) {
+    const { data: adminUser } = await supabase.schema('ladder').from('admin_users').select('id').eq('user_id', user.id).single();
+    if (!adminUser) return NextResponse.redirect(new URL('/', request.url));
+  }
+
+  /*
+  // Check if the route is a sign up route
+  if (request.nextUrl.pathname.startsWith('/auth/')) {
+    if (user) return NextResponse.redirect(new URL('/', request.url));
+  }
+
+  // Check if the route is an admin route
+  if (request.nextUrl.pathname.startsWith('/admin')) {
+    const { data: adminUser } = await supabase.schema('ladder').from('admin_users').select('id').eq('user_id', user.id).single();
+    if (!adminUser) return NextResponse.redirect(new URL('/', request.url));
+  }
+    */
+
+  return response;
 }
 
 export const config = {

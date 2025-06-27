@@ -59,6 +59,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
           data: {
             first_name: values.firstName,
             last_name: values.lastName,
+            phone: values.phone,
           },
         },
       });
@@ -66,13 +67,10 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
       if (error) throw error;
 
       // Insert player info into players table
+      // Note: All user data (email, phone, first_name, last_name) is automatically synced from auth.users via database triggers
       if (data.user) {
         const { error: playerError } = await supabase.schema('ladder').from('players').insert({
           user_id: data.user.id,
-          first_name: values.firstName,
-          last_name: values.lastName,
-          email: values.email,
-          phone: values.phone,
         });
 
         if (playerError) {
@@ -98,7 +96,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
   }
 
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
+    <div className={cn('flex w-full flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Sign up</CardTitle>

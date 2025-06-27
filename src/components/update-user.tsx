@@ -57,13 +57,8 @@ export function UpdateInfoForm({
 
       if (error) throw error;
 
-      const { error: playerError } = await updatePlayer(player.id, {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        phone: values.phone,
-      });
-
-      if (playerError) throw playerError;
+      // Note: All user data is now automatically synced from auth.users via database triggers
+      // No need to manually update the players table
 
       revalidate('/profile');
     } catch (error: any) {

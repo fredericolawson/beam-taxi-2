@@ -7,3 +7,39 @@ My supabase project is called Beam
 My schema is 'ladder'
 
 I am always happy for cursor agent to auto run READ queries -- but always seek my permission before modifying my DB
+
+## Middleware Authentication Learnings
+
+### Issue: Middleware Not Recognizing Admin Users
+When middleware authentication fails to recognize admin users, the problem is usually **both** RLS policies AND table-level permissions:
+
+#### Root Cause
+- Middleware uses `NEXT_PUBLIC_SUPABASE_ANON_KEY` (anonymous key)
+- Anonymous key needs **explicit table-level permissions** to access custom tables
+- RLS policies alone are NOT sufficient
+
+#### Required Setup for Admin Authentication
+1. **Enable RLS** on the admin table:
+   ```sql
+   ALTER TABLE ladder.admin_users ENABLE ROW LEVEL SECURITY;
+   ```
+
+2. **Create RLS policy** for users to check their own admin status:
+   ```sql
+   CREATE POLICY "Users can check their own admin status" ON ladder.admin_users
+       FOR SELECT 
+       USING (auth.uid() = user_id);
+   ```
+
+3. **Grant table-level SELECT permissions** (THIS IS CRITICAL):
+   ```sql
+   GRANT SELECT ON ladder.admin_users TO authenticated;
+   GRANT SELECT ON ladder.admin_users TO anon;
+   ```
+
+#### Debugging Steps
+- Check existing policies: `SELECT * FROM pg_policies WHERE tablename = 'admin_users';`
+- Check table permissions: `SELECT grantee, privilege_type FROM information_schema.role_table_grants WHERE table_name = 'admin_users';`
+- Test admin query directly: `SELECT * FROM ladder.admin_users WHERE user_id = 'user-id';`
+
+**Key Learning**: RLS policies control WHO can see WHAT data, but table-level permissions control WHETHER the role can access the table AT ALL.

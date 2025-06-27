@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
-export async function updatePlayer(playerId: string, values: { firstName: string; lastName: string; phone: string }) {
+export async function updatePlayer(playerId: string, values: {}) {
   const supabase = await createClient();
 
   // Get the current user to ensure they can only update their own record
@@ -18,7 +18,7 @@ export async function updatePlayer(playerId: string, values: { firstName: string
   const { data: existingPlayer, error: fetchError } = await supabase
     .schema('ladder')
     .from('players')
-    .select('id, user_id, first_name, last_name, phone')
+    .select('id, user_id')
     .eq('id', playerId)
     .single();
 
@@ -30,17 +30,9 @@ export async function updatePlayer(playerId: string, values: { firstName: string
     return { error: new Error("Unauthorized: Cannot update another user's player record") };
   }
 
-  const { error } = await supabase
-    .schema('ladder')
-    .from('players')
-    .update({
-      first_name: values.firstName,
-      last_name: values.lastName,
-      phone: values.phone,
-    })
-    .eq('id', playerId);
-
-  if (error) return { error };
+  // Note: All user data (email, phone, first_name, last_name) is now automatically
+  // synced from auth.users via database triggers. This function is kept for
+  // future player-specific fields that aren't in auth metadata.
 
   revalidatePath('/profile');
   return { success: true };

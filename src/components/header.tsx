@@ -5,6 +5,7 @@ import { getUserServer } from '@/lib/utils/get-user-server';
 import { User as UserIcon } from 'lucide-react';
 import { getPlayerByUserId } from '@/lib/tables/players';
 import Image from 'next/image';
+import { isUserAdmin } from '@/lib/utils/admin-utils';
 
 export async function Header() {
   const user = await getUserServer();
@@ -16,10 +17,22 @@ export async function Header() {
       </Link>
 
       <div className="items-top flex flex-1 flex-col justify-end gap-2 md:flex-row">
+        <AdminMenu user={user} />
         <ProfileMenu user={user} />
         <GenericMenu user={user} />
       </div>
     </header>
+  );
+}
+
+async function AdminMenu({ user }: { user: SupabaseUser | null }) {
+  if (!user) return null;
+  const adminUser = await isUserAdmin(user.id);
+
+  return (
+    <Button variant="secondary" asChild className="border">
+      <Link href="/admin">Admin</Link>
+    </Button>
   );
 }
 
@@ -32,7 +45,7 @@ async function ProfileMenu({ user }: { user: SupabaseUser | null }) {
     <Button variant="secondary" asChild className="border">
       <Link href={`/profile`}>
         <UserIcon />
-        {player.firstName} {player.lastName.charAt(0)}
+        {player.displayName}
       </Link>
     </Button>
   );
