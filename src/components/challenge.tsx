@@ -88,7 +88,9 @@ function ChallengePlayer({
     <Card>
       <CardHeader>
         <CardTitle>Challenge player?</CardTitle>
-        <CardDescription>Schedule a match against {player.displayName}. If you win, you'll take their place in the ladder.</CardDescription>
+        <CardDescription>
+          Schedule a match against {player.displayName}. If you win, you&apos;ll take their place in the ladder.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Button onClick={sendChallenge} disabled={isLoading}>

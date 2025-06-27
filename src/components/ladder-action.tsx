@@ -12,7 +12,6 @@ export function LadderAction({ player, currentPlayer }: { player: Player; curren
   const [pendingMatch, setPendingMatch] = useState<Match | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  if (player.id === currentPlayer.id) return null;
   const isPlayable = checkPlayable({ player, currentPlayer });
 
   useEffect(() => {
@@ -25,6 +24,7 @@ export function LadderAction({ player, currentPlayer }: { player: Player; curren
     fetchMatches();
   }, [currentPlayer.id, player.id]);
 
+  if (player.id === currentPlayer.id) return null;
   if (isLoading) return <Loading />;
   if (pendingMatch) return <CompleteMatchButton />;
   if (isPlayable && !pendingMatch) return <ChallengePlayerButton />;
