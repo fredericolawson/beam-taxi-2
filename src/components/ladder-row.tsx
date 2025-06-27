@@ -19,7 +19,7 @@ export function LadderRow({ player, currentPlayer, history }: { player: Player; 
   return (
     <>
       <TableRow
-        className={cn('hover:bg-muted/50 cursor-pointer', player.id === currentPlayer.id && 'border-2 border-green-700')}
+        className={cn('hover:bg-muted/50 cursor-pointer', player.id === currentPlayer.id && 'border-secondary border-2')}
         onClick={() => setIsSheetOpen(true)}
       >
         <TableCell className="w-16 text-center">{player.ladderRank}</TableCell>
