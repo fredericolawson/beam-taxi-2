@@ -42,7 +42,7 @@ export function PlayerSheet({
           <PlayerMatchesTable matches={history.matches} player={player} />
         </div>
         <SheetFooter>
-          <Button variant="secondary" className="border">
+          <Button variant="secondary" className="border" onClick={() => onOpenChange(false)}>
             Close
           </Button>
         </SheetFooter>
