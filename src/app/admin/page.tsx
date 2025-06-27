@@ -11,7 +11,7 @@ export default async function AdminPage() {
   const matches = await getCompletedMatches();
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <PlayerAdminTable players={players} />
       <AllMatchesTable matches={matches} />
     </div>
@@ -20,7 +20,7 @@ export default async function AdminPage() {
 
 function PlayerAdminTable({ players }: { players: Player[] }) {
   return (
-    <div className="mx-auto p-6">
+    <div className="w-full">
       <h1 className="mb-6 text-2xl font-bold">Player Management</h1>
       <Table className="rounded-md border bg-white">
         <TableHeader>
@@ -66,7 +66,7 @@ function PlayerAdminTable({ players }: { players: Player[] }) {
 
 function AllMatchesTable({ matches }: { matches: CompletedMatch[] }) {
   return (
-    <div className="p-6">
+    <div className="w-full">
       <h1 className="mb-6 text-2xl font-bold">All Matches</h1>
       <Table className="rounded-md border bg-white">
         <TableHeader>
