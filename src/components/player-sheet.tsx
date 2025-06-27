@@ -1,6 +1,6 @@
 'use client';
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import type { CompletedMatch, Match, Player } from '@/types';
 
 import { PlayerMatchesTable } from './player-matches-table';
@@ -9,6 +9,7 @@ import { Challenge } from './challenge';
 import { useEffect, useState, useCallback } from 'react';
 
 import { getMatchesByPlayerId } from '@/lib/tables/matches';
+import { Button } from './ui/button';
 
 type History = {
   matches: CompletedMatch[];
@@ -40,6 +41,11 @@ export function PlayerSheet({
           <Challenge player={player} currentPlayer={currentPlayer} onMatchUpdate={fetchHistory} />
           <PlayerMatchesTable matches={history.matches} player={player} />
         </div>
+        <SheetFooter>
+          <Button variant="secondary" className="border">
+            Close
+          </Button>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

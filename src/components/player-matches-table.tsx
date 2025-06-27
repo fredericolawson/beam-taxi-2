@@ -7,7 +7,7 @@ export function PlayerMatchesTable({ matches, player }: { matches: CompletedMatc
   return (
     <div>
       <h2 className="mb-2 text-center font-semibold">Match History</h2>
-      <Table className="rounded-md border bg-white">
+      <Table className="rounded-md border bg-white text-xs md:text-sm">
         <TableHeader>
           <MatchHeader />
         </TableHeader>
@@ -26,8 +26,8 @@ function MatchHeader() {
     <TableRow>
       <TableHead>Opponent</TableHead>
       <TableHead>Winner</TableHead>
-      <TableHead>Date</TableHead>
       <TableHead>Result</TableHead>
+      <TableHead>Date</TableHead>
     </TableRow>
   );
 }
@@ -36,15 +36,13 @@ function MatchRow({ match, player }: { match: CompletedMatch; player: Player }) 
   let opponent = match.challenger;
   if (match.challenger.id === player.id) opponent = match.defender;
   return (
-    <TableRow className="text-sm">
+    <TableRow>
       <TableCell>
         {opponent.firstName} {opponent.lastName}
       </TableCell>
-      <TableCell>
-        {match.winner.firstName} {match.winner.lastName}
-      </TableCell>
-      <TableCell>{new Date(match.completedOn).toLocaleDateString()}</TableCell>
+      <TableCell>{match.winner.firstName}</TableCell>
       <TableCell>{match.result}</TableCell>
+      <TableCell>{new Date(match.completedOn).toLocaleDateString()}</TableCell>
     </TableRow>
   );
 }
