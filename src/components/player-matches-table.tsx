@@ -5,8 +5,7 @@ import { Separator } from '@/components/ui/separator';
 export function PlayerMatchesTable({ matches, player }: { matches: CompletedMatch[] | null; player: Player }) {
   if (!matches) return null;
   return (
-    <>
-      <Separator />
+    <div>
       <h2 className="text-center font-semibold">Match History</h2>
       <Table className="rounded-md border bg-white">
         <TableHeader>
@@ -18,7 +17,7 @@ export function PlayerMatchesTable({ matches, player }: { matches: CompletedMatc
           ))}
         </TableBody>
       </Table>
-    </>
+    </div>
   );
 }
 

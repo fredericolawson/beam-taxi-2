@@ -5,6 +5,7 @@ import { CheckCircle, XCircle, ArrowUp } from 'lucide-react';
 import { updatePlayerApproval, increasePlayerRank } from '@/lib/tables/players';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface AdminActionProps {
   playerId: string;
@@ -30,6 +31,7 @@ export function AdminAction({ playerId, isApproved, currentRank }: AdminActionPr
     const success = await increasePlayerRank(playerId);
     if (success) {
       router.refresh();
+      toast.success('Rank increased');
     }
     setLoading(false);
   };
