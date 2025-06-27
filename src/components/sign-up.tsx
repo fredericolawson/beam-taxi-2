@@ -201,7 +201,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
                   <p className="text-sm text-red-500">{form.formState.errors.root.serverError.message}</p>
                 )}
 
-                <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                <Button type="submit" variant="secondary" className="w-full border" disabled={form.formState.isSubmitting}>
                   {form.formState.isSubmitting ? 'Creating an account...' : 'Sign up'}
                 </Button>
               </div>
