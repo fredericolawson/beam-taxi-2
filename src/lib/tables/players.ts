@@ -2,7 +2,6 @@
 
 import { createClient } from '@/lib/supabase/server';
 import type { Player } from '@/types';
-import camelcaseKeys from 'camelcase-keys';
 import { parsePlayer } from '@/lib/utils/player-utils';
 
 export async function getPlayers(): Promise<Player[]> {

@@ -14,7 +14,6 @@ import { User } from '@supabase/supabase-js';
 import { UploadIcon } from 'lucide-react';
 import type { Player } from '@/types';
 import { revalidate } from '@/actions/revalidate';
-import { updatePlayer } from '@/actions/player';
 
 const formSchema = z.object({
   firstName: z.string().min(1, { message: 'First name is required.' }),
@@ -31,7 +30,6 @@ export function UpdateInfoForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'> & { user: User; player: Player }) {
-  const router = useRouter();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -61,11 +59,11 @@ export function UpdateInfoForm({
       // No need to manually update the players table
 
       revalidate('/profile');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Update error:', error);
       form.setError('root.serverError', {
         type: 'server',
-        message: error?.message || 'An unexpected error occurred.',
+        message: error instanceof Error ? error.message : 'An unexpected error occurred.',
       });
     }
   }

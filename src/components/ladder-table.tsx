@@ -1,11 +1,6 @@
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { Player } from '@/types';
-import { PlayerSheet } from './player-sheet';
-import { MatchHistorySummary } from './match-history';
-import { LadderAction } from './ladder-action';
-import { cn } from '@/lib/utils';
 import { getMatchHistory } from '@/lib/utils/match-utils';
-
 import { LadderRow } from './ladder-row';
 
 export function LadderTable({ players, currentPlayer }: { players: Player[]; currentPlayer: Player }) {

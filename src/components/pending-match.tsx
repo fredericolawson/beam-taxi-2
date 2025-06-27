@@ -41,9 +41,7 @@ export function RecordMatchResult({
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
-  if (!match) return null;
   const router = useRouter();
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -52,6 +50,8 @@ export function RecordMatchResult({
       completedOn: new Date(),
     },
   });
+
+  if (!match) return null;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const submitMatch = async () => {

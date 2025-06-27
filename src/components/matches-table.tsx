@@ -1,5 +1,5 @@
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { Match, CompletedMatch } from '@/types';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import type { CompletedMatch } from '@/types';
 
 export function MatchesTable({ matches }: { matches: CompletedMatch[] }) {
   return (

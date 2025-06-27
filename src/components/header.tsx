@@ -6,12 +6,13 @@ import { User as UserIcon } from 'lucide-react';
 import { getPlayerByUserId } from '@/lib/tables/players';
 import Image from 'next/image';
 import { isUserAdmin } from '@/lib/utils/admin-utils';
+import { LogoutButton } from './logout-button';
 
 export async function Header() {
   const user = await getUserServer();
 
   return (
-    <header className="bg-secondary mb-12 flex items-center justify-between border-b px-6">
+    <header className="bg-secondary flex items-center justify-between border-b px-6">
       <Link href="/" className="text-secondary-foreground mr-6 flex flex-col">
         <Image src="/logo.png" alt="CBTC Ladder" width={300} height={200} />
       </Link>
@@ -20,6 +21,7 @@ export async function Header() {
         <AdminMenu user={user} />
         <ProfileMenu user={user} />
         <GenericMenu user={user} />
+        <LogoutButton user={user} />
       </div>
     </header>
   );
@@ -28,6 +30,7 @@ export async function Header() {
 async function AdminMenu({ user }: { user: SupabaseUser | null }) {
   if (!user) return null;
   const adminUser = await isUserAdmin(user.id);
+  if (!adminUser) return null;
 
   return (
     <Button variant="secondary" asChild className="border">
@@ -45,7 +48,7 @@ async function ProfileMenu({ user }: { user: SupabaseUser | null }) {
     <Button variant="secondary" asChild className="border">
       <Link href={`/profile`}>
         <UserIcon />
-        {player.displayName}
+        {player.firstName !== '' ? player.displayName : player.email}
       </Link>
     </Button>
   );

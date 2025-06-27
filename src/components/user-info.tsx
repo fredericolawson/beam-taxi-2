@@ -74,7 +74,7 @@ export function UserInfo({ user, player }: { user: User | null; player: Player }
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <LogoutButton />
+        <LogoutButton user={user} />
       </CardFooter>
     </Card>
   );

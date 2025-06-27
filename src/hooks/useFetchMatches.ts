@@ -17,7 +17,7 @@ export function useFetchMatches({ challengerId, defenderId }: { challengerId: st
 
   useEffect(() => {
     fetchMatches();
-  }, [challengerId, defenderId]);
+  }, [challengerId, defenderId, fetchMatches]);
 
   return { isLoading, completedMatches, pendingMatch, fetchMatches };
 }

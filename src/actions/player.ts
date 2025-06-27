@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
-export async function updatePlayer(playerId: string, values: {}) {
+export async function updatePlayer(playerId: string, _values: Record<string, unknown>) {
   const supabase = await createClient();
 
   // Get the current user to ensure they can only update their own record

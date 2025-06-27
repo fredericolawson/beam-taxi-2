@@ -26,7 +26,7 @@ export function PlayerSheet({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { history, fetchHistory } = getMatchHistory({ playerId: player.id });
+  const { history, fetchHistory } = useMatchHistory({ playerId: player.id });
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -45,7 +45,7 @@ export function PlayerSheet({
   );
 }
 
-function getMatchHistory({ playerId }: { playerId: string }) {
+function useMatchHistory({ playerId }: { playerId: string }) {
   const [history, setHistory] = useState<History>({ matches: [], summary: [] });
 
   const fetchHistory = async () => {
@@ -58,7 +58,7 @@ function getMatchHistory({ playerId }: { playerId: string }) {
 
   useEffect(() => {
     fetchHistory();
-  }, [playerId]);
+  }, [playerId, fetchHistory]);
 
   return { history, fetchHistory };
 }

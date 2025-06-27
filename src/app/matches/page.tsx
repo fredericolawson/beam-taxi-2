@@ -1,6 +1,5 @@
-import { getCompletedMatches, getMatches } from '@/lib/tables/matches';
+import { getCompletedMatches } from '@/lib/tables/matches';
 import { MatchesTable } from '@/components/matches-table';
-import { CompletedMatch } from '@/types';
 
 export default async function Matches() {
   const completedMatches = await getCompletedMatches();

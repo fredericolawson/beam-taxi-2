@@ -3,9 +3,9 @@
 import * as React from 'react';
 
 import { Calendar } from '@/components/ui/calendar';
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 
-export default function Calendar10({ date, setDate, label }: { date: Date; setDate: (date: Date) => void; label: string }) {
+export default function Calendar10({ date, setDate }: { date: Date; setDate: (date: Date) => void; label: string }) {
   const [month, setMonth] = React.useState<Date | undefined>(new Date());
 
   return (

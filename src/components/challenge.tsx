@@ -8,7 +8,6 @@ import { SiWhatsapp } from 'react-icons/si';
 import { Loader2, MailIcon, PhoneIcon } from 'lucide-react';
 import { checkPlayable } from '@/lib/utils/player-utils';
 import { Loading } from './loading';
-import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { challengePlayer, getPendingBiMatch } from '@/actions/match';
 
@@ -66,7 +65,7 @@ function ChallengePlayer({
   onMatchUpdate: () => Promise<void>;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   const isPlayable = checkPlayable({ player, currentPlayer });
 
   if (!isPlayable || pendingMatch) return null;

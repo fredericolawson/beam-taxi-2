@@ -6,8 +6,9 @@ import { Loader2, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { revalidate } from '@/actions/revalidate';
 import { useTransition } from 'react';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 
-export function LogoutButton() {
+export function LogoutButton({ user }: { user: SupabaseUser | null }) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -18,10 +19,12 @@ export function LogoutButton() {
     router.push('/');
   };
 
+  if (!user) return null;
+
   return (
-    <Button variant="outline" onClick={() => startTransition(logout)} disabled={isPending} className="flex-1">
-      {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LogOut className="mr-2 h-4 w-4" />}
-      Sign Out
+    <Button variant="secondary" onClick={() => startTransition(logout)} disabled={isPending} className="border">
+      {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />}
+      Logout
     </Button>
   );
 }

@@ -4,7 +4,6 @@ import { useFetchMatches } from '@/hooks/useFetchMatches';
 import { Button } from './ui/button';
 import type { Player } from '@/types';
 import { CheckCircle, Loader2, PlusCircle } from 'lucide-react';
-import { PlayerSheet } from './player-sheet';
 import { checkPlayable } from '@/lib/utils/player-utils';
 
 export function LadderAction({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {

@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { revalidate } from '@/actions/revalidate';
 import { useState } from 'react';
 import { notifyTelegram } from '@/actions/telegram';
@@ -26,14 +26,36 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     setError(null);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (error) throw error;
+
+      // Check if player record exists, create if not
+      if (data.user) {
+        const { data: existingPlayer } = await supabase.schema('ladder').from('players').select('id').eq('user_id', data.user.id).single();
+
+        if (!existingPlayer) {
+          // Create player record for users from shared authentication
+          const { error: playerError } = await supabase.schema('ladder').from('players').insert({
+            user_id: data.user.id,
+            email: data.user.email,
+            first_name: data.user.user_metadata.first_name,
+            last_name: data.user.user_metadata.last_name,
+            phone: data.user.user_metadata.phone,
+          });
+
+          if (playerError) {
+            console.error('Player creation error:', playerError);
+            // Don't throw error - user can still use the app
+          }
+        }
+      }
+
       revalidate('/');
       router.push('/');
-      notifyTelegram({ message: 'New HeyBuoy sign in:' + email });
+      notifyTelegram({ message: 'New CBTC sign in:' + email });
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred');
     } finally {

@@ -1,6 +1,5 @@
 'use client';
 
-import { getMatchHistory } from '@/lib/utils/match-utils';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { useState } from 'react';
 import { CompletedMatch, Player } from '@/types';

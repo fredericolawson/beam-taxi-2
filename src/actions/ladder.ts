@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import type { Player } from '@/types';
 
 export async function updateLadderRanks({ matchId, winnerId }: { matchId: string; winnerId: string }) {
   try {
@@ -44,8 +45,8 @@ export async function updateLadderRanks({ matchId, winnerId }: { matchId: string
       return;
     }
 
-    const challengerRank = (match.challenger as any).ladder_rank;
-    const defenderRank = (match.defender as any).ladder_rank;
+    const challengerRank = (match.challenger as unknown as { ladder_rank: number }).ladder_rank;
+    const defenderRank = (match.defender as unknown as { ladder_rank: number }).ladder_rank;
 
     console.log('Updating ranks:', { challengerRank, defenderRank });
 
