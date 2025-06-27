@@ -133,11 +133,11 @@ export function RecordMatchResult({
                 render={({ field }) => (
                   <FormItem className="flex w-full flex-col">
                     <FormLabel>Result</FormLabel>
-                    <FormDescription>Record the result of your superset (first to 8 games)</FormDescription>
                     <FormControl>
                       <Input {...field} placeholder="e.g. 8-6" className="w-full" disabled={isSubmitting} />
                     </FormControl>
                     <FormMessage />
+                    <FormDescription className="text-xs">Record the result of your superset (first to 8 games)</FormDescription>
                   </FormItem>
                 )}
               />
