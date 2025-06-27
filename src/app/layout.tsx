@@ -28,7 +28,7 @@ export default function RootLayout({
       <body className="bg-muted/50 flex min-h-screen flex-col">
         <Header />
         <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center">
-          <div className="flex h-full w-full flex-1 flex-col items-center py-12">{children}</div>
+          <div className="flex h-full w-full flex-1 flex-col items-center px-4 py-12">{children}</div>
         </main>
         <Toaster richColors position="bottom-center" />
         <Analytics />

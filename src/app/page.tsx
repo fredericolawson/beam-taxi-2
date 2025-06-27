@@ -12,7 +12,7 @@ export default async function Home() {
   if (!currentPlayer.isApproved) redirect('/profile');
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <h1 className="heading-1">Club Ladder</h1>
       <LadderTable players={players} currentPlayer={currentPlayer} />
     </div>

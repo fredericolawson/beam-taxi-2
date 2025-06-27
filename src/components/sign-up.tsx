@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { notifyTelegram } from '@/actions/telegram';
@@ -178,6 +178,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
                         <Input type="password" {...field} />
                       </FormControl>
                       <FormMessage />
+                      <FormDescription>Password must be at least 6 characters long.</FormDescription>
                     </FormItem>
                   )}
                 />

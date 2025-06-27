@@ -5,7 +5,7 @@ import { LadderRow } from './ladder-row';
 
 export function LadderTable({ players, currentPlayer }: { players: Player[]; currentPlayer: Player }) {
   return (
-    <Table className="rounded-md border bg-white">
+    <Table className="w-full rounded-md border bg-white">
       <TableHeader>
         <LadderHeader />
       </TableHeader>
@@ -25,6 +25,7 @@ function LadderHeader() {
       <TableHead className="w-16 text-center">Rank</TableHead>
       <TableHead className="w-48">Name</TableHead>
       <TableHead className="flex-1">Recent Results</TableHead>
+      <TableHead className="w-48">Last Match</TableHead>
       <TableHead className="w-32">Action</TableHead>
     </TableRow>
   );
