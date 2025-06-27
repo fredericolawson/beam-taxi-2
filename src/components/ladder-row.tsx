@@ -32,7 +32,7 @@ export function LadderRow({ player, currentPlayer, history }: { player: Player; 
           <MatchHistorySummary historySummary={history.summary} />
         </TableCell>
         <TableCell className="w-32">
-          {history.matches[0].completedOn ? new Date(history.matches[0].completedOn).toLocaleDateString() : '—'}
+          {history.matches[0]?.completedOn ? new Date(history.matches[0].completedOn).toLocaleDateString('en-gb') : '—'}
         </TableCell>
         <TableCell className="w-32">
           <LadderAction player={player} currentPlayer={currentPlayer} />
