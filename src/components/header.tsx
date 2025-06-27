@@ -2,7 +2,7 @@ import { User as SupabaseUser } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { getUserServer } from '@/lib/utils/get-user-server';
-import { User as UserIcon } from 'lucide-react';
+import { HomeIcon, ShieldIcon, User as UserIcon } from 'lucide-react';
 import { getPlayerByUserId } from '@/lib/tables/players';
 import Image from 'next/image';
 import { isUserAdmin } from '@/lib/utils/admin-utils';
@@ -17,11 +17,10 @@ export async function Header() {
         <Image src="/logo.png" alt="CBTC Ladder" width={300} height={200} />
       </Link>
 
-      <div className="items-top flex flex-1 flex-row justify-end gap-2">
+      <div className="items-top flex flex-1 flex-row flex-wrap justify-end gap-2">
         <AdminMenu user={user} />
         <ProfileMenu user={user} />
         <GenericMenu user={user} />
-        <LogoutButton user={user} />
       </div>
     </header>
   );
@@ -34,7 +33,10 @@ async function AdminMenu({ user }: { user: SupabaseUser | null }) {
 
   return (
     <Button variant="secondary" asChild className="border">
-      <Link href="/admin">Admin</Link>
+      <Link href="/admin">
+        <ShieldIcon />
+        Admin
+      </Link>
     </Button>
   );
 }
@@ -45,12 +47,20 @@ async function ProfileMenu({ user }: { user: SupabaseUser | null }) {
   if (!player) return null;
 
   return (
-    <Button variant="secondary" asChild className="border">
-      <Link href={`/profile`}>
-        <UserIcon />
-        {player.firstName !== '' ? player.displayName : player.email}
-      </Link>
-    </Button>
+    <>
+      <Button variant="secondary" asChild className="border">
+        <Link href={`/`}>
+          <HomeIcon />
+          Home
+        </Link>
+      </Button>
+      <Button variant="secondary" asChild className="border">
+        <Link href={`/profile`}>
+          <UserIcon />
+          Profile
+        </Link>
+      </Button>
+    </>
   );
 }
 

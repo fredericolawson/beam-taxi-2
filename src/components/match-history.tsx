@@ -12,7 +12,7 @@ export function MatchHistorySummary({ historySummary }: { historySummary: string
 
 function ResultIcon({ result }: { result: string }) {
   if (result === 'W') {
-    return <div className="flex h-4 w-4 items-center justify-center rounded-full border bg-green-700 p-3 text-white">{result}</div>;
+    return <div className="bg-secondary flex h-4 w-4 items-center justify-center rounded-full border p-3 text-white">{result}</div>;
   }
   return <div className="flex h-4 w-4 items-center justify-center rounded-full border border-gray-300 bg-gray-200 p-3">{result}</div>;
 }

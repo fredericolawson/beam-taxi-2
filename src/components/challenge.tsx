@@ -116,19 +116,19 @@ function PlayerContact({ player, pendingMatch }: { player: Player; pendingMatch:
         </div>
         <div className="flex flex-col gap-1 text-sm">
           <div className="flex w-full flex-col gap-2 md:flex-row">
-            <Button variant="outline" className="flex-1" asChild>
+            <Button variant="secondary" className="flex-1 border" asChild>
               <a href={`https://wa.me/${phone}`} target="_blank">
                 <SiWhatsapp className="h-4 w-4" />
                 Send WhatsApp
               </a>
             </Button>
-            <Button variant="outline" className="flex-1" asChild>
+            <Button variant="secondary" className="flex-1" asChild>
               <a href={`tel:${phone}`} target="_blank">
                 <PhoneIcon className="h-4 w-4" />
                 Call
               </a>
             </Button>
-            <Button variant="outline" className="flex-1" asChild>
+            <Button variant="secondary" className="flex-1" asChild>
               <a href={`mailto:${player.email}`} target="_blank">
                 <MailIcon className="h-4 w-4" />
                 Email
