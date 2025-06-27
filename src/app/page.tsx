@@ -9,6 +9,7 @@ export default async function Home() {
 
   const currentPlayer = await getPlayerByUserId(user?.id ?? '');
   if (!currentPlayer) return null;
+  if (!currentPlayer.isApproved) redirect('/profile');
 
   return (
     <div className="flex flex-col gap-6">

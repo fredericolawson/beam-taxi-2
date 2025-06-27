@@ -71,6 +71,10 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
       if (data.user) {
         const { error: playerError } = await supabase.schema('ladder').from('players').insert({
           user_id: data.user.id,
+          first_name: values.firstName,
+          last_name: values.lastName,
+          email: values.email,
+          phone: values.phone,
         });
 
         if (playerError) {
