@@ -2,11 +2,12 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Loader2, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { revalidate } from '@/actions/revalidate';
 import { useTransition } from 'react';
 import { User as SupabaseUser } from '@supabase/supabase-js';
+import { LoadingSpinner } from './loading-spinner';
 
 export function LogoutButton({ user }: { user: SupabaseUser | null }) {
   const [isPending, startTransition] = useTransition();
@@ -23,7 +24,7 @@ export function LogoutButton({ user }: { user: SupabaseUser | null }) {
 
   return (
     <Button variant="secondary" onClick={() => startTransition(logout)} disabled={isPending} className="border">
-      {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />}
+      {isPending ? <LoadingSpinner /> : <LogOut className="h-4 w-4" />}
       Logout
     </Button>
   );

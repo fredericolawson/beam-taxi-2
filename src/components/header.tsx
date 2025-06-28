@@ -6,7 +6,6 @@ import { HomeIcon, ShieldIcon, TrophyIcon, User as UserIcon } from 'lucide-react
 import { getPlayerByUserId } from '@/lib/tables/players';
 import Image from 'next/image';
 import { isUserAdmin } from '@/lib/utils/admin-utils';
-import { LogoutButton } from './logout-button';
 
 export async function Header() {
   const user = await getUserServer();

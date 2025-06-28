@@ -5,11 +5,12 @@ import { RecordMatchResult } from './pending-match';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { SiWhatsapp } from 'react-icons/si';
-import { Loader2, MailIcon, PhoneIcon } from 'lucide-react';
+import { MailIcon, PhoneIcon } from 'lucide-react';
 import { checkPlayable } from '@/lib/utils/player-utils';
 import { Loading } from './loading';
 import { useEffect, useState } from 'react';
 import { challengePlayer, getPendingBiMatch } from '@/actions/match';
+import { LoadingSpinner } from './loading-spinner';
 
 export function Challenge({
   player,
@@ -94,7 +95,7 @@ function ChallengePlayer({
       </CardHeader>
       <CardContent>
         <Button onClick={sendChallenge} disabled={isLoading}>
-          {isLoading ? <Loader2 className="mr-2 animate-spin" /> : 'Schedule Match'}
+          {isLoading ? <LoadingSpinner /> : 'Schedule Match'}
         </Button>
       </CardContent>
     </Card>

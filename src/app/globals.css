@@ -100,7 +100,7 @@
     @apply mb-4 text-3xl md:text-4xl;
   }
   .heading-2 {
-    @apply mb-6 text-2xl font-bold;
+    @apply mb-4 text-2xl font-semibold;
   }
   .heading-3 {
     @apply text-xl;

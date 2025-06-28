@@ -1,6 +1,6 @@
 'use client';
 
-import { CalendarIcon, Loader2, PlusCircle } from 'lucide-react';
+import { CalendarIcon, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
@@ -19,6 +19,7 @@ import { useState } from 'react';
 import { cancelMatchAction, submitMatchResult } from '@/actions/match';
 import { useRouter } from 'next/navigation';
 import { revalidate } from '@/actions/revalidate';
+import { LoadingSpinner } from './loading-spinner';
 
 const FormSchema = z.object({
   winnerId: z.string().min(1, 'Please select a winner'),
@@ -177,10 +178,10 @@ export function RecordMatchResult({
             <div className="flex flex-col gap-2 md:flex-row">
               <Button type="submit" variant="secondary" className="flex-1" disabled={isSubmitting}>
                 <PlusCircle />
-                {isSubmitting ? <Loader2 className="mr-2 animate-spin" /> : 'Submit Result'}
+                {isSubmitting ? <LoadingSpinner /> : 'Submit Result'}
               </Button>
               <Button variant="outline" className="flex-1" disabled={isCancelling} onClick={onCancel}>
-                {isCancelling ? <Loader2 className="mr-2 animate-spin" /> : 'Cancel Match'}
+                {isCancelling ? <LoadingSpinner /> : 'Cancel Match'}
               </Button>
             </div>
           </form>

@@ -1,12 +1,13 @@
 'use client';
 
 import { Button } from './ui/button';
-import type { CompletedMatch, Match, Player } from '@/types';
-import { CheckCircle, Loader2, PlusCircle } from 'lucide-react';
+import type { Match, Player } from '@/types';
+import { CheckCircle, PlusCircle } from 'lucide-react';
 import { checkPlayable } from '@/lib/utils/player-utils';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { getBiMatches } from '@/actions/match';
+import { LoadingSpinner } from './loading-spinner';
 
 export function LadderAction({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
   const [pendingMatch, setPendingMatch] = useState<Match | null>(null);
@@ -53,7 +54,7 @@ function CompleteMatchButton() {
 function Loading() {
   return (
     <div className="flex w-38 items-center justify-center">
-      <Loader2 className="animate-spin" />
+      <LoadingSpinner />
     </div>
   );
 }

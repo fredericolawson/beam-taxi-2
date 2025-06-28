@@ -3,19 +3,24 @@ import './globals.css';
 import { Analytics } from '@vercel/analytics/react';
 import { Toaster } from '@/components/ui/sonner';
 import { Header } from '@/components/header';
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://tennis.beam.bm'),
   title: 'CBTC Ladder | Coral Beach & Tennis Club',
   description: 'Tennis ladder for the Coral Beach & Tennis Club',
   keywords: ['tennis', 'ladder', 'coral beach', 'tennis club', 'bermuda', 'rankings', 'matches', 'competition'],
   authors: [{ name: 'Coral Beach & Tennis Club' }],
-  viewport: 'width=device-width, initial-scale=1',
   robots: 'index, follow',
   openGraph: {
     title: 'CBTC Ladder | Coral Beach & Tennis Club',
     description: 'Tennis ladder for the Coral Beach & Tennis Club',
-    url: 'https://tennis.beam.com',
+    url: 'https://tennis.beam.bm',
     siteName: 'CBTC Tennis Ladder',
     locale: 'en_BM',
     type: 'website',
