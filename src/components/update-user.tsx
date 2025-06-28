@@ -30,7 +30,6 @@ export function UpdateInfoForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'> & { user: User; player: Player }) {
-
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -137,8 +136,8 @@ export function UpdateInfoForm({
               {form.formState.errors.root?.serverError && (
                 <p className="text-sm text-red-500">{form.formState.errors.root.serverError.message}</p>
               )}
-              <Button type="submit" className="w-fit" disabled={form.formState.isSubmitting}>
-                <UploadIcon className="mr-2 h-4 w-4" />
+              <Button type="submit" variant="secondary" className="w-fit border" disabled={form.formState.isSubmitting}>
+                <UploadIcon className="h-4 w-4" />
                 {form.formState.isSubmitting ? 'Saving...' : 'Update Info'}
               </Button>
             </form>

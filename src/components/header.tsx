@@ -2,7 +2,7 @@ import { User as SupabaseUser } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { getUserServer } from '@/lib/utils/get-user-server';
-import { HomeIcon, ShieldIcon, User as UserIcon } from 'lucide-react';
+import { HomeIcon, ShieldIcon, TrophyIcon, User as UserIcon } from 'lucide-react';
 import { getPlayerByUserId } from '@/lib/tables/players';
 import Image from 'next/image';
 import { isUserAdmin } from '@/lib/utils/admin-utils';
@@ -50,8 +50,8 @@ async function ProfileMenu({ user }: { user: SupabaseUser | null }) {
     <>
       <Button variant="secondary" asChild className="border">
         <Link href={`/`}>
-          <HomeIcon />
-          Home
+          <TrophyIcon />
+          Ladder
         </Link>
       </Button>
       <Button variant="secondary" asChild className="border">
