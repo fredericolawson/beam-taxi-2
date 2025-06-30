@@ -102,40 +102,43 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
   return (
     <div className={cn('flex w-full flex-col gap-6', className)} {...props}>
       <Card>
-        <CardHeader>
+        <CardHeader className="px-6 md:px-8">
           <CardTitle className="text-2xl">Sign up</CardTitle>
           <CardDescription>Register to join the Coral Beach Tennis Ladder</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-6 md:px-8">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col gap-6">
-                <FormField
-                  control={form.control}
-                  name="firstName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>First Name</FormLabel>
-                      <FormControl>
-                        <Input type="text" autoComplete="given-name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="lastName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Last Name</FormLabel>
-                      <FormControl>
-                        <Input type="text" autoComplete="family-name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid gap-6 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>First Name</FormLabel>
+                        <FormControl>
+                          <Input type="text" autoComplete="given-name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Name</FormLabel>
+                        <FormControl>
+                          <Input type="text" autoComplete="family-name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
                 <FormField
                   control={form.control}
                   name="phone"
@@ -144,13 +147,14 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
                       <FormLabel>Phone</FormLabel>
                       <FormControl>
                         <PhoneInput
-                          className="border-input file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                          placeholder="Enter phone number"
+                          className="border-input file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border bg-transparent px-3 py-1 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                          placeholder="+1 (441)"
                           defaultCountry="US"
                           autoComplete="tel"
                           {...field}
                         />
                       </FormControl>
+                      <FormDescription>Ideally enter a number that can be reached via WhatsApp for scheduling matches.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
