@@ -6,7 +6,7 @@ export function PlayerMatchesTable({ matches, player }: { matches: CompletedMatc
   if (!matches) return null;
   return (
     <div>
-      <h2 className="mb-2 text-center font-semibold">Match History</h2>
+      <h2 className="heading-3">Match History</h2>
       <Table className="rounded-md border bg-white text-xs md:text-sm">
         <TableHeader>
           <MatchHeader />

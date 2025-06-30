@@ -100,10 +100,10 @@
     @apply mb-4 text-3xl md:text-4xl;
   }
   .heading-2 {
-    @apply mb-4 text-2xl font-semibold;
+    @apply mb-4 text-xl font-semibold;
   }
   .heading-3 {
-    @apply text-xl;
+    @apply mb-4 text-center font-semibold;
   }
   .card-container {
     @apply bg-card rounded-lg border p-6 shadow-sm;
