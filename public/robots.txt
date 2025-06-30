@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://tennis.beam.bm/sitemap.xml

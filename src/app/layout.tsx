@@ -11,7 +11,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://tennis.beam.bm'),
+  metadataBase: new URL('https://coralbeach.tennis.bm'),
   title: 'CBTC Ladder | Coral Beach & Tennis Club',
   description: 'Tennis ladder for the Coral Beach & Tennis Club',
   icons: {
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'CBTC Ladder | Coral Beach & Tennis Club',
     description: 'Tennis ladder for the Coral Beach & Tennis Club',
-    url: 'https://tennis.beam.bm',
+    url: 'https://coralbeach.tennis.bm',
     siteName: 'CBTC Tennis Ladder',
     locale: 'en_BM',
     type: 'website',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'CBTC Ladder | Coral Beach & Tennis Club',
-    description: 'Tennis ladder for the Coral Beach & Tennis Club',
+    description: 'Ladder for the Coral Beach & Tennis Club',
     images: ['/logo.png'],
   },
 };
