@@ -97,10 +97,10 @@
     @apply bg-background text-foreground;
   }
   .heading-1 {
-    @apply mb-4 text-3xl md:text-4xl;
+    @apply mb-4 text-xl font-semibold;
   }
   .heading-2 {
-    @apply mb-4 text-xl font-semibold;
+    @apply mb-4 text-lg font-semibold;
   }
   .heading-3 {
     @apply mb-4 text-center font-semibold;

@@ -27,7 +27,7 @@ export default async function AdminPage() {
 function PlayerAdminTable({ players }: { players: Player[] }) {
   return (
     <div className="w-full">
-      <h1 className="heading-2">Player Management</h1>
+      <h1 className="heading-1">Player Management</h1>
       <Table className="rounded-md border bg-white">
         <TableHeader>
           <TableRow>
@@ -73,7 +73,7 @@ function PlayerAdminTable({ players }: { players: Player[] }) {
 function AllMatchesTable({ matches }: { matches: CompletedMatch[] }) {
   return (
     <div className="w-full">
-      <h1 className="heading-2">All Matches</h1>
+      <h1 className="heading-1">All Matches</h1>
       <Table className="rounded-md border bg-white">
         <TableHeader>
           <TableRow>
@@ -109,7 +109,7 @@ function AllMatchesTable({ matches }: { matches: CompletedMatch[] }) {
 function PendingPlayersTable({ players }: { players: Player[] }) {
   return (
     <div className="w-full">
-      <h1 className="heading-2">Awaiting Approval</h1>
+      <h1 className="heading-1">Awaiting Approval</h1>
       <Table className="rounded-md border bg-white">
         <TableHeader>
           <TableRow>

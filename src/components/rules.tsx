@@ -4,7 +4,7 @@ import { Target, Trophy, Calendar } from 'lucide-react';
 export function Rules() {
   return (
     <div className="w-full">
-      <h1 className="heading-3">Ladder Rules</h1>
+      <h1 className="heading-3 text-center">Ladder Rules</h1>
 
       <div className="grid gap-6">
         {/* Challenging Rules */}

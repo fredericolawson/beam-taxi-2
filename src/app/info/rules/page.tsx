@@ -1,7 +1,11 @@
 import { Rules } from '@/components/rules';
 
 export default function RulesPage() {
-  return <Rules />;
+  return (
+    <div className="flex w-full flex-col gap-4">
+      <Rules />
+    </div>
+  );
 }
 
 /*

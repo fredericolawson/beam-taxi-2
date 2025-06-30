@@ -15,7 +15,7 @@ export default async function Home() {
 
   return (
     <div className="flex w-full flex-col">
-      <h1 className="heading-2">Club Ladder</h1>
+      <h1 className="heading-1">Club Ladder</h1>
       <LadderTable players={players} currentPlayer={currentPlayer} />
     </div>
   );
