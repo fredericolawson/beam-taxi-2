@@ -137,7 +137,9 @@ function PlayerContact({ player, pendingMatch }: { player: Player; pendingMatch:
             </Button>
           </div>
         </div>
-        <div className="text-muted-foreground text-sm">Your match should be one superset — first to 8 games — with a tiebreaker at 7-7</div>
+        <div className="text-muted-foreground text-sm">
+          Your match should be one superset — first to 8 games — with a tiebreaker if both players get to 7 games
+        </div>
         <div className="text-muted-foreground text-sm"></div>
       </CardContent>
     </Card>
