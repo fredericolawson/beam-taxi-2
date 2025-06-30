@@ -42,7 +42,7 @@ function MatchRow({ match, player }: { match: CompletedMatch; player: Player }) 
       </TableCell>
       <TableCell>{match.winner.firstName}</TableCell>
       <TableCell>{match.result}</TableCell>
-      <TableCell>{new Date(match.completedOn).toLocaleDateString()}</TableCell>
+      <TableCell>{new Date(match.completedOn + 'T00:00:00').toLocaleDateString()}</TableCell>
     </TableRow>
   );
 }
