@@ -35,7 +35,7 @@ export function LadderAction({ player, currentPlayer }: { player: Player; curren
 
 function ChallengePlayerButton() {
   return (
-    <Button variant="outline" size="sm" className="w-38">
+    <Button variant="default" size="sm" className="w-38">
       <PlusCircle className="h-4 w-4" />
       Challenge Player
     </Button>
