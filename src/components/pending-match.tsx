@@ -20,6 +20,17 @@ import { cancelMatchAction, submitMatchResult } from '@/actions/match';
 import { useRouter } from 'next/navigation';
 import { revalidate } from '@/actions/revalidate';
 import { LoadingSpinner } from './loading-spinner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from './ui/alert-dialog';
 
 const FormSchema = z.object({
   winnerId: z.string().min(1, 'Please select a winner'),
@@ -40,6 +51,8 @@ export function RecordMatchResult({
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [pendingData, setPendingData] = useState<z.infer<typeof FormSchema> | null>(null);
   const router = useRouter();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -53,14 +66,22 @@ export function RecordMatchResult({
   if (!match) return null;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    setPendingData(data);
+    setShowConfirmation(true);
+  }
+
+  function handleConfirmSubmit() {
+    if (!pendingData) return;
+
     const submitMatch = async () => {
       setIsSubmitting(true);
+      setShowConfirmation(false);
 
       const response = await submitMatchResult({
         matchId: match!.id,
-        winnerId: data.winnerId,
-        result: data.result,
-        completedOn: data.completedOn,
+        winnerId: pendingData.winnerId,
+        result: pendingData.result,
+        completedOn: pendingData.completedOn,
       });
       if (response.error) toast.error(response.error);
       else {
@@ -70,6 +91,7 @@ export function RecordMatchResult({
         toast.success('Match result submitted');
       }
       setIsSubmitting(false);
+      setPendingData(null);
     };
     submitMatch();
   }
@@ -115,12 +137,8 @@ export function RecordMatchResult({
                           <SelectValue placeholder="Select a winner" />
                         </SelectTrigger>
                         <SelectContent className="w-full">
-                          <SelectItem value={match.challenger.id}>
-                            {match.challenger.firstName} {match.challenger.lastName}
-                          </SelectItem>
-                          <SelectItem value={match.defender.id}>
-                            {match.defender.firstName} {match.defender.lastName}
-                          </SelectItem>
+                          <SelectItem value={match.challenger.id}>{match.challenger.firstName}</SelectItem>
+                          <SelectItem value={match.defender.id}>{match.defender.firstName}</SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -176,10 +194,38 @@ export function RecordMatchResult({
               )}
             />
             <div className="flex flex-col gap-2 md:flex-row">
-              <Button type="submit" variant="secondary" className="flex-1" disabled={isSubmitting}>
-                <PlusCircle />
-                {isSubmitting ? <LoadingSpinner /> : 'Submit Result'}
-              </Button>
+              <AlertDialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+                <AlertDialogTrigger asChild>
+                  <Button type="submit" variant="secondary" className="flex-1" disabled={isSubmitting}>
+                    <PlusCircle />
+                    {isSubmitting ? <LoadingSpinner /> : 'Submit Result'}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Confirm Match Result</AlertDialogTitle>
+                    <div className="flex flex-col gap-2">
+                      <span className="text-muted-foreground">Are you sure you want to submit this match result?</span>
+                      <span>
+                        <strong>Winner:</strong>{' '}
+                        {pendingData?.winnerId === match.challenger.id ? match.challenger.firstName : match.defender.firstName}
+                      </span>
+                      <span>
+                        <strong>Result:</strong> {pendingData?.result}
+                      </span>
+                      <span>
+                        <strong>Date:</strong> {pendingData?.completedOn ? format(pendingData.completedOn, 'PPP') : ''}
+                      </span>
+                    </div>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleConfirmSubmit} disabled={isSubmitting}>
+                      {isSubmitting ? <LoadingSpinner /> : 'Submit Result'}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
               <Button variant="outline" className="flex-1" disabled={isCancelling} onClick={onCancel}>
                 {isCancelling ? <LoadingSpinner /> : 'Cancel Match'}
               </Button>

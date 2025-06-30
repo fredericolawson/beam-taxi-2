@@ -3,13 +3,18 @@ import { UpdateInfoForm } from '@/components/update-user';
 import { getUserServer } from '@/lib/utils/get-user-server';
 import { getPlayerByUserId } from '@/lib/tables/players';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Player } from '@/types';
+import { CompletedMatch, Player } from '@/types';
+import { PlayerMatchesTable } from '@/components/player-matches-table';
+import { getMatchesByPlayerId } from '@/lib/tables/matches';
 
 export default async function AccountPage() {
   const user = await getUserServer();
   if (!user) return null;
   const player = await getPlayerByUserId(user.id);
   if (!player) return null;
+  const matches = await getMatchesByPlayerId({ playerId: player.id });
+  console.log(matches.length);
+  const completedMatches = matches.filter((match) => match.winnerId !== null) as CompletedMatch[];
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -18,6 +23,7 @@ export default async function AccountPage() {
         <UserInfo user={user} player={player} />
         <UpdateInfoForm user={user} player={player} />
       </div>
+      <PlayerMatchesTable matches={completedMatches} player={player} />
     </div>
   );
 }

@@ -55,7 +55,7 @@ export async function getMatchesByPlayerId({ playerId }: { playerId: string }): 
     .select(
       '*, challenger:players!matches_challenger_id_fkey(*), defender:players!matches_defender_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
     )
-    .or(`defender_id.eq.${playerId},winner_id.eq.${playerId}`)
+    .or(`defender_id.eq.${playerId},challenger_id.eq.${playerId}`)
     .not('winner_id', 'is', null)
     .order('completed_on', { ascending: false })
     .order('created_at', { ascending: false });

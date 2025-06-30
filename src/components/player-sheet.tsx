@@ -56,6 +56,7 @@ function useMatchHistory({ playerId }: { playerId: string }) {
 
   const fetchHistory = useCallback(async () => {
     const matches = await getMatchesByPlayerId({ playerId });
+    console.log(matches);
     const completedMatches = matches.filter((match) => match.winnerId !== null);
     const historySummary = completedMatches.map((match) => (match.winnerId === playerId ? 'W' : 'L'));
     const history = { matches: completedMatches as CompletedMatch[], summary: historySummary };
