@@ -104,7 +104,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Sign up</CardTitle>
-          <CardDescription>Register to join the ladder</CardDescription>
+          <CardDescription>Register to join the Coral Beach Tennis Ladder</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
