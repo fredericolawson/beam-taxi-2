@@ -1,6 +1,6 @@
 export function MatchHistorySummary({ historySummary }: { historySummary: string[] }) {
   if (historySummary.length === 0) return <div>—</div>;
-  const slicedSummary = historySummary.slice(0, 12);
+  const slicedSummary = historySummary.slice(0, 6);
   return (
     <div className="flex gap-2">
       {slicedSummary.map((result, index) => (

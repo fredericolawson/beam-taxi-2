@@ -24,7 +24,7 @@ function LadderHeader() {
     <TableRow>
       <TableHead className="w-16 text-center">Rank</TableHead>
       <TableHead className="w-48">Name</TableHead>
-      <TableHead className="flex-1">Recent Results</TableHead>
+      <TableHead className="w-42">Recent Results</TableHead>
       <TableHead className="w-48">Last Match</TableHead>
       <TableHead className="w-32">Action</TableHead>
     </TableRow>
