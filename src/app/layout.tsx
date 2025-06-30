@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://tennis.beam.bm'),
   title: 'CBTC Ladder | Coral Beach & Tennis Club',
   description: 'Tennis ladder for the Coral Beach & Tennis Club',
+  icons: {
+    icon: [{ url: '/favicon-64x64.png', sizes: '64x64', type: 'image/png' }],
+  },
   keywords: ['tennis', 'ladder', 'coral beach', 'tennis club', 'bermuda', 'rankings', 'matches', 'competition'],
   authors: [{ name: 'Coral Beach & Tennis Club' }],
   robots: 'index, follow',
