@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { Toaster } from '@/components/ui/sonner';
 import { Header } from '@/components/header';
 import { Metadata, Viewport } from 'next';
+import { Footer } from '@/components/footer';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -56,6 +57,7 @@ export default function RootLayout({
         <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center">
           <div className="flex h-full w-full flex-1 flex-col items-center px-4 py-12 text-sm md:text-sm">{children}</div>
         </main>
+        <Footer />
         <Toaster richColors position="bottom-center" />
         <Analytics />
       </body>

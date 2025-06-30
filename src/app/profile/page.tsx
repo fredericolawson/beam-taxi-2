@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { CompletedMatch, Player } from '@/types';
 import { PlayerMatchesTable } from '@/components/player-matches-table';
 import { getMatchesByPlayerId } from '@/lib/tables/matches';
+import { Rules } from '@/components/rules';
+import { Separator } from '@/components/ui/separator';
 
 export default async function AccountPage() {
   const user = await getUserServer();
@@ -23,7 +25,11 @@ export default async function AccountPage() {
         <UserInfo user={user} player={player} />
         <UpdateInfoForm user={user} player={player} />
       </div>
-      <PlayerMatchesTable matches={completedMatches} player={player} />
+      <Separator className="mt-4" />
+      <div className="flex w-full flex-col gap-4 md:flex-row">
+        <PlayerMatchesTable matches={completedMatches} player={player} />
+        <Rules />
+      </div>
     </div>
   );
 }
