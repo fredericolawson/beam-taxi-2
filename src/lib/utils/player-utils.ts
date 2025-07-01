@@ -17,7 +17,7 @@ export type RawPlayer = {
 export function checkPlayable({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
   const currentPlayerRank = currentPlayer.ladderRank;
   const playerRank = player.ladderRank;
-  const isPlayable = playerRank >= currentPlayerRank - 3 && playerRank <= currentPlayerRank;
+  const isPlayable = playerRank >= currentPlayerRank - 3 && playerRank <= currentPlayerRank && player.id !== currentPlayer.id;
 
   return isPlayable as boolean;
 }

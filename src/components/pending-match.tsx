@@ -17,8 +17,6 @@ import type { Match } from '@/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useState } from 'react';
 import { cancelMatchAction, submitMatchResult } from '@/actions/match';
-import { useRouter } from 'next/navigation';
-import { revalidate } from '@/actions/revalidate';
 import { LoadingSpinner } from './loading-spinner';
 import {
   AlertDialog,
@@ -42,18 +40,17 @@ const FormSchema = z.object({
 
 export function RecordMatchResult({
   match,
-  setPendingMatch,
-  onMatchUpdate,
+  refresh,
+  fetchHistory,
 }: {
   match: Match | null;
-  setPendingMatch: (match: Match | null) => void;
-  onMatchUpdate: () => Promise<void>;
+  refresh: () => void;
+  fetchHistory: () => void;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [pendingData, setPendingData] = useState<z.infer<typeof FormSchema> | null>(null);
-  const router = useRouter();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -85,9 +82,8 @@ export function RecordMatchResult({
       });
       if (response.error) toast.error(response.error);
       else {
-        setPendingMatch(null);
-        await onMatchUpdate();
-        router.refresh();
+        fetchHistory();
+        refresh();
         toast.success('Match result submitted');
       }
       setIsSubmitting(false);
@@ -103,9 +99,7 @@ export function RecordMatchResult({
       if (response.error) {
         toast.error(response.error);
       } else {
-        await revalidate('/');
-        setPendingMatch(null);
-        router.refresh();
+        refresh();
         toast.success('Match cancelled');
       }
       setIsCancelling(false);

@@ -1,12 +1,15 @@
 'use client';
 
 import { TableCell, TableRow } from '@/components/ui/table';
-import { useState } from 'react';
-import { CompletedMatch, Player } from '@/types';
+import { useCallback, useEffect, useState } from 'react';
+import { CompletedMatch, Match, Player } from '@/types';
 import { cn } from '@/lib/utils';
 import { MatchHistorySummary } from './match-history';
 import { LadderAction } from './ladder-action';
 import { PlayerSheet } from './player-sheet';
+import { useRouter } from 'next/navigation';
+import { checkPlayable } from '@/lib/utils/player-utils';
+import { getBiMatches } from '@/actions/match';
 
 type History = {
   matches: CompletedMatch[];
@@ -14,7 +17,23 @@ type History = {
 };
 
 export function LadderRow({ player, currentPlayer, history }: { player: Player; currentPlayer: Player; history: History }) {
+  const [pendingMatch, setPendingMatch] = useState<Match | null>(null);
+  const [pendingMatchLoading, setPendingMatchLoading] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const refreshMatch = useCallback(() => setRefreshTrigger((prev) => prev + 1), []);
+  const isPlayable = checkPlayable({ player: player, currentPlayer: currentPlayer });
+
+  useEffect(() => {
+    const fetchMatch = async () => {
+      setPendingMatchLoading(true);
+      const matches = await getBiMatches({ challengerId: currentPlayer.id, defenderId: player.id });
+      setPendingMatch(matches.find((m) => m.winnerId === null) || null);
+      setPendingMatchLoading(false);
+    };
+    fetchMatch();
+  }, [isSheetOpen, refreshTrigger]);
 
   return (
     <>
@@ -35,10 +54,17 @@ export function LadderRow({ player, currentPlayer, history }: { player: Player; 
           {history.matches[0]?.completedOn ? new Date(history.matches[0].completedOn + 'T00:00:00').toLocaleDateString('en-gb') : '—'}
         </TableCell>
         <TableCell className="w-32">
-          <LadderAction player={player} currentPlayer={currentPlayer} />
+          <LadderAction isPlayable={isPlayable} isPendingMatch={!!pendingMatch} pendingMatchLoading={pendingMatchLoading} />
         </TableCell>
       </TableRow>
-      <PlayerSheet player={player} currentPlayer={currentPlayer} open={isSheetOpen} onOpenChange={setIsSheetOpen}></PlayerSheet>
+      <PlayerSheet
+        player={player}
+        currentPlayer={currentPlayer}
+        pendingMatch={pendingMatch}
+        open={isSheetOpen}
+        onOpenChange={setIsSheetOpen}
+        refresh={refreshMatch}
+      ></PlayerSheet>
     </>
   );
 }

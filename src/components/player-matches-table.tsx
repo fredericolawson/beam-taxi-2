@@ -1,6 +1,5 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { CompletedMatch, Player } from '@/types';
-import { Separator } from '@/components/ui/separator';
 
 export function PlayerMatchesTable({ matches, player }: { matches: CompletedMatch[] | null; player: Player }) {
   if (!matches) return null;

@@ -7,47 +7,28 @@ import { Button } from './ui/button';
 import { SiWhatsapp } from 'react-icons/si';
 import { MailIcon, PhoneIcon } from 'lucide-react';
 import { checkPlayable } from '@/lib/utils/player-utils';
-import { Loading } from './loading';
-import { useEffect, useState } from 'react';
-import { challengePlayer, getPendingBiMatch } from '@/actions/match';
+import { useState } from 'react';
+import { challengePlayer } from '@/actions/match';
 import { LoadingSpinner } from './loading-spinner';
 
 export function Challenge({
   player,
   currentPlayer,
-  onMatchUpdate,
+  refresh,
+  pendingMatch,
+  fetchHistory,
 }: {
   player: Player;
   currentPlayer: Player;
-  onMatchUpdate: () => Promise<void>;
+  refresh: () => void;
+  pendingMatch: Match | null;
+  fetchHistory: () => void;
 }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [pendingMatch, setPendingMatch] = useState<Match | null>(null);
-
-  const fetchMatch = async () => {
-    setIsLoading(true);
-    const match = await getPendingBiMatch({ challengerId: currentPlayer.id, defenderId: player.id });
-    setPendingMatch(match);
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    fetchMatch();
-  }, [currentPlayer.id, player.id]);
-
-  if (isLoading) return <Loading />;
-
   return (
     <>
-      <ChallengePlayer
-        player={player}
-        currentPlayer={currentPlayer}
-        pendingMatch={pendingMatch}
-        fetchMatch={fetchMatch}
-        onMatchUpdate={onMatchUpdate}
-      />
+      <ChallengePlayer player={player} currentPlayer={currentPlayer} pendingMatch={!!pendingMatch} refresh={refresh} />
       <PlayerContact player={player} pendingMatch={pendingMatch} />
-      <RecordMatchResult match={pendingMatch} key={pendingMatch?.id} setPendingMatch={setPendingMatch} onMatchUpdate={onMatchUpdate} />
+      <RecordMatchResult match={pendingMatch} key={pendingMatch?.id} refresh={refresh} fetchHistory={fetchHistory} />
     </>
   );
 }
@@ -56,21 +37,18 @@ function ChallengePlayer({
   player,
   currentPlayer,
   pendingMatch,
-  fetchMatch,
-  onMatchUpdate,
+  refresh,
 }: {
   player: Player;
   currentPlayer: Player;
-  pendingMatch: Match | null;
-  fetchMatch: () => Promise<void>;
-  onMatchUpdate: () => Promise<void>;
+  pendingMatch: boolean;
+  refresh: () => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [, setError] = useState<string | null>(null);
   const isPlayable = checkPlayable({ player, currentPlayer });
 
   if (!isPlayable || pendingMatch) return null;
-  if (player.id === currentPlayer.id) return null;
 
   const sendChallenge = async () => {
     setIsLoading(true);
@@ -78,8 +56,7 @@ function ChallengePlayer({
     try {
       const { error } = await challengePlayer({ challengerId: currentPlayer.id, defenderId: player.id });
       if (error) setError(error);
-      await fetchMatch();
-      await onMatchUpdate(); // Refresh history after creating challenge
+      refresh(); // Refresh history after creating challenge
     } finally {
       setIsLoading(false);
     }

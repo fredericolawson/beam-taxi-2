@@ -15,7 +15,6 @@ export default async function AccountPage() {
   const player = await getPlayerByUserId(user.id);
   if (!player) return null;
   const matches = await getMatchesByPlayerId({ playerId: player.id });
-  console.log(matches.length);
   const completedMatches = matches.filter((match) => match.winnerId !== null) as CompletedMatch[];
 
   return (

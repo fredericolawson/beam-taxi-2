@@ -66,3 +66,29 @@ export async function getMatchesByPlayerId({ playerId }: { playerId: string }): 
   const matches = camelcaseKeys(data, { deep: true }) as Match[];
   return matches;
 }
+
+/*
+--------------------------------
+Pending Matches where one player is currentPlayer
+--------------------------------
+*/
+
+export async function getPendingMatches({ currentPlayerId }: { currentPlayerId: string }): Promise<Match[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .schema('ladder')
+    .from('matches')
+    .select(
+      '*, challenger:players!matches_challenger_id_fkey(*), defender:players!matches_defender_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
+    )
+    .not('winner_id', 'is', null)
+    .or(`defender_id.eq.${currentPlayerId},challenger_id.eq.${currentPlayerId}`)
+    .order('created_at', { ascending: false });
+  if (error) {
+    console.error('Error fetching pending matches:', error);
+    return [];
+  }
+  if (!data) return [];
+  const matches = camelcaseKeys(data, { deep: true }) as Match[];
+  return matches;
+}

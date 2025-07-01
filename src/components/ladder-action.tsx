@@ -1,34 +1,22 @@
 'use client';
 
 import { Button } from './ui/button';
-import type { Match, Player } from '@/types';
 import { CheckCircle, PlusCircle } from 'lucide-react';
-import { checkPlayable } from '@/lib/utils/player-utils';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { getBiMatches } from '@/actions/match';
+
 import { LoadingSpinner } from './loading-spinner';
 
-export function LadderAction({ player, currentPlayer }: { player: Player; currentPlayer: Player }) {
-  const [pendingMatch, setPendingMatch] = useState<Match | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const isPlayable = checkPlayable({ player, currentPlayer });
-
-  useEffect(() => {
-    const fetchMatches = async () => {
-      setIsLoading(true);
-      const matches = await getBiMatches({ challengerId: currentPlayer.id, defenderId: player.id });
-      setPendingMatch(matches.find((m) => m.winnerId === null) || null);
-      setIsLoading(false);
-    };
-    fetchMatches();
-  }, [currentPlayer.id, player.id]);
-
-  if (player.id === currentPlayer.id) return null;
-  if (isLoading) return <Loading />;
-  if (pendingMatch) return <CompleteMatchButton />;
-  if (isPlayable && !pendingMatch) return <ChallengePlayerButton />;
+export function LadderAction({
+  isPlayable,
+  isPendingMatch,
+  pendingMatchLoading,
+}: {
+  isPlayable: boolean;
+  isPendingMatch: boolean;
+  pendingMatchLoading: boolean;
+}) {
+  if (pendingMatchLoading) return <Loading />;
+  if (isPendingMatch) return <CompleteMatchButton />;
+  if (isPlayable && !isPendingMatch) return <ChallengePlayerButton />;
 
   return null;
 }

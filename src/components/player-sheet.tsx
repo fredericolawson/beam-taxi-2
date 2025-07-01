@@ -2,12 +2,11 @@
 
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import type { CompletedMatch, Match, Player } from '@/types';
-
 import { PlayerMatchesTable } from './player-matches-table';
 import { MatchHistorySummary } from './match-history';
 import { Challenge } from './challenge';
 import { useEffect, useState, useCallback } from 'react';
-
+import { revalidate } from '@/actions/revalidate';
 import { getMatchesByPlayerId } from '@/lib/tables/matches';
 import { Button } from './ui/button';
 
@@ -19,13 +18,17 @@ type History = {
 export function PlayerSheet({
   player,
   currentPlayer,
+  pendingMatch,
   open,
   onOpenChange,
+  refresh,
 }: {
   player: Player;
   currentPlayer: Player;
+  pendingMatch: Match | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  refresh: () => void;
 }) {
   const { history, fetchHistory } = useMatchHistory({ playerId: player.id });
 
@@ -38,7 +41,13 @@ export function PlayerSheet({
           <MatchHistorySummary historySummary={history.summary} />
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
-          <Challenge player={player} currentPlayer={currentPlayer} onMatchUpdate={fetchHistory} />
+          <Challenge
+            player={player}
+            currentPlayer={currentPlayer}
+            refresh={refresh}
+            pendingMatch={pendingMatch}
+            fetchHistory={fetchHistory}
+          />
           <PlayerMatchesTable matches={history.matches} player={player} />
         </div>
         <SheetFooter className="border-t">
@@ -56,7 +65,6 @@ function useMatchHistory({ playerId }: { playerId: string }) {
 
   const fetchHistory = useCallback(async () => {
     const matches = await getMatchesByPlayerId({ playerId });
-    console.log(matches);
     const completedMatches = matches.filter((match) => match.winnerId !== null);
     const historySummary = completedMatches.map((match) => (match.winnerId === playerId ? 'W' : 'L'));
     const history = { matches: completedMatches as CompletedMatch[], summary: historySummary };
