@@ -27,7 +27,7 @@ Server Action to get bilateral matches between two players
 --------------------------------
 */
 
-export async function getBiMatches({ challengerId, defenderId }: { challengerId: string; defenderId: string }): Promise<Match[] | []> {
+export async function getBiMatches({ playerOneId, playerTwoId }: { playerOneId: string; playerTwoId: string }): Promise<Match[] | []> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .schema('ladder')
@@ -35,8 +35,10 @@ export async function getBiMatches({ challengerId, defenderId }: { challengerId:
     .select(
       '*, challenger:players!matches_challenger_id_fkey(*), defender:players!matches_defender_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
     )
-    .eq('challenger_id', challengerId)
-    .eq('defender_id', defenderId);
+    .or(
+      `and(challenger_id.eq.${playerOneId},defender_id.eq.${playerTwoId}),and(challenger_id.eq.${playerTwoId},defender_id.eq.${playerOneId})`
+    );
+
   if (error) {
     console.error('Error fetching matches:', error);
     return [];
@@ -45,8 +47,8 @@ export async function getBiMatches({ challengerId, defenderId }: { challengerId:
   return matches;
 }
 
-export async function getPendingBiMatch({ challengerId, defenderId }: { challengerId: string; defenderId: string }) {
-  const matches = await getBiMatches({ challengerId, defenderId });
+export async function getPendingBiMatch({ playerOneId, playerTwoId }: { playerOneId: string; playerTwoId: string }) {
+  const matches = await getBiMatches({ playerOneId, playerTwoId });
   const pendingMatches = matches.filter((match) => match.winnerId === null);
   return pendingMatches[0] as Match | null;
 }

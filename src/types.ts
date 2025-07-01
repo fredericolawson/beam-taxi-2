@@ -33,7 +33,7 @@ export type Match = {
   challengerId: string;
   defenderId: string;
   winnerId: string | null;
-  completedOn: string | null;
+
   matchDate: string | null;
   result: string | null;
   createdAt: string;
@@ -56,7 +56,7 @@ export type CompletedMatch = {
   challengerId: string;
   defenderId: string;
   winnerId: string;
-  completedOn: string;
+
   matchDate: string;
   result: string;
   createdAt: string;

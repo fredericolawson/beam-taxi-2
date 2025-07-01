@@ -19,17 +19,19 @@ type History = {
 
 export function LadderRow({ player, currentPlayer, history }: { player: Player; currentPlayer: Player; history: History }) {
   const [pendingMatch, setPendingMatch] = useState<Match | null>(null);
+
   const [pendingMatchLoading, setPendingMatchLoading] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const refreshMatch = useCallback(() => setRefreshTrigger((prev) => prev + 1), []);
   const isPlayable = checkPlayable({ player: player, currentPlayer: currentPlayer });
+  const lastMatch = history.matches.filter((m) => m.winnerId !== null)[0] || null;
 
   useEffect(() => {
     const fetchMatch = async () => {
       setPendingMatchLoading(true);
-      const matches = await getBiMatches({ challengerId: currentPlayer.id, defenderId: player.id });
+      const matches = await getBiMatches({ playerOneId: currentPlayer.id, playerTwoId: player.id });
       setPendingMatch(matches.find((m) => m.winnerId === null) || null);
       setPendingMatchLoading(false);
     };
@@ -51,9 +53,7 @@ export function LadderRow({ player, currentPlayer, history }: { player: Player; 
         <TableCell className="flex-1">
           <MatchHistorySummary historySummary={history.summary} />
         </TableCell>
-        <TableCell className="w-32">
-          {history.matches[0]?.matchDate ? format(new Date(history.matches[0].matchDate), 'EEEE d MMMM yyyy') : '—'}
-        </TableCell>
+        <TableCell className="w-32">{lastMatch ? format(new Date(lastMatch.matchDate), 'EEEE d MMMM yyyy') : '—'}</TableCell>
         <TableCell className="w-32">
           <LadderAction isPlayable={isPlayable} pendingMatch={pendingMatch} pendingMatchLoading={pendingMatchLoading} />
         </TableCell>
