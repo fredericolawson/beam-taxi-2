@@ -211,7 +211,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">
-                Already have an account?{' '}
+                Already have a tennis ladder account?{' '}
                 <Link href="/auth/login" className="underline underline-offset-4">
                   Sign In
                 </Link>
