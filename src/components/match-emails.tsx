@@ -2,8 +2,12 @@ import { Match } from '@/types';
 import { Body, Button, Container, Head, Heading, Html, Img, Preview, Section, Text, Tailwind } from '@react-email/components';
 
 export function MatchConfirmation({ match }: { match: Match }) {
-  const date = new Date(match.matchDate!).toLocaleDateString();
-  const time = new Date(match.matchDate!).toLocaleTimeString();
+  const date = new Date(match.matchDate!).toLocaleDateString('en-GB', {
+    timeZone: 'Atlantic/Bermuda',
+  });
+  const time = new Date(match.matchDate!).toLocaleTimeString('en-GB', {
+    timeZone: 'Atlantic/Bermuda',
+  });
   return (
     <Html>
       <Head />
