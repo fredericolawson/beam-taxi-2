@@ -40,7 +40,7 @@ export function PlayerSheet({
           <SheetTitle className="text-2xl font-bold">{player.displayName}</SheetTitle>
           <MatchHistorySummary historySummary={history.summary} />
         </SheetHeader>
-        <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
+        <div className="flex flex-1 flex-col gap-6 overflow-y-auto p-4">
           <Challenge
             player={player}
             currentPlayer={currentPlayer}

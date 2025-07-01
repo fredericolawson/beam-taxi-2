@@ -10,6 +10,7 @@ import { PlayerSheet } from './player-sheet';
 import { useRouter } from 'next/navigation';
 import { checkPlayable } from '@/lib/utils/player-utils';
 import { getBiMatches } from '@/actions/match';
+import { format } from 'date-fns';
 
 type History = {
   matches: CompletedMatch[];
@@ -51,7 +52,7 @@ export function LadderRow({ player, currentPlayer, history }: { player: Player; 
           <MatchHistorySummary historySummary={history.summary} />
         </TableCell>
         <TableCell className="w-32">
-          {history.matches[0]?.completedOn ? new Date(history.matches[0].completedOn + 'T00:00:00').toLocaleDateString('en-gb') : '—'}
+          {history.matches[0]?.completedOn ? format(new Date(history.matches[0].completedOn + 'T00:00:00'), 'EEEE d MMMM yyyy') : '—'}
         </TableCell>
         <TableCell className="w-32">
           <LadderAction isPlayable={isPlayable} isPendingMatch={!!pendingMatch} pendingMatchLoading={pendingMatchLoading} />

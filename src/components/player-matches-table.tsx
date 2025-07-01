@@ -1,5 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { CompletedMatch, Player } from '@/types';
+import { format } from 'date-fns';
 
 export function PlayerMatchesTable({ matches, player }: { matches: CompletedMatch[] | null; player: Player }) {
   if (!matches) return null;
@@ -11,9 +12,7 @@ export function PlayerMatchesTable({ matches, player }: { matches: CompletedMatc
           <MatchHeader />
         </TableHeader>
         <TableBody>
-          {matches.map((match) => (
-            <MatchRow key={match.id} match={match} player={player} />
-          ))}
+          {matches.length > 0 ? matches.map((match) => <MatchRow key={match.id} match={match} player={player} />) : <NoMatches />}
         </TableBody>
       </Table>
     </div>
@@ -41,7 +40,17 @@ function MatchRow({ match, player }: { match: CompletedMatch; player: Player }) 
       </TableCell>
       <TableCell>{match.winner.firstName}</TableCell>
       <TableCell>{match.result}</TableCell>
-      <TableCell>{new Date(match.completedOn + 'T00:00:00').toLocaleDateString()}</TableCell>
+      <TableCell>{format(new Date(match.completedOn + 'T00:00:00'), 'd MMM yyyy')}</TableCell>
+    </TableRow>
+  );
+}
+
+function NoMatches() {
+  return (
+    <TableRow>
+      <TableCell colSpan={4} className="text-center">
+        No matches played yet
+      </TableCell>
     </TableRow>
   );
 }

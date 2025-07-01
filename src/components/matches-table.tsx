@@ -1,5 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { CompletedMatch } from '@/types';
+import { format } from 'date-fns';
 
 export function MatchesTable({ matches }: { matches: CompletedMatch[] }) {
   return (
@@ -41,7 +42,7 @@ function MatchRow({ match }: { match: CompletedMatch }) {
       <TableCell>
         {match.winner.firstName} {match.winner.lastName}
       </TableCell>
-      <TableCell>{new Date(match.completedOn + 'T00:00:00').toLocaleDateString()}</TableCell>
+      <TableCell>{format(new Date(match.completedOn + 'T00:00:00'), 'd MMM yyyy')}</TableCell>
     </TableRow>
   );
 }
