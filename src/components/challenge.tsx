@@ -126,6 +126,7 @@ function ScheduleMatch({ player, pendingMatch, refreshMatch }: { player: Player;
     <Card>
       <CardHeader>
         <CardTitle>Schedule Your Match</CardTitle>
+        <CardDescription>Use the contact details below to arrange a time with your opponent to play your match</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-col gap-2 md:flex-row">
@@ -137,7 +138,7 @@ function ScheduleMatch({ player, pendingMatch, refreshMatch }: { player: Player;
             <Button variant="secondary" className="flex-1 border" asChild>
               <a href={`https://wa.me/${player.phone}`} target="_blank">
                 <SiWhatsapp className="h-4 w-4" />
-                Send WhatsApp
+                WhatsApp
               </a>
             </Button>
             <Button variant="secondary" className="flex-1" asChild>
@@ -154,7 +155,7 @@ function ScheduleMatch({ player, pendingMatch, refreshMatch }: { player: Player;
             </Button>
           </div>
         </div>
-        <div className="text-muted-foreground text-sm">
+        <div className="text-muted-foreground text-xs">
           Your match should be one superset — first to 8 games — with a tiebreaker if both players get to 7 games
         </div>
         <div className="text-muted-foreground text-sm"></div>
