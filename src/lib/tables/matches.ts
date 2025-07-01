@@ -12,7 +12,7 @@ export async function getMatches(): Promise<Match[]> {
     .select(
       '*, challenger:players!matches_challenger_id_fkey(*), defender:players!matches_defender_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
     )
-    .order('completed_on', { ascending: false });
+    .order('match_date', { ascending: false });
   if (error) {
     console.error('Error fetching matches:', error);
     return [];
@@ -36,7 +36,7 @@ export async function getCompletedMatches(): Promise<CompletedMatch[]> {
     .select(
       '*, challenger:players!matches_challenger_id_fkey(*), defender:players!matches_defender_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
     )
-    .order('completed_on', { ascending: false })
+    .order('match_date', { ascending: false })
     .not('winner_id', 'is', null);
   if (error) {
     console.error('Error fetching matches:', error);
@@ -57,7 +57,7 @@ export async function getMatchesByPlayerId({ playerId }: { playerId: string }): 
     )
     .or(`defender_id.eq.${playerId},challenger_id.eq.${playerId}`)
     .not('winner_id', 'is', null)
-    .order('completed_on', { ascending: false })
+    .order('match_date', { ascending: false })
     .order('created_at', { ascending: false });
   if (error) {
     console.error('Error fetching matches by player id:', error);

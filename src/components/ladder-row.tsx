@@ -52,10 +52,10 @@ export function LadderRow({ player, currentPlayer, history }: { player: Player; 
           <MatchHistorySummary historySummary={history.summary} />
         </TableCell>
         <TableCell className="w-32">
-          {history.matches[0]?.completedOn ? format(new Date(history.matches[0].completedOn + 'T00:00:00'), 'EEEE d MMMM yyyy') : '—'}
+          {history.matches[0]?.matchDate ? format(new Date(history.matches[0].matchDate), 'EEEE d MMMM yyyy') : '—'}
         </TableCell>
         <TableCell className="w-32">
-          <LadderAction isPlayable={isPlayable} isPendingMatch={!!pendingMatch} pendingMatchLoading={pendingMatchLoading} />
+          <LadderAction isPlayable={isPlayable} pendingMatch={pendingMatch} pendingMatchLoading={pendingMatchLoading} />
         </TableCell>
       </TableRow>
       <PlayerSheet
@@ -64,7 +64,7 @@ export function LadderRow({ player, currentPlayer, history }: { player: Player; 
         pendingMatch={pendingMatch}
         open={isSheetOpen}
         onOpenChange={setIsSheetOpen}
-        refresh={refreshMatch}
+        refreshMatch={refreshMatch}
       ></PlayerSheet>
     </>
   );

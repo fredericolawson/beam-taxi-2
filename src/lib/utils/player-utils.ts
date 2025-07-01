@@ -24,8 +24,10 @@ export function checkPlayable({ player, currentPlayer }: { player: Player; curre
 
 export function parsePlayer(player: RawPlayer): Player {
   const camelcasePlayer = camelcaseKeys(player, { deep: true });
+  const phone = player.phone?.replace(/ /g, '') || '';
   return {
     ...camelcasePlayer,
+    phone: phone,
     displayName: `${camelcasePlayer.firstName} ${camelcasePlayer.lastName}`,
   } as Player;
 }

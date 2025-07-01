@@ -21,14 +21,14 @@ export function PlayerSheet({
   pendingMatch,
   open,
   onOpenChange,
-  refresh,
+  refreshMatch,
 }: {
   player: Player;
   currentPlayer: Player;
   pendingMatch: Match | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  refresh: () => void;
+  refreshMatch: () => void;
 }) {
   const { history, fetchHistory } = useMatchHistory({ playerId: player.id });
 
@@ -44,7 +44,7 @@ export function PlayerSheet({
           <Challenge
             player={player}
             currentPlayer={currentPlayer}
-            refresh={refresh}
+            refreshMatch={refreshMatch}
             pendingMatch={pendingMatch}
             fetchHistory={fetchHistory}
           />

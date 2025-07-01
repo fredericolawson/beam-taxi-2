@@ -1,34 +1,38 @@
 'use client';
 
 import { Match, Player } from '@/types';
-import { RecordMatchResult } from './pending-match';
+import { RecordMatchResult } from './record-match-result';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { SiWhatsapp } from 'react-icons/si';
-import { MailIcon, PhoneIcon } from 'lucide-react';
+import { CalendarIcon, Loader2, MailIcon, PhoneIcon } from 'lucide-react';
 import { checkPlayable } from '@/lib/utils/player-utils';
 import { useState } from 'react';
-import { challengePlayer } from '@/actions/match';
-import { LoadingSpinner } from './loading-spinner';
+import { challengePlayer, setMatchDate } from '@/actions/match';
+
+import Calendar20 from './calendar-20';
+import { Separator } from './ui/separator';
+import { format } from 'date-fns';
+import { Loading } from './loading';
 
 export function Challenge({
   player,
   currentPlayer,
-  refresh,
+  refreshMatch,
   pendingMatch,
   fetchHistory,
 }: {
   player: Player;
   currentPlayer: Player;
-  refresh: () => void;
+  refreshMatch: () => void;
   pendingMatch: Match | null;
   fetchHistory: () => void;
 }) {
   return (
     <>
-      <ChallengePlayer player={player} currentPlayer={currentPlayer} pendingMatch={!!pendingMatch} refresh={refresh} />
-      <PlayerContact player={player} pendingMatch={pendingMatch} />
-      <RecordMatchResult match={pendingMatch} key={pendingMatch?.id} refresh={refresh} fetchHistory={fetchHistory} />
+      <ChallengePlayer player={player} currentPlayer={currentPlayer} pendingMatch={!!pendingMatch} refresh={refreshMatch} />
+      <ScheduleMatch player={player} pendingMatch={pendingMatch} refreshMatch={refreshMatch} />
+      <RecordMatchResult match={pendingMatch} key={pendingMatch?.id} refresh={refreshMatch} fetchHistory={fetchHistory} />
     </>
   );
 }
@@ -50,7 +54,7 @@ function ChallengePlayer({
 
   if (!isPlayable || pendingMatch) return null;
 
-  const sendChallenge = async () => {
+  const createMatch = async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -71,17 +75,49 @@ function ChallengePlayer({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Button onClick={sendChallenge} disabled={isLoading}>
-          {isLoading ? <LoadingSpinner /> : 'Schedule Match'}
+        <Button onClick={createMatch} disabled={isLoading}>
+          {isLoading ? <Loader2 className="animate-spin" /> : 'Schedule Match'}
         </Button>
       </CardContent>
     </Card>
   );
 }
 
-function PlayerContact({ player, pendingMatch }: { player: Player; pendingMatch: Match | null }) {
+function ScheduleMatch({ player, pendingMatch, refreshMatch }: { player: Player; pendingMatch: Match | null; refreshMatch: () => void }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   if (!pendingMatch) return null;
-  const phone = player.phone.replace(/ /g, '');
+  if (isLoading) return <Loading />;
+
+  const onConfirm = async (date: Date, time: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { error } = await setMatchDate({ matchId: pendingMatch.id, matchDate: `${date.toISOString()}T${time}:00` });
+      if (error) setError(error);
+      refreshMatch();
+    } catch (error) {
+      setError(error as string);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onReschedule = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { error } = await setMatchDate({ matchId: pendingMatch.id, matchDate: null });
+      if (error) setError(error);
+      refreshMatch();
+    } catch (error) {
+      setError(error as string);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -95,13 +131,13 @@ function PlayerContact({ player, pendingMatch }: { player: Player; pendingMatch:
         <div className="flex flex-col gap-1 text-sm">
           <div className="flex w-full flex-col gap-2 md:flex-row">
             <Button variant="secondary" className="flex-1 border" asChild>
-              <a href={`https://wa.me/${phone}`} target="_blank">
+              <a href={`https://wa.me/${player.phone}`} target="_blank">
                 <SiWhatsapp className="h-4 w-4" />
                 Send WhatsApp
               </a>
             </Button>
             <Button variant="secondary" className="flex-1" asChild>
-              <a href={`tel:${phone}`} target="_blank">
+              <a href={`tel:${player.phone}`} target="_blank">
                 <PhoneIcon className="h-4 w-4" />
                 Call
               </a>
@@ -118,8 +154,27 @@ function PlayerContact({ player, pendingMatch }: { player: Player; pendingMatch:
           Your match should be one superset — first to 8 games — with a tiebreaker if both players get to 7 games
         </div>
         <div className="text-muted-foreground text-sm"></div>
+        <Separator />
+        <Calendar20 onConfirm={onConfirm} matchDate={pendingMatch.matchDate} />
+        <MatchDate matchDate={pendingMatch.matchDate} onReschedule={onReschedule} />
       </CardContent>
     </Card>
+  );
+}
+
+function MatchDate({ matchDate, onReschedule }: { matchDate: string | null; onReschedule: () => void }) {
+  if (!matchDate) return null;
+  return (
+    <div className="flex justify-between">
+      <div className="flex flex-col gap-1">
+        <span className="text-xs">Scehduled Match Date</span>
+        {format(new Date(matchDate), 'EEEE d MMMM yyyy HH:mm a')}
+      </div>
+      <Button variant="default" className="" onClick={onReschedule}>
+        <CalendarIcon className="h-4 w-4" />
+        Reschedule
+      </Button>
+    </div>
   );
 }
 

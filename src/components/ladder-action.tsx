@@ -1,22 +1,22 @@
 'use client';
 
+import { Match } from '@/types';
 import { Button } from './ui/button';
-import { CheckCircle, PlusCircle } from 'lucide-react';
-
-import { LoadingSpinner } from './loading-spinner';
+import { CalendarIcon, CheckCircle, Loader2, PlusCircle } from 'lucide-react';
 
 export function LadderAction({
   isPlayable,
-  isPendingMatch,
+  pendingMatch,
   pendingMatchLoading,
 }: {
   isPlayable: boolean;
-  isPendingMatch: boolean;
+  pendingMatch: Match | null;
   pendingMatchLoading: boolean;
 }) {
   if (pendingMatchLoading) return <Loading />;
-  if (isPendingMatch) return <CompleteMatchButton />;
-  if (isPlayable && !isPendingMatch) return <ChallengePlayerButton />;
+  if (isPlayable && !pendingMatch) return <ChallengePlayerButton />;
+  if (pendingMatch && !pendingMatch.matchDate) return <ScheduleMatchButton />;
+  if (pendingMatch) return <CompleteMatchButton />;
 
   return null;
 }
@@ -26,6 +26,15 @@ function ChallengePlayerButton() {
     <Button variant="default" size="sm" className="w-38">
       <PlusCircle className="h-4 w-4" />
       Challenge Player
+    </Button>
+  );
+}
+
+function ScheduleMatchButton() {
+  return (
+    <Button variant="default" size="sm" className="w-38">
+      <CalendarIcon className="h-4 w-4" />
+      Schedule Match
     </Button>
   );
 }
@@ -42,7 +51,7 @@ function CompleteMatchButton() {
 function Loading() {
   return (
     <div className="flex w-38 items-center justify-center">
-      <LoadingSpinner />
+      <Loader2 className="text-secondary h-4 w-4 animate-spin" />
     </div>
   );
 }

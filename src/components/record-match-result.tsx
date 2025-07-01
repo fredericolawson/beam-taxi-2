@@ -3,27 +3,24 @@
 import { CalendarIcon, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar } from '@/components/ui/calendar';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { cn } from '@/lib/utils';
 import { Input } from './ui/input';
 import type { Match } from '@/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useState } from 'react';
 import { cancelMatchAction, submitMatchResult } from '@/actions/match';
-import { LoadingSpinner } from './loading-spinner';
+import { Loading } from './loading-spinner';
 import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -113,7 +110,7 @@ export function RecordMatchResult({
         <CardTitle>
           {match.challenger.firstName} {match.challenger.lastName} vs {match.defender.firstName} {match.defender.lastName}
         </CardTitle>
-        <CardDescription>Record the result of your match</CardDescription>
+        <CardDescription>Record the result of your superset match (first to 8 games)</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -150,49 +147,17 @@ export function RecordMatchResult({
                       <Input {...field} placeholder="e.g. 8-6" className="w-full" disabled={isSubmitting} />
                     </FormControl>
                     <FormMessage />
-                    <FormDescription className="text-xs">Record the result of your superset (first to 8 games)</FormDescription>
                   </FormItem>
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="completedOn"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Match Completed On</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={'outline'}
-                          className={cn('w-full pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
-                        >
-                          {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="z-[100] w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => date > new Date() || date < new Date('1900-01-01') || isSubmitting}
-                        captionLayout="dropdown"
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <div className="flex flex-col gap-2 md:flex-row">
               <AlertDialog open={showConfirmation} onOpenChange={setShowConfirmation}>
                 <AlertDialogTrigger asChild>
                   <Button type="submit" variant="secondary" className="flex-1" disabled={isSubmitting}>
                     <PlusCircle />
-                    {isSubmitting ? <LoadingSpinner /> : 'Submit Result'}
+                    {isSubmitting ? <Loading /> : 'Submit Result'}
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -215,13 +180,13 @@ export function RecordMatchResult({
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction onClick={handleConfirmSubmit} disabled={isSubmitting}>
-                      {isSubmitting ? <LoadingSpinner /> : 'Submit Result'}
+                      {isSubmitting ? <Loading /> : 'Submit Result'}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
               <Button variant="outline" className="flex-1" disabled={isCancelling} onClick={onCancel}>
-                {isCancelling ? <LoadingSpinner /> : 'Cancel Match'}
+                {isCancelling ? <Loading /> : 'Cancel Match'}
               </Button>
             </div>
           </form>

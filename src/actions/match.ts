@@ -53,6 +53,22 @@ export async function getPendingBiMatch({ challengerId, defenderId }: { challeng
 
 /*
 --------------------------------
+Server Action to set matchDate
+--------------------------------
+*/
+
+export async function setMatchDate({ matchId, matchDate }: { matchId: string; matchDate: string | null }) {
+  const supabase = await createClient();
+  const { data, error } = await supabase.schema('ladder').from('matches').update({ match_date: matchDate }).eq('id', matchId);
+  if (error) {
+    console.error('Error setting match date:', error);
+    return { error: error.message };
+  }
+  return { data, error };
+}
+
+/*
+--------------------------------
 Server Action to submit a match result
 --------------------------------
 */

@@ -40,7 +40,7 @@ function MatchRow({ match, player }: { match: CompletedMatch; player: Player }) 
       </TableCell>
       <TableCell>{match.winner.firstName}</TableCell>
       <TableCell>{match.result}</TableCell>
-      <TableCell>{format(new Date(match.completedOn + 'T00:00:00'), 'd MMM yyyy')}</TableCell>
+      <TableCell>{format(new Date(match.matchDate), 'd MMM yyyy')}</TableCell>
     </TableRow>
   );
 }
