@@ -14,6 +14,8 @@ import Calendar20 from './calendar-20';
 import { Separator } from './ui/separator';
 import { format } from 'date-fns';
 import { Loading } from './loading';
+import { sendMatchConfirmation } from '@/actions/email';
+import { toast } from 'sonner';
 
 export function Challenge({
   player,
@@ -97,6 +99,8 @@ function ScheduleMatch({ player, pendingMatch, refreshMatch }: { player: Player;
       const { error } = await setMatchDate({ matchId: pendingMatch.id, matchDate: `${date.toISOString()}T${time}:00` });
       if (error) setError(error);
       refreshMatch();
+      const { sendSuccess } = await sendMatchConfirmation({ matchId: pendingMatch.id });
+      if (sendSuccess) toast.success('Match confirmation sent');
     } catch (error) {
       setError(error as string);
     } finally {

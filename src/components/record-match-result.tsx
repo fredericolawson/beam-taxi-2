@@ -30,9 +30,6 @@ import {
 const FormSchema = z.object({
   winnerId: z.string().min(1, 'Please select a winner'),
   result: z.string().min(1, 'Please enter the match result'),
-  completedOn: z.date({
-    required_error: 'Please set the date the match was completed',
-  }),
 });
 
 export function RecordMatchResult({
@@ -53,11 +50,10 @@ export function RecordMatchResult({
     defaultValues: {
       winnerId: '',
       result: '',
-      completedOn: new Date(),
     },
   });
 
-  if (!match) return null;
+  if (!match || !match.matchDate) return null;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setPendingData(data);
@@ -75,7 +71,6 @@ export function RecordMatchResult({
         matchId: match!.id,
         winnerId: pendingData.winnerId,
         result: pendingData.result,
-        completedOn: pendingData.completedOn,
       });
       if (response.error) toast.error(response.error);
       else {
@@ -171,9 +166,6 @@ export function RecordMatchResult({
                       </span>
                       <span>
                         <strong>Result:</strong> {pendingData?.result}
-                      </span>
-                      <span>
-                        <strong>Date:</strong> {pendingData?.completedOn ? format(pendingData.completedOn, 'PPP') : ''}
                       </span>
                     </div>
                   </AlertDialogHeader>

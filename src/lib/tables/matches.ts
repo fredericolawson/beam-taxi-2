@@ -92,3 +92,27 @@ export async function getPendingMatches({ currentPlayerId }: { currentPlayerId: 
   const matches = camelcaseKeys(data, { deep: true }) as Match[];
   return matches;
 }
+
+/*
+--------------------------------
+Get Match by Id
+--------------------------------
+*/
+
+export async function getMatchById({ matchId }: { matchId: string }) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .schema('ladder')
+    .from('matches')
+    .select(
+      '*, challenger:players!matches_challenger_id_fkey(*), defender:players!matches_defender_id_fkey(*), winner:players!matches_winner_id_fkey(*)'
+    )
+    .eq('id', matchId);
+  if (error) {
+    console.error('Error fetching match by id:', error);
+    return null;
+  }
+  if (!data) return null;
+  const match = camelcaseKeys(data[0], { deep: true }) as Match;
+  return match;
+}
