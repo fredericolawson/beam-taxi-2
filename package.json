@@ -9,7 +9,7 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "email:dev": "email dev"
+    "email:dev": "email dev --dir src/emails"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",

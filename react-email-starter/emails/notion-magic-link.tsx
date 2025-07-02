@@ -100,7 +100,7 @@ function Template({ children, match }: { children: React.ReactNode; match: Match
   );
 }
 
-export function MatchConfirmation({ match }: { match: Match }) {
+export default function MatchConfirmation({ match }: { match: Match }) {
   const { challengerName, defenderName, matchDate, matchTime } = MatchDetails(match);
   return (
     <Template match={match}>

@@ -113,6 +113,6 @@ export async function getMatchById({ matchId }: { matchId: string }) {
     return null;
   }
   if (!data) return null;
-  const match = camelcaseKeys(data[0], { deep: true }) as Match;
+  const match = camelcaseKeys(data[0], { deep: true }) as Match | CompletedMatch;
   return match;
 }

@@ -5,6 +5,7 @@ import type { Match } from '@/types';
 import camelcaseKeys from 'camelcase-keys';
 import { revalidatePath } from 'next/cache';
 import { updateLadderRanks } from './ladder';
+import { sendMatchResult } from './email';
 
 export async function challengePlayer({ challengerId, defenderId }: { challengerId: string; defenderId: string }) {
   const supabase = await createClient();
@@ -89,6 +90,7 @@ export async function submitMatchResult({ matchId, winnerId, result }: { matchId
     console.error('Error submitting match result:', error);
     return { error: error.message };
   }
+  await sendMatchResult({ matchId });
 
   // Update ladder ranks if challenger wins
   await updateLadderRanks({ matchId, winnerId });
