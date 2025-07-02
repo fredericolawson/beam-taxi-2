@@ -1,149 +1,155 @@
-import {
-  Body,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Img,
-  Link,
-  Preview,
-  Text,
-} from '@react-email/components';
+import { CompletedMatch, Match } from '../../src/types';
+import { Body, Button, Container, Head, Heading, Html, Img, Preview, Section, Text, Tailwind } from '@react-email/components';
 
-interface NotionMagicLinkEmailProps {
-  loginCode?: string;
+function MatchDetails(match: Match | CompletedMatch) {
+  const challengerName = `${match.challenger.firstName} ${match.challenger.lastName}`;
+  const defenderName = `${match.defender.firstName} ${match.defender.lastName}`;
+  const matchTitle = `${challengerName} vs ${defenderName}`;
+  const matchDate = new Date(match.matchDate!).toLocaleDateString('en-GB', {
+    timeZone: 'Atlantic/Bermuda',
+  });
+  const matchTime = new Date(match.matchDate!).toLocaleTimeString('en-GB', {
+    timeZone: 'Atlantic/Bermuda',
+  });
+  return {
+    matchTitle,
+    matchDate,
+    matchTime,
+    challengerName,
+    defenderName,
+  };
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : '';
+function MatchDateTime({ match }: { match: Match | CompletedMatch }) {
+  const { matchDate, matchTime } = MatchDetails(match);
+  return (
+    <Section className="mb-6 text-center">
+      <Text className="mb-4 text-base text-gray-700">Please be sure to book your court in the Coral Beach & Tennis Club app!</Text>
+      <Text className="text-base text-gray-700">
+        <strong>Match Date:</strong> {matchDate}
+        <br />
+        <strong>Match Time:</strong> {matchTime}
+      </Text>
+    </Section>
+  );
+}
 
-export const NotionMagicLinkEmail = ({
-  loginCode,
-}: NotionMagicLinkEmailProps) => (
-  <Html>
-    <Head />
-    <Preview>Log in with this magic link</Preview>
-    <Body style={main}>
-      <Container style={container}>
-        <Heading style={h1}>Login</Heading>
-        <Link
-          href="https://notion.so"
-          target="_blank"
-          style={{
-            ...link,
-            display: 'block',
-            marginBottom: '16px',
-          }}
-        >
-          Click here to log in with this magic link
-        </Link>
-        <Text style={{ ...text, marginBottom: '14px' }}>
-          Or, copy and paste this temporary login code:
-        </Text>
-        <code style={code}>{loginCode}</code>
-        <Text
-          style={{
-            ...text,
-            color: '#ababab',
-            marginTop: '14px',
-            marginBottom: '16px',
-          }}
-        >
-          If you didn&apos;t try to login, you can safely ignore this email.
-        </Text>
-        <Text
-          style={{
-            ...text,
-            color: '#ababab',
-            marginTop: '12px',
-            marginBottom: '38px',
-          }}
-        >
-          Hint: You can set a permanent password in Settings & members → My
-          account.
-        </Text>
-        <Img
-          src={`${baseUrl}/static/notion-logo.png`}
-          width="32"
-          height="32"
-          alt="Notion's Logo"
-        />
-        <Text style={footer}>
-          <Link
-            href="https://notion.so"
-            target="_blank"
-            style={{ ...link, color: '#898989' }}
-          >
-            Notion.so
-          </Link>
-          , the all-in-one-workspace
-          <br />
-          for your notes, tasks, wikis, and databases.
-        </Text>
-      </Container>
-    </Body>
-  </Html>
-);
+function MatchSummary({ match }: { match: Match | CompletedMatch }) {
+  const { challengerName, defenderName } = MatchDetails(match);
+  return (
+    <Section className="mb-6 rounded-lg bg-gray-50 p-6">
+      <div className="flex items-center justify-between">
+        <div className="flex-1 text-center">
+          <Text className="mb-1 text-lg font-semibold text-gray-800">{challengerName}</Text>
+          <Text className="m-0 text-sm text-gray-600">Rank #{match.challenger.ladderRank}</Text>
+        </div>
 
-NotionMagicLinkEmail.PreviewProps = {
-  loginCode: 'sparo-ndigo-amurt-secan',
-} as NotionMagicLinkEmailProps;
+        <Text className="text-brand mx-4 text-lg font-semibold">vs</Text>
 
-export default NotionMagicLinkEmail;
+        <div className="flex-1 text-center">
+          <Text className="mb-1 text-lg font-semibold text-gray-800">{defenderName}</Text>
+          <Text className="m-0 text-sm text-gray-600">Rank #{match.defender.ladderRank}</Text>
+        </div>
+      </div>
+    </Section>
+  );
+}
 
-const main = {
-  backgroundColor: '#ffffff',
-};
+function Template({ children, match }: { children: React.ReactNode; match: Match | CompletedMatch }) {
+  const { matchTitle, matchDate, matchTime } = MatchDetails(match);
+  return (
+    <Html>
+      <Head />
+      <Preview>
+        {matchTitle} at {matchDate} {matchTime}
+      </Preview>
+      <Tailwind
+        config={{
+          theme: {
+            extend: {
+              colors: {
+                brand: '#75acbe',
+                'brand-dark': '#5a8fa4',
+              },
+            },
+          },
+        }}
+      >
+        <Body className="bg-gray-100 font-sans">
+          <Container className="mx-auto max-w-2xl">
+            {/* Header Banner with Logo */}
+            <Section className="bg-brand p-8 text-center">
+              <Img
+                src="https://coralbeach.tennis.bm/logo.png"
+                alt="Coral Beach & Tennis Club"
+                className="mx-auto"
+                style={{ maxHeight: '100px', height: '100px' }}
+              />
+            </Section>
 
-const container = {
-  paddingLeft: '12px',
-  paddingRight: '12px',
-  margin: '0 auto',
-};
+            {/* Email Content */}
 
-const h1 = {
-  color: '#333',
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-  fontSize: '24px',
-  fontWeight: 'bold',
-  margin: '40px 0',
-  padding: '0',
-};
+            {children}
 
-const link = {
-  color: '#2754C5',
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-  fontSize: '14px',
-  textDecoration: 'underline',
-};
+            {/* Footer with some spacing */}
+            <Section className="h-4"></Section>
+          </Container>
+        </Body>
+      </Tailwind>
+    </Html>
+  );
+}
 
-const text = {
-  color: '#333',
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-  fontSize: '14px',
-  margin: '24px 0',
-};
+export function MatchConfirmation({ match }: { match: Match }) {
+  const { challengerName, defenderName, matchDate, matchTime } = MatchDetails(match);
+  return (
+    <Template match={match}>
+      <Section className="bg-white p-8">
+        <Heading className="mb-6 text-center text-2xl font-semibold text-gray-800">Match Confirmed</Heading>
 
-const footer = {
-  color: '#898989',
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-  fontSize: '12px',
-  lineHeight: '22px',
-  marginTop: '12px',
-  marginBottom: '24px',
-};
+        <MatchSummary match={match} />
+        <MatchDateTime match={match} />
 
-const code = {
-  display: 'inline-block',
-  padding: '16px 4.5%',
-  width: '90.5%',
-  backgroundColor: '#f4f4f4',
-  borderRadius: '5px',
-  border: '1px solid #eee',
-  color: '#333',
-};
+        {/* Call to Action Buttons */}
+        <Section className="mb-6 text-center">
+          <div className="flex items-center justify-center gap-4">
+            <Button
+              href="https://coralbeach.tennis.bm/"
+              className="bg-brand hover:bg-brand-dark rounded-md px-6 py-3 font-medium text-white"
+              style={{
+                backgroundColor: '#75acbe',
+                color: '#ffffff',
+                padding: '12px 24px',
+                borderRadius: '6px',
+                textDecoration: 'none',
+                fontWeight: '500',
+              }}
+            >
+              Enter Result
+            </Button>
+
+            <Button
+              href="https://coralbeach.tennis.bm/"
+              className="border-brand text-brand rounded-md border px-6 py-3 font-medium hover:bg-gray-50"
+              style={{
+                border: '1px solid #75acbe',
+                color: '#75acbe',
+                padding: '12px 24px',
+                borderRadius: '6px',
+                textDecoration: 'none',
+                fontWeight: '500',
+                backgroundColor: 'transparent',
+              }}
+            >
+              Reschedule
+            </Button>
+          </div>
+        </Section>
+
+        <Section className="border-t border-gray-200 pt-6 text-center">
+          <Text className="m-0 text-sm text-gray-500">Good luck to both players!</Text>
+        </Section>
+      </Section>
+    </Template>
+  );
+}

@@ -1,6 +1,6 @@
 'use server';
 
-import { MatchConfirmation } from '@/components/match-emails';
+import { MatchConfirmation } from '@/emails/match-emails';
 import { getMatchById } from '@/lib/tables/matches';
 import { Resend } from 'resend';
 
