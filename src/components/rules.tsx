@@ -54,7 +54,7 @@ export function Rules() {
             </div>
             <div className="flex items-center gap-2">
               <span className="font-medium">Tiebreaker:</span>
-              <span>Played if both players reach 7 games</span>
+              <span>Played if the match gets to 8-8</span>
             </div>
           </CardContent>
         </Card>
