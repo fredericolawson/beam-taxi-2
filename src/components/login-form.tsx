@@ -10,8 +10,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { revalidate } from '@/actions/revalidate';
 import { useState } from 'react';
-import { notifyTelegram } from '@/actions/telegram';
-
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -55,7 +53,6 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 
       revalidate('/');
       router.push('/');
-      notifyTelegram({ message: 'New CBTC sign in:' + email });
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred');
     } finally {

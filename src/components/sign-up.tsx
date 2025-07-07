@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { notifyTelegram } from '@/actions/telegram';
 import { toast } from 'sonner';
 import { revalidate } from '@/actions/revalidate';
 import PhoneInput from 'react-phone-number-input/input';
@@ -92,7 +91,6 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
       await revalidate('/');
       router.push('/');
       toast.success('Account created successfully. You are now logged in.');
-      notifyTelegram({ message: 'New Tennis Ladder sign up:' + values.firstName + ' ' + values.lastName });
     } catch (error: unknown) {
       console.error(error);
       form.setError('root.serverError', {

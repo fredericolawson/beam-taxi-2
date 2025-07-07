@@ -1,68 +1,59 @@
 'use server';
 
-export async function notifyTelegram({ message }: { message: string }) {
+interface InlineKeyboardButton {
+  text: string;
+  url?: string;
+  callback_data?: string;
+}
 
-  const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-  const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+interface MissileMessageOptions {
+  message: string;
+  parseMode?: 'HTML' | 'Markdown' | 'MarkdownV2';
+  disableWebPagePreview?: boolean;
+  disableNotification?: boolean;
+  buttons?: InlineKeyboardButton[][];
+}
 
-  if (!TELEGRAM_BOT_TOKEN) {
-    throw new Error("TELEGRAM_BOT_TOKEN environment variable is not set");
-  }
+export async function missile(options: MissileMessageOptions): Promise<{ success: boolean; messageId?: number; error?: string }> {
+  const { message, parseMode = 'HTML', disableWebPagePreview = false, disableNotification = false, buttons } = options;
 
-  if (!TELEGRAM_CHAT_ID) {
-    throw new Error("TELEGRAM_CHAT_ID environment variable is not set");
-  }
+  const telegramApiUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
 
-  if (!message.trim()) {
-    throw new Error("Message cannot be empty");
-  }
+  const payload = {
+    chat_id: process.env.TELEGRAM_CHAT_ID,
+    text: message,
+    parse_mode: parseMode,
+    disable_web_page_preview: disableWebPagePreview,
+    disable_notification: disableNotification,
+    ...(buttons && { reply_markup: { inline_keyboard: buttons } }),
+  };
 
   try {
-    const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-      method: "POST",
+    const response = await fetch(telegramApiUrl, {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text: message,
-        parse_mode: "Markdown",
-      }),
+      body: JSON.stringify(payload),
     });
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      let errorMessage = `Telegram API error (${res.status} ${res.statusText})`;
-      
-      try {
-        const errorData = JSON.parse(errorText);
-        if (errorData.description) {
-          errorMessage += `: ${errorData.description}`;
-        }
-      } catch {
-        if (errorText) {
-          errorMessage += `: ${errorText}`;
-        }
-      }
-      
-      console.error("Failed to send Telegram message:", errorMessage);
-      throw new Error(errorMessage);
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.description || 'Failed to send message',
+      };
     }
 
-    return true;
+    return {
+      success: true,
+      messageId: data.result.message_id,
+    };
   } catch (error) {
-    if (error instanceof Error) {
-      if (error.message.includes("Telegram API error") || 
-          error.message.includes("environment variable") ||
-          error.message.includes("Message cannot be empty")) {
-        throw error;
-      }
-      
-      console.error("Network error sending Telegram message:", error.message);
-      throw new Error(`Failed to send Telegram message: ${error.message}`);
-    }
-    
-    console.error("Unknown error sending Telegram message:", error);
-    throw new Error("Failed to send Telegram message: Unknown error occurred");
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+    };
   }
 }
