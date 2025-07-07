@@ -71,12 +71,12 @@ export function Rules() {
             <div className="space-y-3">
               <div className="flex items-start gap-3">
                 <span className="bg-muted flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-medium">1</span>
-                <p className="text-sm">When you select a challenger, you will be shown their contact details</p>
+                <p className="text-sm">When you select to challenge a player, you will be shown their contact details</p>
               </div>
 
               <div className="flex items-start gap-3">
                 <span className="bg-muted flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-medium">2</span>
-                <p className="text-sm">Players are responsible for scheduling their own matches</p>
+                <p className="text-sm">Players are responsible for scheduling their own matches and booking a court</p>
               </div>
 
               <div className="flex items-start gap-3">
@@ -90,27 +90,3 @@ export function Rules() {
     </div>
   );
 }
-
-/*
-# Who can you challenge?
-You may challenge a player up to three positions above you.
-If the challenger beats the defender:
-- the challenger takes the defender's position in the ladder. 
-- the defender, and every player between the challenger and the defender, move down one position.
-If the defender beats the challenger:
-- There is no change in the ladder.
-
-# Match format
-- one "superset" - first to 8 games win
-- a tiebreaker if both players win 7 games
-
-# Match scheduling
-- When you select a challenger player, you will be shown their contact details. 
-- Players are responsible for scheduling their own matches
-- When you complete the match, record the result and score in the app. 
-
-
-
-
-
-*/

@@ -45,7 +45,7 @@ function PendingApproval({ player }: { player: Player }) {
         <CardContent>
           <p className="text-muted-foreground text-sm">
             Thank you for registering! Your account is currently pending approval. You will receive an email notification at{' '}
-            <span className="font-extrabold">{player.email}</span> once an admin has reviewed and approved your account.
+            <span className="font-extrabold">{player.email}</span> once an organiser has reviewed and approved your account.
           </p>
         </CardContent>
       </Card>
