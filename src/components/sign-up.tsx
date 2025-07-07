@@ -183,7 +183,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
                         <Input type="password" autoComplete="new-password" {...field} />
                       </FormControl>
                       <FormMessage />
-                      <FormDescription>Password must be at least 6 characters long.</FormDescription>
+                      <FormDescription>Create a password for your ladder profile. Must be at least 6 characters long.</FormDescription>
                     </FormItem>
                   )}
                 />
