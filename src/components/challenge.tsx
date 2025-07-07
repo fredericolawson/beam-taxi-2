@@ -124,7 +124,10 @@ function ScheduleMatch({ player, pendingMatch, refreshMatch }: { player: Player;
     <Card>
       <CardHeader>
         <CardTitle>Schedule Your Match</CardTitle>
-        <CardDescription>Use the contact details below to arrange a time with your opponent to play your match</CardDescription>
+        <CardDescription>
+          Use the contact details below to arrange a time with your opponent to play your match, set the time and date and click confirm to
+          schedule.
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-col gap-2 md:flex-row">
@@ -153,10 +156,6 @@ function ScheduleMatch({ player, pendingMatch, refreshMatch }: { player: Player;
             </Button>
           </div>
         </div>
-        <div className="text-muted-foreground text-xs">
-          Your match should be one superset — first to 8 games — with a tiebreaker if both players get to 7 games
-        </div>
-        <div className="text-muted-foreground text-sm"></div>
         <Separator />
         <Calendar20 onConfirm={onConfirm} matchDate={pendingMatch.matchDate} />
         <MatchDate matchDate={pendingMatch.matchDate} onReschedule={onReschedule} />

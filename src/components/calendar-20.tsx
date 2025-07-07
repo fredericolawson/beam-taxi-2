@@ -83,7 +83,7 @@ export default function Calendar20({ onConfirm, matchDate }: { onConfirm: (date:
         <Button
           disabled={!date || !selectedTime}
           className="w-full md:ml-auto md:w-auto"
-          variant="outline"
+          variant="secondary"
           onClick={() => onConfirm(date!, selectedTime!)}
         >
           Confirm
