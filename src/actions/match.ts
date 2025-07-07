@@ -5,7 +5,7 @@ import type { Match } from '@/types';
 import camelcaseKeys from 'camelcase-keys';
 import { revalidatePath } from 'next/cache';
 import { updateLadderRanks } from './ladder';
-import { sendMatchResult } from './email';
+import { sendMatchConfirmation, sendMatchResult } from './email';
 
 export async function challengePlayer({ challengerId, defenderId }: { challengerId: string; defenderId: string }) {
   const supabase = await createClient();
@@ -67,6 +67,7 @@ export async function setMatchDate({ matchId, matchDate }: { matchId: string; ma
     console.error('Error setting match date:', error);
     return { error: error.message };
   }
+  await sendMatchConfirmation({ matchId });
   return { data, error };
 }
 

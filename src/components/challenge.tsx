@@ -99,8 +99,6 @@ function ScheduleMatch({ player, pendingMatch, refreshMatch }: { player: Player;
       const { error } = await setMatchDate({ matchId: pendingMatch.id, matchDate: `${date.toISOString()}T${time}:00` });
       if (error) setError(error);
       refreshMatch();
-      const { sendSuccess } = await sendMatchConfirmation({ matchId: pendingMatch.id });
-      if (sendSuccess) toast.success('Match confirmation sent');
     } catch (error) {
       setError(error as string);
     } finally {
