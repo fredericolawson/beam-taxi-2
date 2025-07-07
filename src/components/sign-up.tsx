@@ -15,6 +15,8 @@ import { notifyTelegram } from '@/actions/telegram';
 import { toast } from 'sonner';
 import { revalidate } from '@/actions/revalidate';
 import PhoneInput from 'react-phone-number-input/input';
+import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 
 const formSchema = z
   .object({
@@ -34,6 +36,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -180,7 +183,12 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input type="password" autoComplete="new-password" {...field} />
+                        <div className="flex items-center gap-2">
+                          <Input type={showPassword ? 'text' : 'password'} autoComplete="new-password" {...field} />
+                          <Button type="button" variant="outline" size="sm" onClick={() => setShowPassword(!showPassword)}>
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </Button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                       <FormDescription>Create a password for your ladder profile. Must be at least 6 characters long.</FormDescription>
