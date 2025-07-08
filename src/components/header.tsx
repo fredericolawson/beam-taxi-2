@@ -3,9 +3,7 @@ import Link from 'next/link';
 import { Button } from './ui/button';
 import { getUserServer } from '@/lib/utils/get-user-server';
 import { HomeIcon, ShieldIcon, TrophyIcon, User as UserIcon } from 'lucide-react';
-import { getPlayerByUserId } from '@/lib/tables/players';
 import Image from 'next/image';
-import { isUserAdmin } from '@/lib/utils/admin-utils';
 
 export async function Header() {
   const user = await getUserServer();
@@ -13,7 +11,7 @@ export async function Header() {
   return (
     <header className="bg-secondary flex flex-col items-center justify-between border-b px-6 pb-4 md:flex-row md:pb-0">
       <Link href="/" className="text-secondary-foreground mr-6 flex flex-col">
-        <Image src="/logo.png" alt="CBTC Ladder" width={300} height={200} />
+        <Image src="/logo.png" alt="Beam Taxi" width={300} height={200} />
       </Link>
 
       <div className="items-top flex flex-1 flex-row flex-wrap justify-end gap-2">
@@ -27,8 +25,6 @@ export async function Header() {
 
 async function AdminMenu({ user }: { user: SupabaseUser | null }) {
   if (!user) return null;
-  const adminUser = await isUserAdmin(user.id);
-  if (!adminUser) return null;
 
   return (
     <Button variant="secondary" asChild className="border">
@@ -42,15 +38,13 @@ async function AdminMenu({ user }: { user: SupabaseUser | null }) {
 
 async function ProfileMenu({ user }: { user: SupabaseUser | null }) {
   if (!user) return null;
-  const player = await getPlayerByUserId(user.id);
-  if (!player) return null;
 
   return (
     <>
       <Button variant="secondary" asChild className="border">
         <Link href={`/`}>
           <TrophyIcon />
-          Ladder
+          Home
         </Link>
       </Button>
       <Button variant="secondary" asChild className="border">

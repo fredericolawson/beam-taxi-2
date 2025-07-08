@@ -1,212 +1,270 @@
-# Tennis Club Ladder Application - Current State & Design Overview
+# Beam Taxi - MVP Specification
 
-## Executive Summary
+## Overview
 
-The tennis club ladder application is a web-based platform that digitizes the traditional tennis club ladder system. Built with Next.js and Supabase, it enables club members to view rankings, challenge opponents, and track match results through a clean, mobile-responsive interface.
+Convert the existing tennis ladder management system into a taxi booking platform where riders can request trips at specific offer amounts and drivers can accept them.
 
-## Current Application Features
+## Current State Analysis
 
-### Core Functionality (As Implemented Today)
+- **Built**: Authentication, user management, Supabase backend, React/Next.js frontend
+- **Missing**: All taxi-specific functionality (trip booking, driver matching, real-time updates)
+- **Architecture**: Solid foundation with modern stack (Next.js 15, Supabase, TypeScript)
 
-#### 1. Ladder Display & Rankings
+## Core Features for MVP
 
-- **Main Ladder View**: Displays all approved players ranked by ladder position (`src/app/page.tsx`)
-- **Player Rankings**: Each player shows rank, name, recent match history, and action buttons
-- **Visual Match History**: Recent results displayed as W/L indicators with green/gray circles
-- **Current Player Highlighting**: User's own row is highlighted in the ladder table
+### 1. User Management System
 
-#### 2. Player Management
+**Already Implemented**: Basic authentication and user profiles
+**Needed Enhancements**:
 
-- **Authentication**: Supabase-based user authentication with email/password
-- **Player Approval System**: New players require admin approval before appearing on ladder
-- **Player Profiles**: Each player has firstName, lastName, phone, email, displayName, and ladderRank
-- **User Association**: Players are linked to authenticated users via userId
+- Convert existing `players` table to support both `riders` and `drivers`
+- Add user role system (rider/driver/admin)
+- Driver-specific fields: license plate, vehicle info, approval status
+- Rider-specific fields: payment method, ride history
 
-#### 3. Challenge System
+### 2. Trip Booking System
 
-- **Challenge Restrictions**: Players can only challenge others within 3 ranks above them or same rank
-- **Challenge Button**: "Challenge Player" button appears for eligible opponents
-- **Automatic Challenge Creation**: Creates a pending match record in database when challenge is sent
+**New Implementation Required**:
 
-#### 4. Match Management
+- Trip creation interface for riders
+- Trip listing for available drivers
+- Trip acceptance/rejection by drivers
+- Trip status tracking (pending � accepted � in_progress � completed)
 
-- **Pending Matches**: System tracks matches with status 'pending' and 'completed'
-- **Bilateral Match Detection**: Checks for existing matches between two specific players
-- **Match Result Submission**: Winners can submit match results with score and completion date
-- **Match Cancellation**: Either player can cancel a pending match
+### 3. Real-Time Matching Engine
 
-#### 5. Player Detail Sheets
+**Core Components**:
 
-- **Player Information Modal**: Click any player name to open detailed sheet
-- **Contact Information**: Shows phone and email when match is pending
-- **Communication Links**: Direct WhatsApp and phone call buttons
-- **Match History**: Displays completed matches between current user and selected player
-- **Context-Aware Actions**: Shows either "Challenge" or "Submit Result" based on match status
+- Trip broadcast system (when rider creates trip)
+- Driver notification system
+- First-come-first-served acceptance logic
+- Trip cancellation handling
 
-#### 6. Match History & Results
+### 4. Location Management
 
-- **Completed Matches Page**: Dedicated page showing all completed matches (`src/app/matches/page.tsx`)
-- **Match Details**: Displays challenger, opponent, winner, score, and completion date
-- **Personal Match History**: Each player's recent results shown on main ladder
+**Simplified Approach** (no maps integration):
 
-#### 7. Form Interfaces
+- Text-based location input
+- Popular location suggestions
+- Distance estimation (simple calculation)
 
-- **Match Result Form**: Comprehensive form with winner selection, score input, and date picker
-- **Validation**: Form validation using Zod schemas for data integrity
-- **Loading States**: Proper loading indicators during form submission
+### 5. Pricing & Payment
 
-#### 8. Notifications
+**Basic Implementation**:
 
-- **Toast Notifications**: Success/error messages using Sonner library
-- **Telegram Integration**: Optional webhook for club-wide notifications
-- **Real-time Feedback**: Immediate user feedback for all actions
+- Rider sets offer amount
+- Driver accepts/rejects based on offer
+- Payment processing (future enhancement)
+- Trip history with earnings
 
-### Technical Architecture (Current Implementation)
+## Data Model Changes
 
-#### Frontend
+### Database Schema Updates
 
-- **Framework**: Next.js 15 with App Router
-- **Styling**: Tailwind CSS with custom component library
-- **UI Components**: Radix UI primitives with custom styling
-- **Forms**: React Hook Form with Zod validation
-- **State Management**: React hooks with server state via Supabase
+#### Users Table Enhancement
 
-#### Backend
+```sql
+-- Extend existing users with role system
+ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'rider' CHECK (role IN ('rider', 'driver', 'admin'));
+ALTER TABLE users ADD COLUMN phone TEXT;
+ALTER TABLE users ADD COLUMN is_approved BOOLEAN DEFAULT false;
 
-- **Database**: Supabase PostgreSQL with custom 'ladder' schema
-- **Authentication**: Supabase Auth with email/password
-- **API**: Next.js Server Actions for database operations
-- **Real-time**: Supabase real-time subscriptions (not actively used)
+-- Driver-specific fields
+ALTER TABLE users ADD COLUMN license_plate TEXT;
+ALTER TABLE users ADD COLUMN vehicle_model TEXT;
+ALTER TABLE users ADD COLUMN vehicle_year INTEGER;
+```
 
-#### Data Model
+#### New Trips Table
 
-- **Players Table**: id, userId, ladderRank, isApproved, firstName, lastName, phone, email, createdAt
-- **Matches Table**: id, challengerId, defenderId, winnerId, completedOn, status, score, createdAt, updatedAt
+```sql
+CREATE TABLE trips (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  rider_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  driver_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  start_location TEXT NOT NULL,
+  end_location TEXT NOT NULL,
+  offer_amount DECIMAL(10,2) NOT NULL,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'in_progress', 'completed', 'cancelled')),
+  scheduled_for TIMESTAMP WITH TIME ZONE,
+  accepted_at TIMESTAMP WITH TIME ZONE,
+  started_at TIMESTAMP WITH TIME ZONE,
+  completed_at TIMESTAMP WITH TIME ZONE,
+  cancelled_at TIMESTAMP WITH TIME ZONE,
+  cancellation_reason TEXT,
+  notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
 
-### User Workflows (As They Work Today)
+#### Notifications Table
 
-#### Challenge & Play Workflow
+```sql
+CREATE TABLE notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  trip_id UUID REFERENCES trips(id) ON DELETE CASCADE,
+  type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
 
-1. User views ladder and identifies opponent within challenge range
-2. Clicks player name to open player sheet
-3. Clicks "Challenge Player" button to send challenge
-4. System creates pending match record
-5. Both players see each other's contact information
-6. Players coordinate match externally (phone/WhatsApp/email)
-7. Winner returns to app and submits result via "Submit Result" button
-8. System records winner, score, and completion date
-9. Ladder positions remain static (no automatic reranking implemented)
+## API Endpoints / Server Actions
 
-#### Current Limitations & Gaps
+### Trip Management
 
-- **No Ladder Reranking**: Winning matches doesn't automatically adjust ladder positions
-- **No Notification System**: No in-app notifications for new challenges or match results
-- **Static Challenge Rules**: Fixed 3-rank challenge window with no administrative override
-- **No User Profile Management**: Users cannot edit their own profiles
-- **No Administrative Interface**: No admin dashboard for member management
-- **No Match Scheduling**: External coordination required for match timing
-- **No Score Validation**: No rules around acceptable score formats
+- `createTrip(riderData)` - Rider creates new trip request
+- `getAvailableTrips()` - Drivers view pending trips
+- `acceptTrip(tripId, driverId)` - Driver accepts trip
+- `updateTripStatus(tripId, status)` - Update trip progress
+- `cancelTrip(tripId, reason)` - Cancel trip with reason
 
-### Navigation & User Experience
+### User Management
 
-#### Current Pages
+- `updateUserRole(userId, role)` - Admin approves drivers
+- `getUserTrips(userId)` - Get user's trip history
+- `approveDriver(driverId)` - Admin approves driver application
 
-- **Home (/)**: Main ladder display and primary user interface
-- **Matches (/matches/)**: Historical completed matches view
-- **Authentication Pages**: Login, signup, password reset flows
+### Notifications
 
-#### Key UI Components
+- `getUserNotifications(userId)` - Get user notifications
+- `markNotificationRead(notificationId)` - Mark notification as read
 
-- **Responsive Design**: Works on mobile and desktop
-- **Loading States**: Proper loading indicators throughout
-- **Error Handling**: Error messages for failed operations
-- **Accessibility**: Basic accessibility features via Radix UI
+## UI Components to Build
 
-## Recommended MVP Additions
+### For Riders
 
-### High Priority (Essential for Full Ladder Function)
+1. **Trip Request Form**
 
-#### 1. Automatic Ladder Reranking
+   - Start/end location inputs
+   - Offer amount input
+   - Scheduled time picker
+   - Trip notes (optional)
 
-- **Winner Advancement**: When a lower-ranked player beats higher-ranked player, swap positions
-- **Multiple Rank Jumps**: Winner takes defeated player's position, others shift down
-- **Rerank Logic**: Implement proper ladder advancement rules
-- **Visual Feedback**: Show ladder changes after match completion
+2. **Active Trip Display**
 
-#### 2. Administrative Interface
+   - Current trip status
+   - Driver details (when accepted)
+   - Cancel trip option
 
-- **Admin Dashboard**: Dedicated admin area for club management
-- **Member Approval**: Streamlined interface for approving new members
-- **Ladder Management**: Admin ability to adjust rankings manually
-- **Match Oversight**: Admin tools to modify or delete matches if needed
+3. **Trip History**
+   - Past trips with details
 
-#### 3. User Profile Management
+### For Drivers
 
-- **Edit Profile**: Users can update their contact information
-- **Account Settings**: Basic account management features
-- **Profile Validation**: Ensure required fields are completed
+1. **Available Trips Dashboard**
 
-### Medium Priority (Enhanced User Experience)
+   - List of pending trips
+   - Trip details (locations, offer, time)
+   - Accept trip CTA
 
-#### 4. Enhanced Notifications
+2. **Active Trip Management**
 
-- **Email Notifications**: Automatic emails for challenges and results
-- **In-App Notification Center**: Dedicated area showing all notifications
-- **Notification Preferences**: User control over notification types and methods
-- **Push Notifications**: Browser push notifications for important events
+   - Trip details and progress
+   - Status update buttons
+   - Complete trip option
 
-#### 5. Match Scheduling System
+3. **Driver Profile**
+   - Vehicle information
+   - Approval status
+   - Earnings summary
 
-- **Proposed Match Times**: Challenger can suggest match times when challenging
-- **Calendar Integration**: Basic calendar functionality for scheduling
-- **Match Reminders**: Automated reminders before scheduled matches
-- **Availability Indicators**: Players can mark their general availability
+### Shared Components
 
-#### 6. Enhanced Match Management
+1. **Notification System**
 
-- **Score Validation**: Rules for acceptable score formats and validation
-- **Match Disputes**: System for handling disputed results
-- **Match Photos**: Optional photo upload for match results
-- **Weather Integration**: Automatic weather alerts for scheduled outdoor matches
+   - riders notified of trip acceptance via WhatsApp API
+   - drivers notified of new trip request via Telegram channel
+   - Mark as read functionality
 
-### Lower Priority (Nice-to-Have Features)
+2. **User Profile**
+   - Role-specific information
+   - Contact details
+   - Account settings
 
-#### 7. Statistics & Analytics
+## Technical Implementation Plan
 
-- **Player Statistics**: Win/loss ratios, playing frequency, performance trends
-- **Club Analytics**: Overall activity levels, popular playing times
-- **Performance Tracking**: Individual improvement metrics over time
+### Phase 1: Database Migration
 
-#### 8. Social Features
+- Update existing schema to support trips
+- Migrate user data to new structure
+- Set up Row Level Security policies
 
-- **Player Comments**: Optional comments on match results
-- **Achievement Badges**: Recognition for milestones (matches played, win streaks, etc.)
-- **Club Feed**: Activity stream of recent matches and results
+### Phase 2: Core Trip Logic
 
-#### 9. Mobile App Enhancements
+- Implement trip creation and management
+- Build driver matching system
+- Create notification system
 
-- **Progressive Web App**: Full PWA functionality with offline capabilities
-- **Mobile-Specific Features**: Camera integration for score photos, GPS for court locations
-- **Native Apps**: Eventual iOS/Android native applications
+### Phase 3: UI Development
 
-## Success Metrics for MVP Implementation
+- Build trip request interface
+- Create driver dashboard
+- Implement real-time updates
 
-### Functional Completeness
+### Phase 4: Testing & Polish
 
-- [ ] Automatic ladder reranking after match completion
-- [ ] Administrative member management interface
-- [ ] User profile editing capabilities
+- Test trip flow end-to-end
+- Optimize performance
+- Add error handling
 
-### User Engagement
+## Real-Time Features
 
-- [ ] Increased match completion rate (target: >80%)
-- [ ] Reduced time between challenge and match play
-- [ ] Higher user retention after initial registration
+### Using Supabase Realtime
 
-### System Reliability
+- Trip status updates
+- New trip notifications for drivers
+- Driver acceptance notifications for riders
+- Trip cancellation alerts
 
-- [ ] Zero data integrity issues with match results
-- [ ] Proper error handling for all user actions
-- [ ] Consistent ladder state across all users
+### WebSocket Events
 
-The current application provides a solid foundation for tennis club ladder management, but requires these MVP additions to function as a complete, autonomous system that truly replaces manual ladder administration.
+- `trip_created` - Notify available drivers
+- `trip_accepted` - Notify rider
+- `trip_status_updated` - Notify both parties
+- `trip_cancelled` - Notify affected user
+
+## Security Considerations
+
+### Row Level Security Policies
+
+- Users can only see their own trips
+- Drivers can only see pending trips
+- Admins can see all data
+
+### Data Validation
+
+- Trip offers must be positive amounts
+- Only approved drivers can accept trips
+- Users can only cancel their own trips
+
+## Future Enhancements (Post-MVP)
+
+- Google Maps integration for real locations
+- Real-time GPS tracking
+- Payment processing integration
+- Rating and review system
+- Surge pricing algorithms
+- Driver earnings analytics
+- Push notifications (mobile app)
+
+## Migration Strategy
+
+### From Current Tennis System
+
+1. **Preserve**: User authentication, admin system, email notifications
+2. **Modify**: User profiles to support rider/driver roles
+3. **Replace**: Match system with trip booking system
+4. **Remove**: Ladder ranking, challenge system
+
+### Data Migration
+
+- Convert existing users to riders by default
+- Archive tennis-related data
+- Update component imports and routes
+
+This MVP focuses on core taxi booking functionality while leveraging the existing robust authentication and backend infrastructure.

@@ -57,3 +57,42 @@ export async function missile(options: MissileMessageOptions): Promise<{ success
     };
   }
 }
+
+export async function sendLocation(latitude: number, longitude: number): Promise<{ success: boolean; messageId?: number; error?: string }> {
+  const telegramApiUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendLocation`;
+
+  const payload = {
+    chat_id: process.env.TELEGRAM_CHAT_ID,
+    latitude,
+    longitude,
+  };
+
+  try {
+    const response = await fetch(telegramApiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.description || 'Failed to send location',
+      };
+    }
+
+    return {
+      success: true,
+      messageId: data.result.message_id,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+    };
+  }
+}

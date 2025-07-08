@@ -1,63 +1,49 @@
-export type RawPlayer = {
+export type Trip = {
   id: string;
-  user_id: string;
-  ladder_rank: number;
-  is_approved: boolean;
-  created_at: string;
-  first_name: string;
-  last_name: string;
-  phone: string;
-  email: string;
-  matches: Match[];
+  riderId: string;
+  driverId: string;
+  startLocation: string;
+  endLocation: string;
+  startDate: Date;
+  endDate: Date;
+  offer: number;
+  createdAt: Date;
+  updatedAt: Date;
+  status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
 };
 
-export type Player = {
+export type Rider = {
   id: string;
-  userId: string;
-  ladderRank: number;
+  name: string;
+  phone: string;
+  email: string;
   isApproved: boolean;
-  createdAt: string;
-  firstName: string;
-  lastName: string;
+};
+
+export type Driver = {
+  id: string;
+  name: string;
+  licensePlate: string;
   phone: string;
-  displayName: string;
   email: string;
-  matches: Match[];
+  isApproved: boolean;
 };
 
-export type Match = {
+export type TripRequest = {
   id: string;
-  challenger: Player;
-  defender: Player;
-  winner: Player | null;
-  challengerId: string;
-  defenderId: string;
-  winnerId: string | null;
-
-  matchDate: string | null;
-  result: string | null;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type PendingMatch = {
-  id: string;
-  challenger: Player;
-  defender: Player;
-  challengerId: string;
-  defenderId: string;
-};
-
-export type CompletedMatch = {
-  id: string;
-  challenger: Player;
-  defender: Player;
-  winner: Player;
-  challengerId: string;
-  defenderId: string;
-  winnerId: string;
-
-  matchDate: string;
-  result: string;
-  createdAt: string;
+  pickup: {
+    address: string;
+    lat: number;
+    lng: number;
+  };
+  destination: {
+    address: string;
+    lat: number;
+    lng: number;
+  };
+  fare: number;
+  rider: {
+    name: string;
+    phone: string;
+  };
 };

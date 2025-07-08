@@ -14,6 +14,7 @@ You are a senior engineer with deep experience building production- grade AI age
 
 ## Error Handling
 
+- Lean and simple error handling. Don't over-engineer.
 - Bubble specific error text all the way up to the front end. I like simplicity and clarity.
 
 ## Tech Stack
@@ -22,7 +23,16 @@ You are a senior engineer with deep experience building production- grade AI age
 - shadcn/ui components
 - Supabase for database and authentication
 - TypeScript preferred
+- types preferred to interfaces. Centrally defined in types file.
+
+## NextJS
+
+- Use NextJS server actions instead of API routes.
 
 ## UI
 
-- I use ShadCM as my component library.
+Always make efficient use of ShadCN components.
+
+## Database
+
+- my Supabase Schema is called "taxi"
