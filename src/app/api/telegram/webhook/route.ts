@@ -150,3 +150,7 @@ async function updateDriverLocation(driverId: string, location: { latitude: numb
     location_updated_at: new Date().toISOString(),
   });
 }
+
+export async function GET(request: NextRequest) {
+  return NextResponse.json({ success: true });
+}
