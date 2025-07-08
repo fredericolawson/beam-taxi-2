@@ -34,7 +34,7 @@ export async function getTrip(tripId: string) {
       lat: trip.destination_lat,
       lng: trip.destination_lng,
     },
-    fare: trip.estimated_fare,
+    fare: trip.offer_amount,
     rider: {
       name: trip.riders.name,
       phone: trip.riders.phone,
