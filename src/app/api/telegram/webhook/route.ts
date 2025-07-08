@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
 
     // Handle callback queries (button presses)
     if (body.callback_query) {
+      console.log('callback_query', body.callback_query);
       const callbackQuery = body.callback_query;
       const driverId = callbackQuery.from.id.toString();
       const data = callbackQuery.data;
