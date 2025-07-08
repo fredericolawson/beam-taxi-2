@@ -1,49 +1,33 @@
 export type Trip = {
   id: string;
-  riderId: string;
-  driverId: string;
-  startLocation: string;
-  endLocation: string;
-  startDate: Date;
-  endDate: Date;
-  offer: number;
-  createdAt: Date;
-  updatedAt: Date;
-  status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
+  rider_id: string;
+  rider: Rider;
+  driver_id: string | null;
+  pickup_address: string;
+  pickup_lat: number;
+  pickup_lng: number;
+  destination_address: string;
+  destination_lat: number;
+  destination_lng: number;
+  offer_amount: number;
+  requested_at: Date;
+  assigned_at: Date | null;
 };
 
 export type Rider = {
   id: string;
   name: string;
   phone: string;
-  email: string;
-  isApproved: boolean;
+  created_at: Date | null;
 };
 
 export type Driver = {
   id: string;
   name: string;
-  licensePlate: string;
-  phone: string;
-  email: string;
-  isApproved: boolean;
-};
-
-export type TripRequest = {
-  id: string;
-  pickup: {
-    address: string;
-    lat: number;
-    lng: number;
-  };
-  destination: {
-    address: string;
-    lat: number;
-    lng: number;
-  };
-  fare: number;
-  rider: {
-    name: string;
-    phone: string;
-  };
+  phone: string | null;
+  telegram_id: string;
+  current_lat: number | null;
+  current_lng: number | null;
+  location_updated_at: Date | null;
+  created_at: Date | null;
 };

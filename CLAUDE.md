@@ -11,6 +11,7 @@ You are a senior engineer with deep experience building production- grade AI age
 
 - Write the code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live
 - I like small, simple functions & abstractions
+- Always use named parameters
 
 ## Error Handling
 

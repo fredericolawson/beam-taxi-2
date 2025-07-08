@@ -1,7 +1,10 @@
 import { createClient } from '@/lib/supabase/server';
 import { TelegramBot } from '@/lib/telegram';
 import { sendTripConfirmation, sendTripUnavailable, updateTripMessage } from '@/lib/telegram-messages';
+import { assignTripToDriver, getTrip } from '@/lib/tables/trips';
 import { NextRequest, NextResponse } from 'next/server';
+import { getDriverByTelegramId } from '@/lib/tables/drivers';
+import { Trip } from '@/types';
 
 const bot = new TelegramBot();
 
@@ -11,9 +14,8 @@ export async function POST(request: NextRequest) {
 
     // Handle callback queries (button presses)
     if (body.callback_query) {
-      console.log('callback_query', body.callback_query);
       const callbackQuery = body.callback_query;
-      const driverId = callbackQuery.from.id.toString();
+      const driverTelegramId = callbackQuery.from.id.toString();
       const data = callbackQuery.data;
       const messageId = callbackQuery.message.message_id;
 
@@ -21,28 +23,35 @@ export async function POST(request: NextRequest) {
       const [action, tripId] = data.split('_');
 
       if (action === 'accept') {
-        const success = await assignTripToDriver(tripId, driverId);
+        try {
+          // First check if driver exists
+          const driver = await getDriverByTelegramId({ telegramId: driverTelegramId });
+          if (!driver) return;
 
-        if (success) {
-          const trip = await getTripDetails(tripId);
+          const success = await assignTripToDriver({ tripId, driverTelegramId });
 
-          await sendTripConfirmation(driverId, trip);
-
-          await updateTripMessage(driverId, messageId, trip, 'confirmed');
-
+          if (success) {
+            const trip = await getTrip({ tripId });
+            if (!trip) return;
+            await sendTripConfirmation({ driver, trip: trip as Trip });
+            await updateTripMessage({ driverId: driverTelegramId, messageId, trip, status: 'confirmed' });
+            await bot.answerCallbackQuery({
+              callback_query_id: callbackQuery.id,
+              text: 'Trip confirmed!',
+            });
+          } else {
+            await sendTripUnavailable({ driverId: driverTelegramId });
+            await bot.answerCallbackQuery({
+              callback_query_id: callbackQuery.id,
+              text: 'Trip is no longer available',
+              show_alert: true,
+            });
+          }
+        } catch (error) {
+          console.error('Error accepting trip:', error);
           await bot.answerCallbackQuery({
             callback_query_id: callbackQuery.id,
-            text: 'Trip confirmed!',
-          });
-        } else {
-          await sendTripUnavailable(driverId);
-
-          const trip = await getTripDetails(tripId);
-          await updateTripMessage(driverId, messageId, trip, 'unavailable');
-
-          await bot.answerCallbackQuery({
-            callback_query_id: callbackQuery.id,
-            text: 'Trip unavailable',
+            text: `Error: ${error instanceof Error ? error.message : 'Unknown error occurred'}`,
             show_alert: true,
           });
         }
@@ -51,105 +60,55 @@ export async function POST(request: NextRequest) {
           callback_query_id: callbackQuery.id,
           text: 'Trip declined',
         });
-      } else if (action === 'arrived') {
-        await updateTripStatus(tripId, 'arrived');
-        await bot.answerCallbackQuery({
-          callback_query_id: callbackQuery.id,
-          text: 'Marked as arrived',
-        });
       }
     }
 
     // Handle regular messages (location sharing, etc.)
     if (body.message) {
       const message = body.message;
-      const driverId = message.from.id.toString();
-
+      const driverTelegramId = message.from.id.toString();
+      const driver = await getDriverByTelegramId({ telegramId: driverTelegramId });
       // Handle location sharing
       if (message.location) {
-        await updateDriverLocation(driverId, message.location);
+        try {
+          await updateDriverLocation({ driverId: driver.id, location: message.location });
+        } catch (error) {
+          console.error('Error updating driver location:', error);
+          await bot.sendMessage(driverTelegramId, {
+            text: `Error updating location: ${error instanceof Error ? error.message : 'Unknown error occurred'}`,
+          });
+        }
       }
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Telegram webhook error:', error);
-    return NextResponse.json({ error: 'Webhook error' }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : 'Unknown webhook error',
+      },
+      { status: 500 }
+    );
   }
 }
 
 // Helper functions
-async function assignTripToDriver(tripId: string, driverId: string): Promise<boolean> {
+
+async function updateDriverLocation({ driverId, location }: { driverId: string; location: { latitude: number; longitude: number } }) {
   const supabase = await createClient();
 
-  // Check if trip is still available and assign atomically
-  const { data, error } = await supabase
-    .from('trips')
+  const { error } = await supabase
+    .schema('taxi')
+    .from('drivers')
     .update({
-      driver_id: driverId,
-      status: 'assigned',
-      assigned_at: new Date().toISOString(),
+      current_lat: location.latitude,
+      current_lng: location.longitude,
+      location_updated_at: new Date().toISOString(),
     })
-    .eq('id', tripId)
-    .eq('status', 'pending') // Only assign if still pending
-    .select()
-    .single();
+    .eq('id', driverId);
 
-  return !error && data !== null;
-}
-
-async function getTripDetails(tripId: string) {
-  const supabase = await createClient();
-
-  const { data: trip } = await supabase
-    .from('trips')
-    .select(
-      `
-      *,
-      riders (
-        name,
-        phone
-      )
-    `
-    )
-    .eq('id', tripId)
-    .single();
-
-  return {
-    id: trip.id,
-    pickup: {
-      address: trip.pickup_address,
-      lat: trip.pickup_lat,
-      lng: trip.pickup_lng,
-    },
-    destination: {
-      address: trip.destination_address,
-      lat: trip.destination_lat,
-      lng: trip.destination_lng,
-    },
-    fare: trip.estimated_fare,
-    rider: {
-      name: trip.riders.name,
-      phone: trip.riders.phone,
-    },
-  };
-}
-
-async function updateTripStatus(tripId: string, status: string) {
-  const supabase = await createClient();
-
-  await supabase.from('trips').update({ status }).eq('id', tripId);
-}
-
-async function updateDriverLocation(driverId: string, location: { latitude: number; longitude: number }) {
-  const supabase = await createClient();
-
-  await supabase.from('drivers').upsert({
-    id: driverId,
-    current_lat: location.latitude,
-    current_lng: location.longitude,
-    location_updated_at: new Date().toISOString(),
-  });
+  if (error) throw error;
 }
 
 export async function GET(request: NextRequest) {

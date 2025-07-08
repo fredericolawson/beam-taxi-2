@@ -26,7 +26,19 @@ export class TelegramBot {
     });
 
     if (!response.ok) {
-      throw new Error(`Telegram API error: ${response.statusText}`);
+      const errorBody = await response.json().catch(() => null);
+      console.error('Telegram API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorResponse: errorBody,
+        requestBody: {
+          chat_id: chatId,
+          text: options.text,
+          reply_markup: options.reply_markup,
+          parse_mode: 'HTML',
+        },
+      });
+      throw new Error(`Telegram API error: ${response.statusText}${errorBody ? ` - ${JSON.stringify(errorBody)}` : ''}`);
     }
 
     return response.json();
