@@ -18,12 +18,12 @@ interface Route {
   bounds: google.maps.LatLngBounds;
 }
 
-interface RouteVisualizationProps {
+interface RouteMapProps {
   pickup: LatLng | null;
   destination: LatLng | null;
   apiKey: string;
   className?: string;
-  onRouteCalculated: (metrics: { distance: number; duration: number }) => void;
+  onRouteCalculated?: (metrics: { distance: number; duration: number }) => void;
 }
 
 // Component for handling route calculation and rendering
@@ -35,7 +35,7 @@ function RouteRenderer({
 }: {
   pickup: LatLng | null;
   destination: LatLng | null;
-  onRouteCalculated: (metrics: { distance: number; duration: number }) => void;
+  onRouteCalculated?: (metrics: { distance: number; duration: number }) => void;
   setZoom: (zoom: number) => void;
 }) {
   const map = useMap();
@@ -116,7 +116,7 @@ function RouteRenderer({
           if (map && route.bounds) map.fitBounds(route.bounds);
 
           // Notify parent about route metrics
-          onRouteCalculated({
+          onRouteCalculated?.({
             distance: leg.distance?.value || 0,
             duration: leg.duration?.value || 0,
           });
@@ -184,13 +184,7 @@ function RouteRenderer({
 }
 
 // Main component
-export default function RouteVisualization({
-  pickup,
-  destination,
-  apiKey,
-  className = 'w-full h-96',
-  onRouteCalculated,
-}: RouteVisualizationProps) {
+export default function RouteMap({ pickup, destination, apiKey, className = 'w-full h-96', onRouteCalculated }: RouteMapProps) {
   const [mapCenter, setMapCenter] = useState<LatLng>(pickup || destination || { lat: 32.29482077750405, lng: -64.76918653081073 });
   const [zoom, setZoom] = useState(12);
 
@@ -211,7 +205,7 @@ export default function RouteVisualization({
   }, [pickup, destination]);
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className} rounded-lg`}>
       <APIProvider apiKey={apiKey}>
         <Map
           mapId="route-map"

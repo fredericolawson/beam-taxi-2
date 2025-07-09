@@ -30,10 +30,13 @@ You are a senior engineer with deep experience building production- grade AI age
 
 - Use NextJS server actions instead of API routes.
 - Always use named parameters
+- I hate long components. Create nice, simple component abstractions, but define them in the same file.
+- Define all function prop types in line, not as separate objects.
 
 ## UI
 
 Always make efficient use of ShadCN components.
+Work exclusively with ShadCN and Lucide React icons.
 
 ## Database
 

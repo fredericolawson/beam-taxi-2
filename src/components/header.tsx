@@ -9,17 +9,18 @@ export async function Header() {
   const user = await getUserServer();
 
   return (
-    <header className="bg-secondary flex w-full flex-col items-center justify-between border-b px-6 pb-4 md:flex-row md:pb-0">
-      <Link href="/" className="text-secondary-foreground mr-6 flex flex-col">
-        <Image src="/logo.png" alt="Beam Taxi" width={300} height={200} />
-      </Link>
-
-      <div className="items-top flex flex-1 flex-row flex-wrap justify-end gap-2">
-        <AdminMenu user={user} />
-        <ProfileMenu user={user} />
-        <GenericMenu user={user} />
-      </div>
+    <header className="bg-accent relative flex w-full items-center justify-between border-b p-8 md:justify-center">
+      <Logo />
+      <div className="absolute inset-y-0 right-4 flex items-center"></div>
     </header>
+  );
+}
+function Logo() {
+  return (
+    <Link href="/" className="font-heading flex flex-col gap-1 md:items-center">
+      <h1 className="text-6xl">beam</h1>
+      <p className="px-1 text-sm tracking-widest uppercase">bermuda</p>
+    </Link>
   );
 }
 

@@ -1,5 +1,5 @@
 import { createClient } from '../supabase/server';
-import { Trip } from '@/types';
+import type { Trip, RawTrip } from '@/types';
 import { getDriverByTelegramId } from './drivers';
 
 export async function getTrip({ tripId }: { tripId: string }) {
@@ -22,13 +22,37 @@ export async function getTrip({ tripId }: { tripId: string }) {
 
   if (error) {
     if (error.code === 'PGRST116') {
-      // This is the error code when no rows or multiple rows are returned
       return null;
     }
     throw new Error(error.message);
   }
 
-  return trip as Trip;
+  return processTripData(trip) as Trip;
+}
+export async function listTripsByRiderId({ riderId }: { riderId: string }) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .schema('taxi')
+    .from('trips')
+    .select(
+      `
+      *,
+      rider:riders (
+        name,
+        phone
+      ),
+      driver:drivers (
+        name,
+        phone
+      )
+    `
+    )
+    .eq('rider_id', riderId);
+
+  if (error) throw error;
+
+  return data.map(processTripData) as Trip[];
 }
 
 export async function assignTripToDriver({ tripId, driverTelegramId }: { tripId: string; driverTelegramId: string }): Promise<boolean> {
@@ -58,4 +82,13 @@ export async function assignTripToDriver({ tripId, driverTelegramId }: { tripId:
   }
 
   return true;
+}
+
+function processTripData(trip: RawTrip): Trip {
+  const status = trip.cancelled_at ? 'cancelled' : trip.assigned_at ? 'assigned' : 'pending';
+
+  return {
+    ...trip,
+    status,
+  };
 }

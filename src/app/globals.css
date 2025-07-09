@@ -1,21 +1,35 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
+@import 'tailwindcss';
+
+:root {
+}
 
 @font-face {
-  font-family: 'Open Sans';
-  src: url('/fonts/OpenSans-Regular.ttf') format('truetype');
-  font-weight: 400;
+  font-family: 'TtLakesNeue';
+  src: url('/fonts/TT_Lakes_Neue_Trial_Regular.ttf') format('truetype');
+  font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', sans-serif;
+}
+
 @theme inline {
+  --color-primary: var(--primary);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-accent: var(--accent);
+  --color-secondary: var(--secondary);
+
+  --font-sans: 'Inter', sans-serif;
+  --font-heading: 'TtLakesNeue', sans-serif;
+  --font-mono: 'Inter', monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -34,13 +48,9 @@
   --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -53,20 +63,24 @@
 }
 
 :root {
+  --primary: #1d2b36;
+  --foreground: #1d2b36;
+  --background: #f5ede3;
+  --accent: #00c2b2;
+  --secondary: #7c8a97;
+
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: #75acbe;
+
   --secondary-foreground: #fff;
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
@@ -96,20 +110,29 @@
   body {
     @apply bg-background text-foreground;
   }
+
   .heading-1 {
-    @apply mb-4 text-xl font-semibold;
+    @apply mb-4 text-3xl font-bold uppercase;
+    font-family: 'TtLakesNeue', sans-serif;
   }
   .heading-2 {
-    @apply mb-4 text-lg font-semibold;
+    @apply mb-2 text-xl uppercase;
+    font-family: 'TtLakesNeue', sans-serif;
   }
   .heading-3 {
-    @apply mb-4 text-center font-semibold;
+    @apply mb-2 text-lg uppercase;
+    font-family: 'TtLakesNeue', sans-serif;
   }
-  .card-container {
-    @apply bg-card rounded-lg border p-6 shadow-sm;
+  .underline-spaced {
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
-
-  .label {
-    @apply text-muted-foreground text-sm;
+  .cta {
+    @apply bg-accent hover:bg-accent/90 rounded-sm px-6 py-3 uppercase transition-colors;
+    font-family: 'TtLakesNeue', sans-serif;
+  }
+  .cta-link {
+    @apply text-accent hover:text-accent/90 italic transition-colors;
+    font-family: 'TtLakesNeue', sans-serif;
   }
 }

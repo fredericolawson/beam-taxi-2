@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import type { TripInsert } from '@/types';
 import { createTrip } from '@/actions/trip';
 import { AddressAutocomplete } from './address-autocomplete';
-import RouteVisualization from './route-map';
+import RouteMap from './route-map';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar24 } from './date-time-picker';
@@ -114,7 +114,7 @@ export default function NewTripForm() {
         <CardContent className="flex flex-col gap-4">
           <AddressAutocomplete onSelect={handlePickupSelect} placeholder="Enter pickup address" />
           <AddressAutocomplete onSelect={handleDestinationSelect} placeholder="Enter destination address" />
-          <RouteVisualization
+          <RouteMap
             pickup={pickup}
             destination={destination}
             apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}

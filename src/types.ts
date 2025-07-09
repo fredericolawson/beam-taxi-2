@@ -3,6 +3,7 @@ export type Trip = {
   rider_id: string;
   rider: Rider;
   driver_id: string | null;
+  driver: Driver | null;
   pickup_address: string;
   pickup_lat: number;
   pickup_lng: number;
@@ -12,7 +13,11 @@ export type Trip = {
   offer_amount: number;
   requested_at: Date;
   assigned_at: Date | null;
+  cancelled_at: Date | null;
+  status: 'pending' | 'assigned' | 'cancelled';
 };
+
+export type RawTrip = Omit<Trip, 'status'>;
 
 export type TripInsert = {
   rider_id: string;
