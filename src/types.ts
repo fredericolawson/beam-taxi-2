@@ -14,6 +14,15 @@ export type Trip = {
   assigned_at: Date | null;
 };
 
+export type TripInsert = {
+  rider_id: string;
+  pickup_lat: number;
+  pickup_lng: number;
+  destination_lat: number;
+  destination_lng: number;
+  offer_amount: number;
+};
+
 export type Rider = {
   id: string;
   name: string;

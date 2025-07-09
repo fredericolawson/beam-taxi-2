@@ -9,7 +9,7 @@ export async function Header() {
   const user = await getUserServer();
 
   return (
-    <header className="bg-secondary flex flex-col items-center justify-between border-b px-6 pb-4 md:flex-row md:pb-0">
+    <header className="bg-secondary flex w-full flex-col items-center justify-between border-b px-6 pb-4 md:flex-row md:pb-0">
       <Link href="/" className="text-secondary-foreground mr-6 flex flex-col">
         <Image src="/logo.png" alt="Beam Taxi" width={300} height={200} />
       </Link>

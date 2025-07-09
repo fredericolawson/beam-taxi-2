@@ -11,12 +11,12 @@ You are a senior engineer with deep experience building production- grade AI age
 
 - Write the code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live
 - I like small, simple functions & abstractions
-- Always use named parameters
+- only build happy paths, I'll add an error handling myself.
 
 ## Error Handling
 
-- Lean and simple error handling. Don't over-engineer.
-- Bubble specific error text all the way up to the front end. I like simplicity and clarity.
+- When I ask you to add errior handling, make it lean and simple.
+- Bubble actual error text all the way up to the front end. I like simplicity and clarity.
 
 ## Tech Stack
 
@@ -29,6 +29,7 @@ You are a senior engineer with deep experience building production- grade AI age
 ## NextJS
 
 - Use NextJS server actions instead of API routes.
+- Always use named parameters
 
 ## UI
 

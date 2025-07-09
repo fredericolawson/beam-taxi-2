@@ -52,11 +52,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-muted/50 flex min-h-screen flex-col">
+      <body className="bg-muted/50 flex min-h-screen flex-col items-center">
         <Header />
-        <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center">
-          <div className="flex h-full w-full flex-1 flex-col items-center px-4 py-12 text-sm md:text-sm">{children}</div>
-        </main>
+        <main className="flex w-full max-w-6xl flex-1 flex-col items-center justify-center">{children}</main>
         <Footer />
         <Toaster richColors position="bottom-center" />
         <Analytics />
