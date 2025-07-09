@@ -27,6 +27,7 @@ const formSchema = z.object({
   offer_amount: z.coerce.number().min(0),
   pickup_time: z.date().optional(),
   type: z.enum(['now', 'later']),
+  rider_id: z.string(),
 });
 
 export default function NewTripForm() {
@@ -38,6 +39,7 @@ export default function NewTripForm() {
     defaultValues: {
       offer_amount: 0, // Start with 0, we'll update this when route changes
       type: 'now',
+      rider_id: '2b0dcfa7-6cd0-4978-beb0-1272d8785226',
     },
   });
 
@@ -59,10 +61,6 @@ export default function NewTripForm() {
   }, [routeMetrics.distance, routeMetrics.duration, form]);
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    //    const trip = await createTrip({ trip: { ...values, rider_id: '1' } });
-    console.log(values);
-  }
 
   const handlePickupSelect = (suggestion: any) => {
     form.setValue('pickup_lat', suggestion.lat);
@@ -78,6 +76,11 @@ export default function NewTripForm() {
 
   const handleTimeSelect = (time: Date | undefined) => {
     form.setValue('pickup_time', time);
+  };
+
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const trip = await createTrip({ trip: { ...data, pickup_time: data.pickup_time || null } });
+    console.log(trip);
   };
 
   // Watch form values for reactivity

@@ -1,6 +1,6 @@
 'use server';
 
-import { TripInsert } from '@/types';
+import type { TripInsert } from '@/types';
 import { createClient } from '@/lib/supabase/server';
 
 export async function createTrip({ trip }: { trip: TripInsert }) {
