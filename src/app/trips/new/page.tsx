@@ -3,7 +3,7 @@ import NewTripForm from '../components/form';
 
 export default function NewTripPage() {
   return (
-    <div className="flex w-full flex-1 flex-col items-center justify-center border border-red-500">
+    <div className="flex w-full flex-1 flex-col items-center justify-center">
       <Script
         src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
         strategy="beforeInteractive"

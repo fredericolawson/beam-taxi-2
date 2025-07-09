@@ -21,6 +21,8 @@ export type TripInsert = {
   destination_lat: number;
   destination_lng: number;
   offer_amount: number;
+  pickup_time: Date | null;
+  type: 'now' | 'later';
 };
 
 export type Rider = {

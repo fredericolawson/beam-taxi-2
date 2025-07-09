@@ -12,7 +12,9 @@ interface LatLng {
 interface Route {
   polyline: google.maps.Polyline;
   distance: string;
+  distanceValue: number;
   duration: string;
+  durationValue: number;
   bounds: google.maps.LatLngBounds;
 }
 
@@ -21,7 +23,7 @@ interface RouteVisualizationProps {
   destination: LatLng | null;
   apiKey: string;
   className?: string;
-  onRouteCalculated?: (route: Route) => void;
+  onRouteCalculated: (metrics: { distance: number; duration: number }) => void;
 }
 
 // Component for handling route calculation and rendering
@@ -33,7 +35,7 @@ function RouteRenderer({
 }: {
   pickup: LatLng | null;
   destination: LatLng | null;
-  onRouteCalculated?: (route: Route) => void;
+  onRouteCalculated: (metrics: { distance: number; duration: number }) => void;
   setZoom: (zoom: number) => void;
 }) {
   const map = useMap();
@@ -76,8 +78,6 @@ function RouteRenderer({
       setRoute(null);
       return;
     }
-    console.log('pickup', pickup);
-    console.log('destination', destination);
     if (!pickup || !destination) return;
 
     const calculateRoute = async () => {
@@ -98,26 +98,28 @@ function RouteRenderer({
           const route = result.routes[0];
           const leg = route.legs[0];
           const distance = leg.distance?.value ? leg.distance.value / 1000 : 0;
-          console.log('leg', leg.distance?.value);
           const zoom = distance > 10 ? 12 : distance > 5 ? 13 : distance > 2 ? 14 : 15;
-          console.log('zoom', zoom);
           setZoom(zoom);
 
           const routeData: Route = {
             polyline: directionsRenderer.getDirections()?.routes[0]?.overview_polyline as unknown as google.maps.Polyline,
             distance: leg.distance?.text || 'Unknown',
+            distanceValue: leg.distance?.value || 0,
             duration: leg.duration?.text || 'Unknown',
+            durationValue: leg.duration?.value || 0,
             bounds: route.bounds,
           };
 
           setRoute(routeData);
 
           // Fit map to route bounds
-          if (map && route.bounds) {
-            map.fitBounds(route.bounds);
-          }
+          if (map && route.bounds) map.fitBounds(route.bounds);
 
-          onRouteCalculated?.(routeData);
+          // Notify parent about route metrics
+          onRouteCalculated({
+            distance: leg.distance?.value || 0,
+            duration: leg.duration?.value || 0,
+          });
         }
       } catch (error) {
         console.error('Route calculation error:', error);
