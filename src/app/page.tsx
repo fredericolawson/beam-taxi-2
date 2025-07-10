@@ -8,19 +8,17 @@ export default async function Home() {
 
   return (
     <div className="flex w-full flex-col space-y-6">
-      <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">Active Trips</h2>
+      <h2 className="heading-2">Active Requests</h2>
 
-        {activeTrips.length === 0 ? (
-          <p className="text-muted-foreground">No active trips</p>
-        ) : (
-          <div className="space-y-4">
-            {activeTrips.map((trip) => (
-              <TripCard key={trip.id} trip={trip} />
-            ))}
-          </div>
-        )}
-      </div>
+      {activeTrips.length === 0 ? (
+        <p className="text-muted-foreground">No active trips</p>
+      ) : (
+        <div className="space-y-4">
+          {activeTrips.map((trip) => (
+            <TripCard key={trip.id} trip={trip} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -97,16 +97,17 @@ function RouteRenderer({
           directionsRenderer.setDirections(result);
           const route = result.routes[0];
           const leg = route.legs[0];
-          const distance = leg.distance?.value ? leg.distance.value / 1000 : 0;
-          const zoom = distance > 10 ? 12 : distance > 5 ? 13 : distance > 2 ? 14 : 15;
+          const distance = leg.distance?.value || 0; // Value in meters
+          const duration = leg.duration?.value ? Math.round(leg.duration.value / 60) : 0; // Convert seconds to minutes
+          const zoom = distance > 10000 ? 12 : distance > 5000 ? 13 : distance > 2000 ? 14 : 15;
           setZoom(zoom);
 
           const routeData: Route = {
             polyline: directionsRenderer.getDirections()?.routes[0]?.overview_polyline as unknown as google.maps.Polyline,
             distance: leg.distance?.text || 'Unknown',
-            distanceValue: leg.distance?.value || 0,
+            distanceValue: distance,
             duration: leg.duration?.text || 'Unknown',
-            durationValue: leg.duration?.value || 0,
+            durationValue: duration,
             bounds: route.bounds,
           };
 
@@ -117,8 +118,8 @@ function RouteRenderer({
 
           // Notify parent about route metrics
           onRouteCalculated?.({
-            distance: leg.distance?.value || 0,
-            duration: leg.duration?.value || 0,
+            distance: distance, // Pass raw meters
+            duration: duration, // Pass minutes
           });
         }
       } catch (error) {

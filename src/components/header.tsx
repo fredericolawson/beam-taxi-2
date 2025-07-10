@@ -9,7 +9,7 @@ export async function Header() {
   const user = await getUserServer();
 
   return (
-    <header className="bg-accent relative flex w-full items-center justify-between border-b p-8 md:justify-center">
+    <header className="bg-accent relative mb-8 flex w-full items-center justify-between border-b p-8 md:justify-center">
       <Logo />
       <div className="absolute inset-y-0 right-4 flex items-center"></div>
     </header>

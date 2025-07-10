@@ -10,7 +10,9 @@ export type Trip = {
   destination_address: string;
   destination_lat: number;
   destination_lng: number;
+  duration: number;
   offer_amount: number;
+  distance: number;
   requested_at: Date;
   assigned_at: Date | null;
   cancelled_at: Date | null;
@@ -27,7 +29,8 @@ export type TripInsert = {
   destination_lng: number;
   offer_amount: number;
   pickup_time: Date | null;
-  type: 'now' | 'later';
+  duration: number;
+  distance: number;
 };
 
 export type Rider = {

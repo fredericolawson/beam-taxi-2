@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: 'Beam Taxi',
   description: 'Beam Taxi',
   icons: {
-    icon: [{ url: '/favicon.png', sizes: '192x192', type: 'image/png' }],
+    icon: [{ url: '/favicon.ico', sizes: '192x192', type: 'image/x-icon' }],
   },
   keywords: ['beam', 'taxi', 'bermuda'],
   authors: [{ name: 'Beam Taxi' }],

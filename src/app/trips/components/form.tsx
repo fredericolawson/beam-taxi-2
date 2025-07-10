@@ -26,6 +26,8 @@ const formSchema = z.object({
   destination_address: z.string(),
   offer_amount: z.coerce.number().min(0),
   pickup_time: z.date().optional(),
+  distance: z.number(),
+  duration: z.number(),
   type: z.enum(['now', 'later']),
   rider_id: z.string(),
 });
@@ -58,6 +60,8 @@ export default function NewTripForm() {
   useEffect(() => {
     const offerAmount = calculateOffer({ distance: routeMetrics.distance, duration: routeMetrics.duration });
     form.setValue('offer_amount', offerAmount);
+    form.setValue('distance', routeMetrics.distance);
+    form.setValue('duration', routeMetrics.duration);
   }, [routeMetrics.distance, routeMetrics.duration, form]);
 
   // 2. Define a submit handler.
