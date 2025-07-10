@@ -13,9 +13,10 @@ import { createTrip } from '@/actions/trip';
 import { AddressAutocomplete } from './address-autocomplete';
 import RouteMap from './route-map';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar24 } from './date-time-picker';
 import { calculateOffer } from '@/lib/utils/calculate-offer';
+import { Label } from '@/components/ui/label';
 
 const formSchema = z.object({
   pickup_lat: z.number(),
@@ -127,7 +128,7 @@ export default function NewTripForm() {
           />
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
               <FormField
                 control={form.control}
                 name="offer_amount"
@@ -140,20 +141,43 @@ export default function NewTripForm() {
                     <FormDescription>
                       This is the recommended offer amount based on the distance and duration of the trip. You can adjust it as you wish.
                     </FormDescription>
+
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Tabs defaultValue="now" className="w-[400px]" onValueChange={(value) => form.setValue('type', value as 'now' | 'later')}>
+              <FormLabel>Pick-up Time</FormLabel>
+              <Tabs
+                defaultValue="now"
+                className="min-h-28 w-full"
+                onValueChange={(value) => form.setValue('type', value as 'now' | 'later')}
+              >
                 <TabsList>
                   <TabsTrigger value="now">Now</TabsTrigger>
                   <TabsTrigger value="later">Later</TabsTrigger>
                 </TabsList>
-                <TabsContent value="now">Request immediate pick-up.</TabsContent>
+                <TabsContent value="now">
+                  <Card className="w-full">
+                    <CardHeader>
+                      <CardTitle>Request immediate pick-up.</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p>Request an immediate pick-up. This will be the cheapest option, but it will not be the most convenient.</p>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
                 <TabsContent value="later">
-                  <Calendar24 onTimeSelect={handleTimeSelect} />
+                  <Card className="w-full">
+                    <CardHeader>
+                      <CardTitle>Request a pick-up at a later time.</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Calendar24 onTimeSelect={handleTimeSelect} />
+                    </CardContent>
+                  </Card>
                 </TabsContent>
               </Tabs>
+
               <Button type="submit">Submit</Button>
             </form>
           </Form>

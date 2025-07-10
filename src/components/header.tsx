@@ -2,16 +2,18 @@ import { User as SupabaseUser } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { getUserServer } from '@/lib/utils/get-user-server';
-import { HomeIcon, ShieldIcon, TrophyIcon, User as UserIcon } from 'lucide-react';
+import { HomeIcon, PlusCircleIcon, PlusIcon, ShieldIcon, TrophyIcon, User as UserIcon } from 'lucide-react';
 import Image from 'next/image';
 
 export async function Header() {
   const user = await getUserServer();
 
   return (
-    <header className="bg-accent relative mb-8 flex w-full items-center justify-between border-b p-8 md:justify-center">
+    <header className="border-accent relative mb-8 flex w-full items-center justify-between border-b p-8 md:justify-center">
       <Logo />
-      <div className="absolute inset-y-0 right-4 flex items-center"></div>
+      <div className="absolute inset-y-0 right-4 flex items-center">
+        <ProfileMenu user={user} />
+      </div>
     </header>
   );
 }
@@ -19,21 +21,8 @@ function Logo() {
   return (
     <Link href="/" className="font-heading flex flex-col gap-1 md:items-center">
       <h1 className="text-6xl">beam</h1>
-      <p className="px-1 text-sm tracking-widest uppercase">bermuda</p>
+      <p className="text-accent px-1 text-sm tracking-widest uppercase">bermuda</p>
     </Link>
-  );
-}
-
-async function AdminMenu({ user }: { user: SupabaseUser | null }) {
-  if (!user) return null;
-
-  return (
-    <Button variant="secondary" asChild className="border">
-      <Link href="/admin">
-        <ShieldIcon />
-        Admin
-      </Link>
-    </Button>
   );
 }
 
@@ -41,20 +30,20 @@ async function ProfileMenu({ user }: { user: SupabaseUser | null }) {
   if (!user) return null;
 
   return (
-    <>
-      <Button variant="secondary" asChild className="border">
-        <Link href={`/`}>
-          <TrophyIcon />
-          Home
+    <div className="flex flex-row items-center gap-2">
+      <Button variant="accent" size="lg" asChild className="border">
+        <Link href={`/trips/new`}>
+          <PlusCircleIcon />
+          New Trip
         </Link>
       </Button>
-      <Button variant="secondary" asChild className="border">
+      <Button variant="secondary" size="lg" asChild className="border">
         <Link href={`/profile`}>
           <UserIcon />
           Profile
         </Link>
       </Button>
-    </>
+    </div>
   );
 }
 

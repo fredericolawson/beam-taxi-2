@@ -68,19 +68,6 @@ function DriverInfo({ driver }: { driver: { name: string; phone: string | null }
   );
 }
 
-function getStatusColor(status: Trip['status']) {
-  switch (status) {
-    case 'pending':
-      return 'bg-secondary/20 text-secondary-foreground hover:bg-secondary/30';
-    case 'assigned':
-      return 'bg-accent/20 text-accent-foreground hover:bg-accent/30';
-    case 'cancelled':
-      return 'bg-muted text-muted-foreground hover:bg-muted';
-    default:
-      return 'bg-muted text-muted-foreground hover:bg-muted';
-  }
-}
-
 export function TripCard({ trip }: { trip: Trip }) {
   return (
     <Card className="overflow-hidden">
