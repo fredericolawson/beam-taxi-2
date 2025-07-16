@@ -43,7 +43,7 @@ export type Rider = {
 export type Driver = {
   id: string;
   name: string;
-  phone: string | null;
+  phone: string;
   telegram_id: string;
   current_lat: number | null;
   current_lng: number | null;

@@ -1,8 +1,9 @@
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Clock, DollarSign, User, Timer, Route } from 'lucide-react';
+import { MapPin, Clock, DollarSign, User, Timer, Route, Phone, MessageSquare, Link } from 'lucide-react';
 import RouteMap from '@/app/trips/components/route-map';
-import type { Trip } from '@/types';
+import type { Driver, Trip } from '@/types';
 import { useRouteMetrics } from '@/hooks/route-metrics';
 import { RouteMetrics } from './route-metrics';
 
@@ -33,14 +34,28 @@ function OfferAmount({ offerAmount }: { offerAmount: number }) {
   );
 }
 
-function DriverInfo({ driver }: { driver: { name: string; phone: string | null } }) {
+function DriverInfo({ driver }: { driver: Driver | null }) {
+  if (!driver) return null;
   return (
     <div className="bg-muted/50 rounded-lg border p-3">
       <div className="flex items-center gap-2">
         <User className="text-accent h-4 w-4" />
-        <div>
+        <div className="flex-1">
           <p className="text-sm font-medium">{driver.name}</p>
-          {driver.phone && <p className="text-muted-foreground text-xs">{driver.phone}</p>}
+          <p className="text-muted-foreground text-xs">{driver.phone}</p>
+        </div>
+        <div className="flex gap-2">
+          <Button size="sm" variant="default" asChild>
+            <a href={`tel:${driver.phone}`} target="_blank" className="flex items-center gap-2">
+              <Phone className="h-3 w-3" /> Call
+            </a>
+          </Button>
+
+          <Button size="sm" variant="default" asChild>
+            <a href={`https://wa.me/${driver.phone.replace(/\D/g, '')}`} target="_blank" className="flex items-center gap-2">
+              <MessageSquare className="h-3 w-3" /> WhatsApp
+            </a>
+          </Button>
         </div>
       </div>
     </div>
@@ -59,7 +74,7 @@ export function TripCard({ trip }: { trip: Trip }) {
               <OfferAmount offerAmount={trip.offer_amount} />
             </div>
             <RouteMetrics routeMetrics={{ distance: trip.distance * 1000, duration: trip.duration }} />
-            {trip.driver && <DriverInfo driver={trip.driver} />}
+            <DriverInfo driver={trip.driver} />
           </div>
           <div className="bg-muted/20 overflow-hidden rounded-r-lg border">
             <RouteMap

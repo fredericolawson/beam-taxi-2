@@ -19,11 +19,7 @@ export async function sendTripRequest({ trip }: { trip: Trip }) {
           longitude: trip.pickup_lng,
         }),
         bot.sendMessage(driverTelegramId, {
-          text: `🚗 <b>NEW TRIP REQUEST</b>\n
-          \n📍 <b>Pickup:</b> ${trip.pickup_address}
-          \n🏁 <b>Destination:</b> ${trip.destination_address}
-          \n💰 <b>Offer:</b> $${trip.offer_amount}
-          \n⭐ <b>Rider:</b> ${trip.rider.name}`,
+          text: `🚗 <b>NEW TRIP REQUEST</b>\n\n📍 <b>Pickup:</b> ${trip.pickup_address}\n🏁 <b>Destination:</b> ${trip.destination_address}\n💰 <b>Offer:</b> $${trip.offer_amount}\n⭐ <b>Rider:</b> ${trip.rider.name}`,
           reply_markup: {
             inline_keyboard: [
               [
