@@ -16,8 +16,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar24 } from './date-time-picker';
 import { calculateOffer } from '@/lib/utils/calculate-offer';
-import { Label } from '@/components/ui/label';
 import Script from 'next/script';
+import { RouteMetrics } from '@/components/route-metrics';
 
 const formSchema = z.object({
   pickup_lat: z.number(),
@@ -87,6 +87,7 @@ export default function NewTripForm() {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const trip = await createTrip({ trip: { ...data, pickup_time: data.pickup_time || null } });
+    console.log(trip);
   };
 
   // Watch form values for reactivity
@@ -125,6 +126,7 @@ export default function NewTripForm() {
         <CardContent className="flex flex-col gap-4">
           <AddressAutocomplete onSelect={handlePickupSelect} placeholder="Enter pickup address" />
           <AddressAutocomplete onSelect={handleDestinationSelect} placeholder="Enter destination address" />
+          <RouteMetrics routeMetrics={routeMetrics} />
 
           <RouteMap
             pickup={pickup}
