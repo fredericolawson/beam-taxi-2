@@ -11,6 +11,7 @@ export async function createTrip({ tripRequest }: { tripRequest: TripInsert }) {
   if (error) throw error;
   const driverTelegramIds = await listDriverTelegramIds();
 
+  for (const driverTelegramId of driverTelegramIds) {
   return trip;
 }
 
