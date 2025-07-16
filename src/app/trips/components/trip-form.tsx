@@ -17,6 +17,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Calendar24 } from './date-time-picker';
 import { calculateOffer } from '@/lib/utils/calculate-offer';
 import { Label } from '@/components/ui/label';
+import Script from 'next/script';
 
 const formSchema = z.object({
   pickup_lat: z.number(),
@@ -35,6 +36,7 @@ const formSchema = z.object({
 
 export default function NewTripForm() {
   const [routeMetrics, setRouteMetrics] = useState<{ distance: number; duration: number }>({ distance: 0, duration: 0 });
+  const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -85,7 +87,6 @@ export default function NewTripForm() {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const trip = await createTrip({ trip: { ...data, pickup_time: data.pickup_time || null } });
-    console.log(trip);
   };
 
   // Watch form values for reactivity
@@ -112,6 +113,11 @@ export default function NewTripForm() {
 
   return (
     <div className="flex w-full flex-1 flex-col items-center justify-center">
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+        strategy="beforeInteractive"
+        onLoad={() => setIsGoogleMapsLoaded(true)}
+      />
       <Card className="w-full max-w-2xl">
         <CardHeader>
           <CardTitle>Pick-up</CardTitle>
@@ -119,6 +125,7 @@ export default function NewTripForm() {
         <CardContent className="flex flex-col gap-4">
           <AddressAutocomplete onSelect={handlePickupSelect} placeholder="Enter pickup address" />
           <AddressAutocomplete onSelect={handleDestinationSelect} placeholder="Enter destination address" />
+
           <RouteMap
             pickup={pickup}
             destination={destination}
@@ -138,20 +145,14 @@ export default function NewTripForm() {
                     <FormControl>
                       <Input placeholder="Offer Amount" {...field} type="number" min={0} />
                     </FormControl>
-                    <FormDescription>
-                      This is the recommended offer amount based on the distance and duration of the trip. You can adjust it as you wish.
-                    </FormDescription>
+                    <FormDescription>This is the recommended offer amount based on the distance and duration of the trip. You can adjust it as you wish.</FormDescription>
 
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <FormLabel>Pick-up Time</FormLabel>
-              <Tabs
-                defaultValue="now"
-                className="min-h-28 w-full"
-                onValueChange={(value) => form.setValue('type', value as 'now' | 'later')}
-              >
+              <Tabs defaultValue="now" className="min-h-28 w-full" onValueChange={(value) => form.setValue('type', value as 'now' | 'later')}>
                 <TabsList>
                   <TabsTrigger value="now">Now</TabsTrigger>
                   <TabsTrigger value="later">Later</TabsTrigger>

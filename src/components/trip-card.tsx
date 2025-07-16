@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Clock, DollarSign, User, Timer, Route } from 'lucide-react';
 import RouteMap from '@/app/trips/components/route-map';
 import type { Trip } from '@/types';
+import { useRouteMetrics } from '@/hooks/route-metrics';
 
 function TripLocation({ type, address }: { type: 'pickup' | 'destination'; address: string }) {
   const isPickup = type === 'pickup';
@@ -33,8 +34,7 @@ function TripMetadata({ trip }: { trip: Trip }) {
         <div className="text-muted-foreground flex items-center gap-2">
           <Clock className="h-4 w-4" />
           <span className="text-sm">
-            {date.toLocaleDateString([], { month: 'short', day: 'numeric' })} at{' '}
-            {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            {date.toLocaleDateString([], { month: 'short', day: 'numeric' })} at {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </span>
         </div>
       </div>
@@ -70,8 +70,8 @@ function DriverInfo({ driver }: { driver: { name: string; phone: string | null }
 
 export function TripCard({ trip }: { trip: Trip }) {
   return (
-    <Card className="overflow-hidden">
-      <CardContent className="space-y-6">
+    <Card className="overflow-hidden p-0">
+      <CardContent className="space-y-6 pr-0">
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-4">
             <div className="space-y-3">
@@ -83,9 +83,8 @@ export function TripCard({ trip }: { trip: Trip }) {
 
             {trip.driver && <DriverInfo driver={trip.driver} />}
           </div>
-
           <div className="lg:pl-4">
-            <div className="bg-muted/20 overflow-hidden rounded-lg border">
+            <div className="bg-muted/20 overflow-hidden rounded-r-lg border">
               <RouteMap
                 pickup={{ lat: trip.pickup_lat, lng: trip.pickup_lng }}
                 destination={{ lat: trip.destination_lat, lng: trip.destination_lng }}

@@ -31,7 +31,6 @@ export async function getTrip({ tripId }: { tripId: string }) {
 }
 export async function listTripsByRiderId({ riderId }: { riderId: string }) {
   const supabase = await createClient();
-
   const { data, error } = await supabase
     .schema('taxi')
     .from('trips')
@@ -49,8 +48,10 @@ export async function listTripsByRiderId({ riderId }: { riderId: string }) {
     `
     )
     .eq('rider_id', riderId);
-
-  if (error) throw error;
+  if (error) {
+    console.error('error', error);
+    throw error;
+  }
 
   return data.map(processTripData) as Trip[];
 }

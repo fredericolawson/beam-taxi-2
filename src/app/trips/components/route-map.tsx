@@ -157,7 +157,7 @@ function RouteRenderer({
 
   return (
     <>
-      {/* Route Info */}
+      {/* Route Info 
       {route && (
         <div className="absolute top-4 left-4 z-10 rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
           <div className="text-sm font-medium text-gray-800">
@@ -165,7 +165,7 @@ function RouteRenderer({
             <div>Duration: {route.duration}</div>
           </div>
         </div>
-      )}
+      )}*/}
 
       {/* Pickup Marker */}
       {pickup && (
@@ -215,13 +215,13 @@ export default function RouteMap({ pickup, destination, apiKey, className = 'w-f
           style={{ width: '100%', height: '100%' }}
           mapTypeId="roadmap"
           disableDefaultUI={false}
-          zoomControl={true}
+          zoomControl={false}
           mapTypeControl={false}
-          scaleControl={true}
+          scaleControl={false}
           streetViewControl={false}
           rotateControl={false}
           fullscreenControl={true}
-          gestureHandling={'greedy'}
+          gestureHandling={'none'}
         >
           <RouteRenderer pickup={pickup} destination={destination} onRouteCalculated={onRouteCalculated} setZoom={setZoom} />
         </Map>

@@ -1,13 +1,14 @@
 import Script from 'next/script';
-import NewTripForm from '../components/form';
+import NewTripForm from '../components/trip-form';
+import { getUserServer } from '@/lib/utils/get-user-server';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { User } from 'lucide-react';
 
-export default function NewTripPage() {
+export default async function NewTripPage() {
+  const user = await getUserServer();
+
   return (
     <div className="flex w-full flex-1 flex-col items-center justify-center">
-      <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
-        strategy="beforeInteractive"
-      />
       <NewTripForm />
     </div>
   );

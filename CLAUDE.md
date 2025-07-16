@@ -41,3 +41,9 @@ Work exclusively with ShadCN and Lucide React icons.
 ## Database
 
 - my Supabase Schema is called "taxi"
+
+## Security & Authorization
+
+- Don't add unnecessary authorization checks unless explicitly requested
+- Focus on the happy path - I'll add security layers myself if needed
+- Assume the caller has appropriate permissions unless told otherwise
