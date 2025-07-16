@@ -18,6 +18,8 @@ import { Calendar24 } from './date-time-picker';
 import { calculateOffer } from '@/lib/utils/calculate-offer';
 import Script from 'next/script';
 import { RouteMetrics } from '@/components/route-metrics';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   pickup_lat: z.number(),
@@ -37,6 +39,7 @@ const formSchema = z.object({
 export default function NewTripForm() {
   const [routeMetrics, setRouteMetrics] = useState<{ distance: number; duration: number }>({ distance: 0, duration: 0 });
   const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
+  const router = useRouter();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -87,7 +90,8 @@ export default function NewTripForm() {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const trip = await createTrip({ tripRequest: { ...data, pickup_time: data.pickup_time || null } });
-    console.log(trip);
+    toast.success(`Trip created successfully + ${trip.id}`);
+    router.push('/');
   };
 
   // Watch form values for reactivity

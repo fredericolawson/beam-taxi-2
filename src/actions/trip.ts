@@ -2,16 +2,28 @@
 
 import type { Trip, TripInsert } from '@/types';
 import { createClient } from '@/lib/supabase/server';
-import { listDriverTelegramIds } from '@/lib/tables/drivers';
+import { sendTripRequest } from './telegram';
 
 export async function createTrip({ tripRequest }: { tripRequest: TripInsert }) {
   const supabase = await createClient();
-  const { data, error } = await supabase.schema('taxi').from('trips').insert(tripRequest).select().single();
-  const trip = data as Trip;
+  const { data, error } = await supabase
+    .schema('taxi')
+    .from('trips')
+    .insert(tripRequest)
+    .select(
+      `
+    *,
+    rider:riders (
+      name,
+      phone
+    )
+  `
+    )
+    .single();
   if (error) throw error;
-  const driverTelegramIds = await listDriverTelegramIds();
+  const trip = data as Trip;
+  await sendTripRequest({ trip });
 
-  for (const driverTelegramId of driverTelegramIds) {
   return trip;
 }
 

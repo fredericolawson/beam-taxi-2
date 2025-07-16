@@ -1,40 +1,42 @@
 'use server';
 import { TelegramBot } from '../lib/telegram';
 import type { Driver, Trip } from '@/types';
-import { getTrip } from '../lib/tables/trips';
-import { getFirstDriver } from '../lib/tables/drivers';
+import { getFirstDriver, listDriverTelegramIds } from '../lib/tables/drivers';
 
 const bot = new TelegramBot();
 
 export async function sendTripRequest({ trip }: { trip: Trip }) {
   console.log('trip', trip);
-  const driver = await getFirstDriver();
-  // Send pickup location first
-  await bot.sendLocation(driver.telegram_id, {
-    latitude: trip.pickup_lat,
-    longitude: trip.pickup_lng,
-  });
+  const driverTelegramIds = await listDriverTelegramIds();
 
-  // Then send trip details with action buttons
-
-  const message = await bot.sendMessage(driver.telegram_id, {
-    text: `🚗 <b>NEW TRIP REQUEST</b>\n
-    \n📍 <b>Pickup:</b> ${trip.pickup_address}
-    \n🏁 <b>Destination:</b> ${trip.destination_address}
-    \n💰 <b>Offer:</b> $${trip.offer_amount}
-    \n⭐ <b>Rider:</b> ${trip.rider.name}`,
-    reply_markup: {
-      inline_keyboard: [
-        [
-          { text: '🚗 ACCEPT', callback_data: `accept_${trip.id}` },
-          { text: '❌ DECLINE', callback_data: `decline_${trip.id}` },
-        ],
-        [{ text: '📍 NAVIGATE', url: `https://maps.google.com/maps?daddr=${trip.pickup_lat},${trip.pickup_lng}` }],
-      ],
-    },
-  });
-
-  return message;
+  // Send to all drivers in parallel
+  await Promise.all(
+    driverTelegramIds.map(async (driverTelegramId) => {
+      // Send both messages in parallel for each driver
+      await Promise.all([
+        bot.sendLocation(driverTelegramId, {
+          latitude: trip.pickup_lat,
+          longitude: trip.pickup_lng,
+        }),
+        bot.sendMessage(driverTelegramId, {
+          text: `🚗 <b>NEW TRIP REQUEST</b>\n
+          \n📍 <b>Pickup:</b> ${trip.pickup_address}
+          \n🏁 <b>Destination:</b> ${trip.destination_address}
+          \n💰 <b>Offer:</b> $${trip.offer_amount}
+          \n⭐ <b>Rider:</b> ${trip.rider.name}`,
+          reply_markup: {
+            inline_keyboard: [
+              [
+                { text: '🚗 ACCEPT', callback_data: `accept_${trip.id}` },
+                { text: '❌ DECLINE', callback_data: `decline_${trip.id}` },
+              ],
+              [{ text: '📍 NAVIGATE', url: `https://maps.google.com/maps?daddr=${trip.pickup_lat},${trip.pickup_lng}` }],
+            ],
+          },
+        }),
+      ]);
+    })
+  );
 }
 
 export async function sendTripConfirmation({ driver, trip }: { driver: Driver; trip: Trip }) {
