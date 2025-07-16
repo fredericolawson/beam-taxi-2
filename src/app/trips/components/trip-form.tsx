@@ -86,7 +86,7 @@ export default function NewTripForm() {
   };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const trip = await createTrip({ trip: { ...data, pickup_time: data.pickup_time || null } });
+    const trip = await createTrip({ tripRequest: { ...data, pickup_time: data.pickup_time || null } });
     console.log(trip);
   };
 

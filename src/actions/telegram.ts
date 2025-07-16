@@ -1,98 +1,87 @@
 'use server';
+import { TelegramBot } from '../lib/telegram';
+import type { Driver, Trip } from '@/types';
+import { getTrip } from '../lib/tables/trips';
+import { getFirstDriver } from '../lib/tables/drivers';
 
-interface InlineKeyboardButton {
-  text: string;
-  url?: string;
-  callback_data?: string;
+const bot = new TelegramBot();
+
+export async function sendTripRequest({ trip }: { trip: Trip }) {
+  console.log('trip', trip);
+  const driver = await getFirstDriver();
+  // Send pickup location first
+  await bot.sendLocation(driver.telegram_id, {
+    latitude: trip.pickup_lat,
+    longitude: trip.pickup_lng,
+  });
+
+  // Then send trip details with action buttons
+
+  const message = await bot.sendMessage(driver.telegram_id, {
+    text: `🚗 <b>NEW TRIP REQUEST</b>\n
+    \n📍 <b>Pickup:</b> ${trip.pickup_address}
+    \n🏁 <b>Destination:</b> ${trip.destination_address}
+    \n💰 <b>Offer:</b> $${trip.offer_amount}
+    \n⭐ <b>Rider:</b> ${trip.rider.name}`,
+    reply_markup: {
+      inline_keyboard: [
+        [
+          { text: '🚗 ACCEPT', callback_data: `accept_${trip.id}` },
+          { text: '❌ DECLINE', callback_data: `decline_${trip.id}` },
+        ],
+        [{ text: '📍 NAVIGATE', url: `https://maps.google.com/maps?daddr=${trip.pickup_lat},${trip.pickup_lng}` }],
+      ],
+    },
+  });
+
+  return message;
 }
 
-interface MissileMessageOptions {
-  message: string;
-  parseMode?: 'HTML' | 'Markdown' | 'MarkdownV2';
-  disableWebPagePreview?: boolean;
-  disableNotification?: boolean;
-  buttons?: InlineKeyboardButton[][];
+export async function sendTripConfirmation({ driver, trip }: { driver: Driver; trip: Trip }) {
+  await bot.sendMessage(driver.telegram_id, {
+    text: `✅ <b>TRIP CONFIRMED</b>\n\nYou've been assigned this trip!\n\n📍 <b>Pickup:</b> ${trip.pickup_address}\n🏁 <b>Destination:</b> ${trip.destination_address}\n💰 <b>Fare:</b> $${trip.offer_amount}\n📞 <b>Rider Phone:</b> ${trip.rider.phone}\n\n🚗 Head to pickup location`,
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: '📍 NAVIGATE', url: `https://maps.google.com/maps?daddr=${trip.pickup_lat},${trip.pickup_lng}` }],
+        [{ text: '✅ ARRIVED', callback_data: `arrived_${trip.id}` }],
+      ],
+    },
+  });
+  // Follow with location sharing prompt
+  await bot.sendMessage(driver.telegram_id, {
+    text: `📍 <b>Share your live location</b> so the rider can track your arrival!\n\nTap the 📎 button below → Location → Share Live Location (15 minutes)`,
+    reply_markup: {
+      keyboard: [[{ text: '📍 Share Live Location', request_location: true }]],
+      one_time_keyboard: true,
+      resize_keyboard: true,
+    },
+  });
 }
 
-export async function missile(options: MissileMessageOptions): Promise<{ success: boolean; messageId?: number; error?: string }> {
-  const { message, parseMode = 'HTML', disableWebPagePreview = false, disableNotification = false, buttons } = options;
+export async function sendTripUnavailable({ driverId }: { driverId: string }) {
+  return bot.sendMessage(driverId, {
+    text: `⚠️ <b>TRIP UNAVAILABLE</b>\n\nSorry, this trip was just taken by another driver.\n\n🔍 More trips coming soon...`,
+  });
+}
 
-  const telegramApiUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
-
-  const payload = {
-    chat_id: process.env.TELEGRAM_CHAT_ID,
-    text: message,
-    parse_mode: parseMode,
-    disable_web_page_preview: disableWebPagePreview,
-    disable_notification: disableNotification,
-    ...(buttons && { reply_markup: { inline_keyboard: buttons } }),
-  };
-
-  try {
-    const response = await fetch(telegramApiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+export async function updateTripMessage({ driverId, messageId, trip, status }: { driverId: string; messageId: number; trip: Trip; status: 'confirmed' | 'unavailable' }) {
+  if (status === 'confirmed') {
+    return bot.editMessageText({
+      chat_id: driverId,
+      message_id: messageId,
+      text: `✅ <b>TRIP CONFIRMED</b>\n\n📍 <b>Pickup:</b> ${trip.pickup_address}\n🏁 <b>Destination:</b> ${trip.destination_address}\n💰 <b>Fare:</b> $${trip.offer_amount}\n⭐ <b>Rider:</b> ${trip.rider.name}\n📞 <b>Rider Phone:</b> ${trip.rider.phone}`,
+      reply_markup: {
+        inline_keyboard: [[{ text: '📍 NAVIGATE', url: `https://maps.google.com/maps?daddr=${trip.pickup_lat},${trip.pickup_lng}` }]],
       },
-      body: JSON.stringify(payload),
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return {
-        success: false,
-        error: data.description || 'Failed to send message',
-      };
-    }
-
-    return {
-      success: true,
-      messageId: data.result.message_id,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
-    };
-  }
-}
-
-export async function sendLocation(latitude: number, longitude: number): Promise<{ success: boolean; messageId?: number; error?: string }> {
-  const telegramApiUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendLocation`;
-
-  const payload = {
-    chat_id: process.env.TELEGRAM_CHAT_ID,
-    latitude,
-    longitude,
-  };
-
-  try {
-    const response = await fetch(telegramApiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+  } else {
+    return bot.editMessageText({
+      chat_id: driverId,
+      message_id: messageId,
+      text: `❌ <b>TRIP UNAVAILABLE</b>\n\n📍 <b>Pickup:</b> ${trip.pickup_address}\n🏁 <b>Destination:</b> ${trip.destination_address}\n💰 <b>Fare:</b> $${trip.offer_amount}\n\n<i>This trip was taken by another driver.</i>`,
+      reply_markup: {
+        inline_keyboard: [],
       },
-      body: JSON.stringify(payload),
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return {
-        success: false,
-        error: data.description || 'Failed to send location',
-      };
-    }
-
-    return {
-      success: true,
-      messageId: data.result.message_id,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
-    };
   }
 }

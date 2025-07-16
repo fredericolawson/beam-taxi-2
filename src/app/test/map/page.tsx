@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { sendLocation } from '@/actions/telegram';
+import { useState } from 'react';
 import { APIProvider, Map, Marker, MapMouseEvent } from '@vis.gl/react-google-maps';
 
 interface Location {
@@ -20,22 +19,10 @@ export default function TestPage() {
       setLocation({ lat, lng });
     }
   };
-  useEffect(() => {
-    if (location) {
-      setIsSending(true);
-      sendLocation(location.lat, location.lng).then((result) => {
-        setIsSending(false);
-      });
-    }
-  }, [location]);
+
   return (
     <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}>
-      <Map
-        defaultCenter={{ lat: 32.29419722130781, lng: -64.77670184254964 }}
-        defaultZoom={10}
-        onClick={handleMapClick}
-        className="h-96 w-full"
-      >
+      <Map defaultCenter={{ lat: 32.29419722130781, lng: -64.77670184254964 }} defaultZoom={10} onClick={handleMapClick} className="h-96 w-full">
         {location && <Marker position={location} />}
       </Map>
       <Coordinates location={location} />

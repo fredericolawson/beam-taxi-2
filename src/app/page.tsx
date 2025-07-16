@@ -25,7 +25,7 @@ function TripList({ trips, title }: { trips: Trip[]; title: string }) {
       {trips.length === 0 ? (
         <p className="text-muted-foreground">No active trips</p>
       ) : (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-6">
           {trips.map((trip) => (
             <TripCard key={trip.id} trip={trip} />
           ))}

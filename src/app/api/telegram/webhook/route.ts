@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { TelegramBot } from '@/lib/telegram';
-import { sendTripConfirmation, sendTripUnavailable, updateTripMessage } from '@/lib/telegram-messages';
+import { sendTripConfirmation, sendTripUnavailable, updateTripMessage } from '@/actions/telegram';
 import { assignTripToDriver, getTrip } from '@/lib/tables/trips';
 import { NextRequest, NextResponse } from 'next/server';
 import { getDriverByTelegramId } from '@/lib/tables/drivers';
