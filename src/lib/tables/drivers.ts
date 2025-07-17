@@ -15,10 +15,10 @@ export async function listDriverTelegramIds() {
   return data.map((driver) => driver.telegram_id);
 }
 
-export async function getDriverByTelegramId({ telegramId }: { telegramId: string }) {
+export async function getDriverByTelegramId({ driver_telegram_id }: { driver_telegram_id: string }) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.schema('taxi').from('drivers').select('*').eq('telegram_id', telegramId).single();
+  const { data, error } = await supabase.schema('taxi').from('drivers').select('*').eq('telegram_id', driver_telegram_id).single();
 
   if (error) throw error;
 

@@ -21,6 +21,11 @@ export type Trip = {
 
 export type RawTrip = Omit<Trip, 'status'>;
 
+export type AssignedTrip = Trip & {
+  message_id: number;
+  driver: Driver;
+};
+
 export type TripInsert = {
   rider_id: string;
   pickup_lat: number;

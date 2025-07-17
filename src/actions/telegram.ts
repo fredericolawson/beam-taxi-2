@@ -1,12 +1,11 @@
 'use server';
 import { TelegramBot } from '../lib/telegram';
-import type { Driver, Trip } from '@/types';
+import type { AssignedTrip, Driver, Trip } from '@/types';
 import { getFirstDriver, listDriverTelegramIds } from '../lib/tables/drivers';
 
 const bot = new TelegramBot();
 
 export async function sendTripRequest({ trip }: { trip: Trip }) {
-  console.log('trip', trip);
   const driverTelegramIds = await listDriverTelegramIds();
 
   // Send to all drivers in parallel
@@ -14,7 +13,7 @@ export async function sendTripRequest({ trip }: { trip: Trip }) {
     driverTelegramIds.map(async (driverTelegramId) => {
       // Send both messages in parallel for each driver
       await Promise.all([
-        bot.sendLocation(driverTelegramId, {
+        await bot.sendLocation(driverTelegramId, {
           latitude: trip.pickup_lat,
           longitude: trip.pickup_lng,
         }),
@@ -35,19 +34,9 @@ export async function sendTripRequest({ trip }: { trip: Trip }) {
   );
 }
 
-export async function sendTripConfirmation({ driver, trip }: { driver: Driver; trip: Trip }) {
-  await bot.sendMessage(driver.telegram_id, {
-    text: `✅ <b>TRIP CONFIRMED</b>\n\nYou've been assigned this trip!\n\n📍 <b>Pickup:</b> ${trip.pickup_address}\n🏁 <b>Destination:</b> ${trip.destination_address}\n💰 <b>Fare:</b> $${trip.offer_amount}\n📞 <b>Rider Phone:</b> ${trip.rider.phone}\n\n🚗 Head to pickup location`,
-    reply_markup: {
-      inline_keyboard: [
-        [{ text: '📍 NAVIGATE', url: `https://maps.google.com/maps?daddr=${trip.pickup_lat},${trip.pickup_lng}` }],
-        [{ text: '✅ ARRIVED', callback_data: `arrived_${trip.id}` }],
-      ],
-    },
-  });
-  // Follow with location sharing prompt
-  await bot.sendMessage(driver.telegram_id, {
-    text: `📍 <b>Share your live location</b> so the rider can track your arrival!\n\nTap the 📎 button below → Location → Share Live Location (15 minutes)`,
+export async function sendLocationPrompt({ driver_telegram_id }: { driver_telegram_id: string }) {
+  await bot.sendMessage(driver_telegram_id, {
+    text: `📍 <b>Share your live location</b> so the rider can track your arrival!`,
     reply_markup: {
       keyboard: [[{ text: '📍 Share Live Location', request_location: true }]],
       one_time_keyboard: true,
@@ -62,24 +51,56 @@ export async function sendTripUnavailable({ driverId }: { driverId: string }) {
   });
 }
 
-export async function updateTripMessage({ driverId, messageId, trip, status }: { driverId: string; messageId: number; trip: Trip; status: 'confirmed' | 'unavailable' }) {
+export async function updateTripMessage({ trip, status }: { trip: AssignedTrip; status: 'confirmed' | 'cancelled' }) {
   if (status === 'confirmed') {
     return bot.editMessageText({
-      chat_id: driverId,
-      message_id: messageId,
-      text: `✅ <b>TRIP CONFIRMED</b>\n\n📍 <b>Pickup:</b> ${trip.pickup_address}\n🏁 <b>Destination:</b> ${trip.destination_address}\n💰 <b>Fare:</b> $${trip.offer_amount}\n⭐ <b>Rider:</b> ${trip.rider.name}\n📞 <b>Rider Phone:</b> ${trip.rider.phone}`,
+      chat_id: trip.driver.telegram_id,
+      message_id: trip.message_id,
+      text: `✅ <b>TRIP CONFIRMED</b>\n\nYou've been assigned this trip!\n\n📍 <b>Pickup:</b> ${trip.pickup_address}\n🏁 <b>Destination:</b> ${trip.destination_address}\n💰 <b>Fare:</b> $${trip.offer_amount}\n⭐ <b>Rider:</b> ${trip.rider.name}\n📞 <b>Rider Phone:</b> ${trip.rider.phone}`,
       reply_markup: {
         inline_keyboard: [[{ text: '📍 NAVIGATE', url: `https://maps.google.com/maps?daddr=${trip.pickup_lat},${trip.pickup_lng}` }]],
       },
     });
-  } else {
+  } else if (status === 'cancelled') {
     return bot.editMessageText({
-      chat_id: driverId,
-      message_id: messageId,
-      text: `❌ <b>TRIP UNAVAILABLE</b>\n\n📍 <b>Pickup:</b> ${trip.pickup_address}\n🏁 <b>Destination:</b> ${trip.destination_address}\n💰 <b>Fare:</b> $${trip.offer_amount}\n\n<i>This trip was taken by another driver.</i>`,
+      chat_id: trip.driver.telegram_id,
+      message_id: trip.message_id,
+      text: `❌ <b>TRIP CANCELLED</b>\n\n📍 <b>Pickup:</b> ${trip.pickup_address}\n🏁 <b>Destination:</b> ${trip.destination_address}\n💰 <b>Fare:</b> $${trip.offer_amount}\n\n<i>Sorry, this trip has been cancelled.</i>`,
       reply_markup: {
         inline_keyboard: [],
       },
     });
   }
+}
+/*
+==============================================
+send trip confirmed
+==============================================
+*/
+export async function sendTripConfirmed({ trip }: { trip: AssignedTrip }) {
+  await bot.editMessageText({
+    chat_id: trip.driver.telegram_id,
+    message_id: trip.message_id,
+    text: `✅ <b>TRIP CONFIRMED</b>\n\nYou've been assigned this trip!\n\n📍 <b>Pickup:</b> ${trip.pickup_address}\n🏁 <b>Destination:</b> ${trip.destination_address}\n💰 <b>Fare:</b> $${trip.offer_amount}\n⭐ <b>Rider:</b> ${trip.rider.name}\n📞 <b>Rider Phone:</b> ${trip.rider.phone}`,
+  });
+}
+
+/*
+==============================================
+send trip cancelled
+==============================================
+*/
+export async function sendTripCancelled({ trip }: { trip: AssignedTrip }) {
+  await bot.editMessageText({
+    chat_id: trip.driver.telegram_id,
+    message_id: trip.message_id,
+    text: `❌ <b>TRIP CANCELLED</b>\n\n📍 <b>Pickup:</b> ${trip.pickup_address}\n🏁 <b>Destination:</b> ${trip.destination_address}\n💰 <b>Fare:</b> $${trip.offer_amount}\n\n<i>Sorry, this trip has been cancelled.</i>`,
+    reply_markup: {
+      inline_keyboard: [],
+    },
+  });
+
+  bot.sendMessage(trip.driver.telegram_id, {
+    text: `❌ <b>TRIP CANCELLED</b>\n\n📍 <b>Pickup:</b> ${trip.pickup_address}\n🏁 <b>Destination:</b> ${trip.destination_address}\n💰 <b>Fare:</b> $${trip.offer_amount}\n\n<i>Sorry, this trip has been cancelled.</i>`,
+  });
 }

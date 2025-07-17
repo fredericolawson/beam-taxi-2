@@ -1,11 +1,10 @@
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Clock, DollarSign, User, Timer, Route, Phone, MessageSquare, Link } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { MapPin, DollarSign, User, Phone, MessageSquare } from 'lucide-react';
 import RouteMap from '@/app/trips/components/route-map';
 import type { Driver, Trip } from '@/types';
-import { useRouteMetrics } from '@/hooks/route-metrics';
 import { RouteMetrics } from './route-metrics';
+import { CancelTrip } from './cancel-trip';
 
 function TripLocation({ type, address }: { type: 'pickup' | 'destination'; address: string }) {
   const isPickup = type === 'pickup';
@@ -67,7 +66,7 @@ export function TripCard({ trip }: { trip: Trip }) {
     <Card className="overflow-hidden p-0">
       <CardContent className="space-y-6 pr-0">
         <div className="grid gap-6 lg:grid-cols-2">
-          <div className="space-y-4 py-6">
+          <div className="flex flex-col gap-4 py-6">
             <div className="space-y-3">
               <TripLocation type="pickup" address={trip.pickup_address} />
               <TripLocation type="destination" address={trip.destination_address} />
@@ -75,6 +74,7 @@ export function TripCard({ trip }: { trip: Trip }) {
             </div>
             <RouteMetrics routeMetrics={{ distance: trip.distance * 1000, duration: trip.duration }} />
             <DriverInfo driver={trip.driver} />
+            <CancelTrip trip_id={trip.id} />
           </div>
           <div className="bg-muted/20 overflow-hidden rounded-r-lg border">
             <RouteMap

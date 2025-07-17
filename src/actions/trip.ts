@@ -1,8 +1,9 @@
 'use server';
 
-import type { Trip, TripInsert } from '@/types';
+import type { AssignedTrip, Trip, TripInsert } from '@/types';
 import { createClient } from '@/lib/supabase/server';
-import { sendTripRequest } from './telegram';
+import { sendTripRequest, sendTripCancelled } from './telegram';
+import { revalidatePath } from 'next/cache';
 
 export async function createTrip({ tripRequest }: { tripRequest: TripInsert }) {
   const supabase = await createClient();
@@ -26,12 +27,11 @@ export async function createTrip({ tripRequest }: { tripRequest: TripInsert }) {
 
   return trip;
 }
-
-export async function cancelTrip({ trip_id }: { trip_id: string }) {
+export async function storeMessageId({ trip_id, message_id }: { trip_id: string; message_id: number }) {
   const supabase = await createClient();
-  const { data, error } = await supabase.schema('taxi').from('trips').update({ cancelled_at: new Date() }).eq('id', trip_id).select().single();
+  const { error } = await supabase.schema('taxi').from('trips').update({ message_id }).eq('id', trip_id);
   if (error) throw error;
-  return data;
+  console.log('Message ID stored', trip_id, message_id);
 }
 
 export async function getActiveTrips({ riderId }: { riderId: string }) {
@@ -63,4 +63,61 @@ export async function getActiveTrips({ riderId }: { riderId: string }) {
     ...trip,
     status: trip.assigned_at ? 'assigned' : 'pending',
   }));
+}
+
+/*
+==============================================
+assign driver
+==============================================
+*/
+
+export async function assignTripToDriver({ tripId, driver_id, message_id }: { tripId: string; driver_id: string; message_id: number }) {
+  const supabase = await createClient();
+
+  // Check if trip is still available and assign atomically
+  const { data, error } = await supabase
+    .schema('taxi')
+    .from('trips')
+    .update({
+      driver_id,
+      assigned_at: new Date().toISOString(),
+      message_id,
+    })
+    .eq('id', tripId)
+    .is('driver_id', null) // Changed from .eq() to .is()
+    .select(`*, driver:drivers (*), rider:riders (*)`)
+    .single();
+
+  if (error) {
+    console.error('error', error);
+    if (error.code === 'PGRST116') {
+      return false;
+    }
+    throw new Error(error.message);
+  }
+
+  return data as AssignedTrip;
+}
+
+/*
+==============================================
+cancel trip
+==============================================
+*/
+export async function cancelTrip({ trip_id }: { trip_id: string }) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .schema('taxi')
+    .from('trips')
+    .update({ cancelled_at: new Date() })
+    .eq('id', trip_id)
+    .select(`*, driver:drivers (*), rider:riders (*)`)
+    .single();
+  if (error) throw error;
+  if (data.driver_id) {
+    const trip = data as AssignedTrip;
+    await sendTripCancelled({ trip });
+  }
+  revalidatePath('/');
+  return data;
 }
