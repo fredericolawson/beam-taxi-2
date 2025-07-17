@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { Header } from '@/components/header';
 import { Metadata, Viewport } from 'next';
 import { Footer } from '@/components/footer';
+import Script from 'next/script';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -58,6 +59,10 @@ export default function RootLayout({
         <Footer />
         <Toaster richColors position="bottom-center" />
         <Analytics />
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+          strategy="beforeInteractive"
+        />
       </body>
     </html>
   );

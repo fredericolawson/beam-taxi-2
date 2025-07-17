@@ -16,7 +16,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar24 } from './date-time-picker';
 import { calculateOffer } from '@/lib/utils/calculate-offer';
-import Script from 'next/script';
 import { RouteMetrics } from '@/components/route-metrics';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
@@ -40,6 +39,17 @@ export default function NewTripForm() {
   const [routeMetrics, setRouteMetrics] = useState<{ distance: number; duration: number }>({ distance: 0, duration: 0 });
   const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const checkGoogleMapsLoaded = () => {
+      if (typeof window !== 'undefined' && window.google && window.google.maps && window.google.maps.places) {
+        setIsGoogleMapsLoaded(true);
+      } else {
+        setTimeout(checkGoogleMapsLoaded, 100);
+      }
+    };
+    checkGoogleMapsLoaded();
+  }, []);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -118,11 +128,6 @@ export default function NewTripForm() {
 
   return (
     <div className="flex w-full flex-1 flex-col items-center justify-center">
-      <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
-        strategy="beforeInteractive"
-        onLoad={() => setIsGoogleMapsLoaded(true)}
-      />
       <Card className="w-full max-w-2xl">
         <CardHeader>
           <CardTitle>Pick-up</CardTitle>
