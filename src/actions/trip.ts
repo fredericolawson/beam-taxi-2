@@ -85,6 +85,7 @@ export async function assignTripToDriver({ tripId, driver_id, message_id }: { tr
     })
     .eq('id', tripId)
     .is('driver_id', null) // Changed from .eq() to .is()
+    .is('cancelled_at', null)
     .select(`*, driver:drivers (*), rider:riders (*)`)
     .single();
 

@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { TelegramBot } from '@/lib/telegram';
-import { sendLocationPrompt, sendTripConfirmed, sendTripUnavailable, updateTripMessage } from '@/actions/telegram';
-import { getTrip } from '@/lib/tables/trips';
+import { sendLocationPrompt, sendTripConfirmed, sendTripUnavailable } from '@/actions/telegram';
 import { assignTripToDriver } from '@/actions/trip';
 import { NextRequest, NextResponse } from 'next/server';
 import { getDriverByTelegramId } from '@/lib/tables/drivers';
@@ -40,7 +39,7 @@ export async function POST(request: NextRequest) {
               text: 'Trip confirmed!',
             });
           } else {
-            await sendTripUnavailable({ driverId: driver_telegram_id });
+            await sendTripUnavailable({ driver_telegram_id, message_id });
             await bot.answerCallbackQuery({
               callback_query_id: callbackQuery.id,
               text: 'Trip is no longer available',

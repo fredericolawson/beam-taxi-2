@@ -9,7 +9,7 @@ export async function Header() {
   const user = await getUserServer();
 
   return (
-    <header className="border-accent relative mb-8 flex w-full items-center justify-between border-b p-8 md:justify-center">
+    <header className="border-accent relative mb-8 flex w-full flex-col items-start justify-between border-b p-8 md:flex-row md:items-center md:justify-center">
       <Logo />
       <div className="absolute inset-y-0 right-4 flex items-center">
         <ProfileMenu user={user} />
@@ -30,17 +30,17 @@ async function ProfileMenu({ user }: { user: SupabaseUser | null }) {
   if (!user) return null;
 
   return (
-    <div className="flex flex-row items-center gap-2">
-      <Button variant="accent" size="lg" asChild className="border">
-        <Link href={`/trips/new`}>
-          <PlusCircleIcon />
-          New Trip
-        </Link>
-      </Button>
+    <div className="flex flex-col items-end gap-2 md:flex-row">
       <Button variant="secondary" size="lg" asChild className="border">
         <Link href={`/profile`}>
           <UserIcon />
           Profile
+        </Link>
+      </Button>
+      <Button variant="accent" size="lg" asChild className="border">
+        <Link href={`/trips/new`}>
+          <PlusCircleIcon />
+          New Trip
         </Link>
       </Button>
     </div>

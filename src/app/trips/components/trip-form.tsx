@@ -37,19 +37,7 @@ const formSchema = z.object({
 
 export default function NewTripForm() {
   const [routeMetrics, setRouteMetrics] = useState<{ distance: number; duration: number }>({ distance: 0, duration: 0 });
-  const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    const checkGoogleMapsLoaded = () => {
-      if (typeof window !== 'undefined' && window.google && window.google.maps && window.google.maps.places) {
-        setIsGoogleMapsLoaded(true);
-      } else {
-        setTimeout(checkGoogleMapsLoaded, 100);
-      }
-    };
-    checkGoogleMapsLoaded();
-  }, []);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({

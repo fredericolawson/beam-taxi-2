@@ -55,14 +55,11 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-muted/50 flex min-h-screen flex-col items-center">
         <Header />
-        <main className="flex w-full max-w-6xl flex-1 flex-col items-center justify-center">{children}</main>
+        <main className="flex w-full max-w-6xl flex-1 flex-col items-center justify-center p-4">{children}</main>
         <Footer />
         <Toaster richColors position="bottom-center" />
         <Analytics />
-        <Script
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
-          strategy="beforeInteractive"
-        />
+        <Script src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`} strategy="beforeInteractive" />
       </body>
     </html>
   );

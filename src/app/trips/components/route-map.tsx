@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { APIProvider, Map, Marker, useMap, useMapsLibrary, AdvancedMarker, InfoWindow } from '@vis.gl/react-google-maps';
+import { Driver } from '@/types';
 
 // Type definitions
 interface LatLng {
@@ -24,6 +25,7 @@ interface RouteMapProps {
   apiKey: string;
   className?: string;
   onRouteCalculated?: (metrics: { distance: number; duration: number }) => void;
+  driver: Driver | null;
 }
 
 // Component for handling route calculation and rendering
@@ -31,12 +33,12 @@ function RouteRenderer({
   pickup,
   destination,
   onRouteCalculated,
-  setZoom,
+  setRouteMetrics,
 }: {
   pickup: LatLng | null;
   destination: LatLng | null;
   onRouteCalculated?: (metrics: { distance: number; duration: number }) => void;
-  setZoom: (zoom: number) => void;
+  setRouteMetrics: (metrics: { distance: number; duration: number }) => void;
 }) {
   const map = useMap();
   const routesLibrary = useMapsLibrary('routes');
@@ -99,8 +101,6 @@ function RouteRenderer({
           const leg = route.legs[0];
           const distance = leg.distance?.value || 0; // Value in meters
           const duration = leg.duration?.value ? Math.round(leg.duration.value / 60) : 0; // Convert seconds to minutes
-          const zoom = distance > 10000 ? 12 : distance > 5000 ? 13 : distance > 2000 ? 14 : 15;
-          setZoom(zoom);
 
           const routeData: Route = {
             polyline: directionsRenderer.getDirections()?.routes[0]?.overview_polyline as unknown as google.maps.Polyline,
@@ -121,6 +121,7 @@ function RouteRenderer({
             distance: distance, // Pass raw meters
             duration: duration, // Pass minutes
           });
+          setRouteMetrics({ distance: distance, duration: duration });
         }
       } catch (error) {
         console.error('Route calculation error:', error);
@@ -157,16 +158,6 @@ function RouteRenderer({
 
   return (
     <>
-      {/* Route Info 
-      {route && (
-        <div className="absolute top-4 left-4 z-10 rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
-          <div className="text-sm font-medium text-gray-800">
-            <div>Distance: {route.distance}</div>
-            <div>Duration: {route.duration}</div>
-          </div>
-        </div>
-      )}*/}
-
       {/* Pickup Marker */}
       {pickup && (
         <AdvancedMarker position={pickup}>
@@ -185,23 +176,28 @@ function RouteRenderer({
 }
 
 // Main component
-export default function RouteMap({ pickup, destination, apiKey, className = 'w-full h-96', onRouteCalculated }: RouteMapProps) {
+export default function RouteMap({ pickup, destination, apiKey, className = 'w-full h-96', onRouteCalculated, driver }: RouteMapProps) {
   const [mapCenter, setMapCenter] = useState<LatLng>(pickup || destination || { lat: 32.29482077750405, lng: -64.76918653081073 });
-  const [zoom, setZoom] = useState(12);
+  const [routeMetrics, setRouteMetrics] = useState<{ distance: number; duration: number }>({ distance: 0, duration: 0 });
+  const zoom = routeMetrics.distance > 10000 ? 12 : routeMetrics.distance > 5000 ? 13 : routeMetrics.distance > 2000 ? 14 : 15;
 
-  // Update center when pickup/destination changes
+  const driverLocation = driver ? { lat: driver.current_lat!, lng: driver.current_lng! } : null;
+  // Update center when pickup/destination changesO
   useEffect(() => {
-    if (pickup && destination) {
+    if (driverLocation) {
+      console.log('setting location to ', driverLocation);
+      setMapCenter(driverLocation);
+    } else if (pickup && destination) {
       // Center between pickup and destination
       const center = {
         lat: (pickup.lat + destination.lat) / 2,
         lng: (pickup.lng + destination.lng) / 2,
       };
-      setMapCenter(center);
+      // setMapCenter(center);
     } else if (pickup) {
-      setMapCenter(pickup);
+      // setMapCenter(pickup);
     } else if (destination) {
-      setMapCenter(destination);
+      //setMapCenter(destination);
     }
   }, [pickup, destination]);
 
@@ -209,12 +205,9 @@ export default function RouteMap({ pickup, destination, apiKey, className = 'w-f
     <div className={`relative ${className} rounded-lg`}>
       <APIProvider apiKey={apiKey}>
         <Map
-          mapId="route-map"
-          defaultCenter={mapCenter}
+          mapId="367b4dd71336055f97680177"
+          center={mapCenter}
           zoom={zoom}
-          style={{ width: '100%', height: '100%' }}
-          mapTypeId="roadmap"
-          disableDefaultUI={false}
           zoomControl={false}
           mapTypeControl={false}
           scaleControl={false}
@@ -223,9 +216,23 @@ export default function RouteMap({ pickup, destination, apiKey, className = 'w-f
           fullscreenControl={true}
           gestureHandling={'none'}
         >
-          <RouteRenderer pickup={pickup} destination={destination} onRouteCalculated={onRouteCalculated} setZoom={setZoom} />
+          <RouteRenderer pickup={pickup} destination={destination} onRouteCalculated={onRouteCalculated} setRouteMetrics={setRouteMetrics} />
+          <DriverMarker driverLocation={driverLocation} />
         </Map>
       </APIProvider>
     </div>
+  );
+}
+
+function DriverMarker({ driverLocation }: { driverLocation: LatLng | null }) {
+  if (!driverLocation) return null;
+
+  return (
+    <AdvancedMarker position={driverLocation}>
+      <div className="relative flex h-6 w-6 items-center justify-center">
+        <div className="absolute h-6 w-6 animate-ping rounded-full bg-blue-500 opacity-75"></div>
+        <div className="relative flex h-6 w-6 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white">D</div>
+      </div>
+    </AdvancedMarker>
   );
 }

@@ -41,10 +41,7 @@ export async function listTripsByRiderId({ riderId }: { riderId: string }) {
         name,
         phone
       ),
-      driver:drivers (
-        name,
-        phone
-      )
+      driver:drivers (*)
     `
     )
     .eq('rider_id', riderId);
@@ -54,35 +51,6 @@ export async function listTripsByRiderId({ riderId }: { riderId: string }) {
   }
 
   return data.map(processTripData) as Trip[];
-}
-
-export async function assignTripToDriver({ tripId, driverTelegramId }: { tripId: string; driverTelegramId: string }): Promise<boolean> {
-  const supabase = await createClient();
-
-  const driver = await getDriverByTelegramId({ telegramId: driverTelegramId });
-
-  // Check if trip is still available and assign atomically
-  const { data, error } = await supabase
-    .schema('taxi')
-    .from('trips')
-    .update({
-      driver_id: driver.id,
-      assigned_at: new Date().toISOString(),
-    })
-    .eq('id', tripId)
-    .is('driver_id', null) // Changed from .eq() to .is()
-    .select()
-    .single();
-
-  if (error) {
-    console.error('error', error);
-    if (error.code === 'PGRST116') {
-      return false;
-    }
-    throw new Error(error.message);
-  }
-
-  return true;
 }
 
 function processTripData(trip: RawTrip): Trip {
